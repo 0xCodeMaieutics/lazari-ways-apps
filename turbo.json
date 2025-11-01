@@ -17,5 +17,21 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": [
+    "DATABASE_URL",
+    "NODE_ENV",
+    "ENCRYPTION_KEY",
+    "TELEGRAM_BOT_TOKEN",
+    "TELEGRAM_BOT_CHAT_ID",
+    "AWS_ACCESS_KEY_ID",
+    "AWS_SECRET_ACCESS_KEY",
+    "AWS_REGION",
+    "S3_BUCKET_NAME",
+    "AWS_BUCKET_NAME",
+    "NEXT_PUBLIC_BASE_URL",
+    "JOSE_SECRET",
+    "BETTER_AUTH_SECRET",
+    "SKIP_ENV_VALIDATION"
+  ]
 }
