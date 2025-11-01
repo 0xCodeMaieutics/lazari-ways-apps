@@ -13,7 +13,13 @@ const images = [
 ];
 
 const ImageCustom = ({ ...props }: ImageProps) => (
-  <Image className="rounded-md object-cover" fill={true} {...props} />
+  <Image
+    priority={false}
+    className="rounded-md object-cover"
+    fill={true}
+    sizes="350x400"
+    {...props}
+  />
 );
 
 export const EmployersGallery = () => {
