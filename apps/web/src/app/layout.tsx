@@ -2,12 +2,20 @@ import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { Header } from "./header";
 import { Footer } from "./footer";
+import { I18NEXT_LANGUAGES } from "@/utils/i18n/constants";
+import { getTranslations } from "@/utils/i18n/server";
 
-export const metadata = {
-  title: "Lazari Ways - Jobs and Internships in Germany",
-  description:
-    "We help you find internships and jobs in Germany and other countries.",
-};
+export async function generateStaticParams() {
+  return I18NEXT_LANGUAGES.map((lng) => ({ lng }));
+}
+
+export async function generateMetadata() {
+  const { t } = await getTranslations("common");
+  return {
+    title: t("title"),
+    descption: t("description"),
+  };
+}
 
 export default function RootLayout({
   children,

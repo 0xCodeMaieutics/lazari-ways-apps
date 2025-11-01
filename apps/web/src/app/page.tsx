@@ -8,8 +8,12 @@ import { TypeAnimation } from "react-type-animation";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
 import { HeroVideo } from "@/components/hero-video";
 import { SectionHeader } from "@/components/section-header";
+import { useTranslations } from "@/utils/i18n/client";
 
 export default function Home() {
+  const { t } = useTranslations("common");
+  console.log(t("title"));
+
   return (
     <main className="min-h-screen w-full flex flex-col">
       <section className="px-6 py-40 md:py-40">
@@ -22,7 +26,6 @@ export default function Home() {
                   sequence={["Fast", 2000, "Easy", 1500, "Reliable", 2000]}
                   wrapper="span"
                   speed={60}
-                  // style={{ fontSize: "2em", display: "inline-block" }}
                   className="h-[70px] text-primary"
                   repeat={Infinity}
                 />
