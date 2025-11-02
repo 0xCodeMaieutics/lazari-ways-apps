@@ -1,10 +1,11 @@
 import Link from "next/link";
 import { TextLogo } from "./text-logo";
 import { APP_NAME } from "./constants";
+import { Translations } from "@/i18n/translations";
 
-export const Footer = () => {
+export const Footer = ({ translations }: { translations: Translations }) => {
   return (
-    <footer className="mt-auto border-t ">
+    <footer className="mt-auto border-t">
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="flex flex-col gap-4">

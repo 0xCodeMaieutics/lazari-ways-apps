@@ -1,3 +1,8 @@
 {
-  "hello": "gamardjoba"
+  "header": {
+    "about": "შესახებ",
+    "services": "სერვისები",
+    "contact": "კონტაქტი"
+  },
+  "footer": {}
 }

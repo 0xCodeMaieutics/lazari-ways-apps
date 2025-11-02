@@ -30,17 +30,18 @@ export const HomeClient = ({
             <div className="text-center md:text-left flex-1 space-y-6">
               <div className="text-4xl md:text-6xl font-bold tracking-tight">
                 {translations.title}{" "}
-                <TypeAnimation
-                  sequence={["Fast", 2000, "Easy", 1500, "Reliable", 2000]}
-                  wrapper="span"
-                  speed={60}
-                  className="h-[70px] text-primary"
-                  repeat={Infinity}
-                />
+                <div className="h-[42px] md:h-[70px]">
+                  <TypeAnimation
+                    sequence={translations.typeAnimationWords as any}
+                    wrapper="span"
+                    speed={60}
+                    className="h-[70px] text-primary"
+                    repeat={Infinity}
+                  />
+                </div>
               </div>
               <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                We will help you with choosing an internship and finding a job
-                in Germany and other countries.
+                {translations.slogan}
               </p>
               <Button
                 size={"lg"}
@@ -50,7 +51,7 @@ export const HomeClient = ({
                   scrollSmoothlyToSection(SECTION_IDS.contact);
                 }}
               >
-                Contact us
+                {translations.callToAction}
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>

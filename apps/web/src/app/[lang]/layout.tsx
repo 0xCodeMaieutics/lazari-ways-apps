@@ -28,15 +28,16 @@ export default async function RootLayout({
   params,
 }: Readonly<PropsWithChildren> & { params: Promise<{ lang: Locale }> }) {
   const { lang = DEFAULT_LOCALE } = await params;
+  const commonTranslations = await getTranslations(lang, "common");
   return (
     <html lang={lang} suppressHydrationWarning>
       <body className={"font-sans antialiased"}>
         <Providers>
-          <Header />
+          <Header translations={commonTranslations["header"] ?? {}} />
           <main className="flex-1 w-dvw gap-6 items-center justify-center">
             {children}
           </main>
-          <Footer />
+          <Footer translations={commonTranslations["footer"] ?? {}} />
         </Providers>
       </body>
     </html>

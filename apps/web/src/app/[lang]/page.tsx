@@ -1,6 +1,6 @@
-import { Locale } from "@/i18n";
-import { HomeClient } from "./page.client";
 import { getTranslations } from "@/i18n/translations";
+import { HomeClient } from "./page.client";
+import { Locale } from "@/i18n";
 
 export default async function Home({
   params,
