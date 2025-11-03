@@ -18,6 +18,6 @@ export const SECTION_IDS = {
   howItWork: "how-it-work",
   gallery: "gallery",
   advantages: "advantages",
-  aboutUs: "about-us",
+  about: "about",
   contact: "contact",
 };

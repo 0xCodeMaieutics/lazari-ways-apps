@@ -51,7 +51,7 @@ export const Header = ({ translations }: { translations: Translations }) => {
   const [open, setOpen] = useState(false);
   const NAV_LINKS = [
     {
-      href: SECTION_IDS.aboutUs,
+      href: SECTION_IDS.about,
       label: translations.about,
     },
     {

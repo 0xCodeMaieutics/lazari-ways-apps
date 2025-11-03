@@ -29,10 +29,10 @@ export const HomeClient = ({
           <div className="flex flex-col gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
             <div className="text-center md:text-left flex-1 space-y-6">
               <div className="text-4xl md:text-6xl font-bold tracking-tight">
-                {translations.title}{" "}
+                {translations["hero.title"]}{" "}
                 <div className="h-[42px] md:h-[70px]">
                   <TypeAnimation
-                    sequence={translations.typeAnimationWords as any}
+                    sequence={translations["hero.typeAnimationWords"] as any}
                     wrapper="span"
                     speed={60}
                     className="h-[70px] text-primary"
@@ -41,7 +41,7 @@ export const HomeClient = ({
                 </div>
               </div>
               <p className="mt-6 text-lg md:text-xl text-muted-foreground">
-                {translations.slogan}
+                {translations["hero.slogan"]}
               </p>
               <Button
                 size={"lg"}
@@ -51,7 +51,7 @@ export const HomeClient = ({
                   scrollSmoothlyToSection(SECTION_IDS.contact);
                 }}
               >
-                {translations.callToAction}
+                {translations["hero.callToAction"]}
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
@@ -61,6 +61,7 @@ export const HomeClient = ({
           </div>
         </section>
 
+        {/* Gallery */}
         <section
           id={SECTION_IDS.gallery}
           className="w-full space-y-6 max-w-6xl mx-auto px-6"
@@ -112,7 +113,7 @@ export const HomeClient = ({
             </div>
           </div>
         </section>
-
+        {/* Advantages */}
         <section id={SECTION_IDS.advantages} className="px-6 py-16 md:py-20">
           <div className="max-w-6xl mx-auto">
             <SectionHeader
@@ -144,24 +145,18 @@ export const HomeClient = ({
             </div>
           </div>
         </section>
-
-        <section id={SECTION_IDS.aboutUs} className="px-6 py-16 md:py-20">
+        {/* About Us */}
+        <section id={SECTION_IDS.about} className="px-6 py-16 md:py-20">
           <div className="max-w-6xl mx-auto">
             <SectionHeader
               onClick={() => {
-                scrollSmoothlyToSection(SECTION_IDS.aboutUs);
+                scrollSmoothlyToSection(SECTION_IDS.about);
               }}
             >
-              About Us
+              {translations["aboutUs.title"]}
             </SectionHeader>
             <div className="mt-6 space-y-4 text-slate-700">
-              <p>
-                From a small office where two managers consulted clients,
-                Mavista has grown into a large company that now employs over 75
-                people! Our main mission is to give people the opportunity to
-                earn good money, see the world, and get only good impressions
-                and memories from their trip.
-              </p>
+              <p>{translations["aboutUs.p1"]}</p>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="rounded-lg border p-4  text-center">
                   <div className="text-2xl font-bold">11+</div>
@@ -192,6 +187,7 @@ export const HomeClient = ({
           </div>
         </section>
 
+        {/* Contact */}
         <section id={SECTION_IDS.contact} className="px-6 pb-16">
           <div className="max-w-6xl mx-auto text-center border py-10 rounded-xl bg-accent text-accent-foreground">
             <h2 className="text-background text-2xl md:text-3xl font-semibold">
