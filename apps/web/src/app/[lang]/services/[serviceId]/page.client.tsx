@@ -1,0 +1,251 @@
+"use client";
+import Image from "next/image";
+import clsx from "clsx";
+import { Button } from "@workspace/ui/components/button";
+import { scrollSmoothlyToSection, SECTION_IDS } from "../../utils";
+import {
+  ArrowDown,
+  CheckCircle2,
+  Clock,
+  Euro,
+  Calendar,
+  Package,
+  Star,
+  User,
+} from "lucide-react";
+import { ServicePageData } from "@/utils/models/service";
+import { SectionHeader } from "@/components/section-header";
+import { formatDistanceToNow } from "date-fns";
+
+import { ka } from "date-fns/locale"; // Georgian locale
+import { useParams } from "next/navigation";
+
+export const ServicesClientPage = ({ data }: { data: ServicePageData }) => {
+  const params = useParams();
+
+  return (
+    <main className="min-h-screen">
+      {/* Hero Section */}
+      <section className="px-6 py-24 md:py-30 max-w-6xl mx-auto">
+        <div className="flex flex-col gap-12 lg:gap-20 md:flex-row md:items-center">
+          <div className="text-center md:text-left flex-1 space-y-6">
+            <div className="tracking-tight space-y-3">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
+                {data.title}
+              </h1>
+              <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
+                  <Clock className="size-4" />
+                  <span className="font-semibold">
+                    {data.durationInMonths} Months
+                  </span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
+                  <Euro className="size-4" />
+                  <span className="font-semibold">{data.priceInEuro}</span>
+                </div>
+                {data.beginningDate && (
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
+                    <Calendar className="size-4" />
+                    <span className="font-semibold">
+                      {formatDistanceToNow(new Date(data.beginningDate), {
+                        addSuffix: true,
+                        locale: params?.lang === "ka" ? ka : undefined, // FIXME: use dynamic locale based on params.lang
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+              {data.description}
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <Button
+                size="lg"
+                className="flex gap-2 items-center text-lg font-semibold h-12 px-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollSmoothlyToSection(SECTION_IDS.requirements);
+                }}
+              >
+                View Details
+                <ArrowDown className="animate-bounce size-4" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="flex gap-2 items-center text-lg font-semibold h-12 px-8"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // TODO: Add contact/application link
+                }}
+              >
+                Apply Now
+              </Button>
+            </div>
+          </div>
+          <div className="flex-shrink-0">
+            <div
+              className={clsx(
+                "group mx-auto relative w-[320px] h-[400px] lg:w-[450px] lg:h-[550px] overflow-hidden rounded-2xl shadow-2xl border"
+              )}
+            >
+              <Image
+                src={data.picture}
+                alt={data.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-500"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Requirements Section */}
+      <section id={SECTION_IDS.requirements} className="px-6">
+        <div className="px-6 max-w-6xl mx-auto space-y-8 bg-muted/30 py-10 md:py-16 rounded-lg">
+          <SectionHeader
+            onClick={() => scrollSmoothlyToSection(SECTION_IDS.requirements)}
+          >
+            Requirements
+          </SectionHeader>
+          <div className="grid md:grid-cols-2 gap-4">
+            {data.requirements.map((req, index) => (
+              <div
+                key={index}
+                className="flex items-start gap-3 p-4 rounded-lg bg-background border hover:shadow-md transition-shadow"
+              >
+                <CheckCircle2 className="size-5 text-primary flex-shrink-0 mt-0.5" />
+                <p className="text-base md:text-lg text-foreground">{req}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What's Included Section */}
+      <section className="px-6 py-10 max-w-6xl mx-auto">
+        <div className="space-y-8 md:py-16">
+          <SectionHeader>What&apos;s Included</SectionHeader>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {data.included.map((item, index) => (
+              <div
+                key={index}
+                className="group relative p-6 rounded-xl border bg-card hover:shadow-lg transition-all duration-300"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                    <Package className="size-5 text-primary" />
+                  </div>
+                  <p className="text-base md:text-lg text-card-foreground leading-relaxed">
+                    {item}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Photos Gallery Section */}
+      {data.photos && data.photos.length > 0 && (
+        <section className="px-6 max-w-6xl mx-auto space-y-8 py-10 md:py-16 rounded-xl">
+          <SectionHeader>Gallery</SectionHeader>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {data.photos.map((photo, index) => (
+              <div
+                key={index}
+                className="relative aspect-square rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow group"
+              >
+                <Image
+                  src={photo}
+                  alt={`${data.title} photo ${index + 1}`}
+                  fill
+                  className="object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Reviews Section */}
+      {data.reviews && data.reviews.length > 0 && (
+        <section className="px-6 py-10 md:py-16 max-w-6xl mx-auto">
+          <div className="space-y-8">
+            <SectionHeader>What Our Clients Say</SectionHeader>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {data.reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="p-6 rounded-xl border bg-card hover:shadow-lg transition-shadow space-y-4"
+                >
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star
+                        key={i}
+                        className={clsx(
+                          "size-5",
+                          i < review.rating
+                            ? "fill-yellow-400 text-yellow-400"
+                            : "text-muted-foreground"
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <p className="text-base text-muted-foreground leading-relaxed italic">
+                    &quot;{review.review}&quot;
+                  </p>
+                  <div className="flex items-center gap-2 pt-2 border-t">
+                    <div className="p-2 rounded-full bg-primary/10">
+                      <User className="size-4 text-primary" />
+                    </div>
+                    <span className="font-semibold text-sm">{review.name}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* CTA Section */}
+      <section className="px-6 py-10 md:py-16">
+        <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-card shadow-lg bg-muted/30">
+          <h2 className="text-3xl md:text-4xl font-bold">
+            Ready to Get Started?
+          </h2>
+          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            Take the first step towards your career journey. Apply now and our
+            team will get in touch with you shortly.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button
+              size="lg"
+              className="text-lg font-semibold h-12 px-10"
+              onClick={(e) => {
+                e.preventDefault();
+                // TODO: Add application form link
+              }}
+            >
+              Submit Application
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="text-lg font-semibold h-12 px-10"
+              onClick={(e) => {
+                e.preventDefault();
+                // TODO: Add contact link
+              }}
+            >
+              Contact Us
+            </Button>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};

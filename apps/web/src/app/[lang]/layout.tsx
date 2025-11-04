@@ -34,7 +34,7 @@ export default async function RootLayout({
       <body className={"font-sans antialiased"}>
         <Providers>
           <Header translations={commonTranslations["header"] ?? {}} />
-          <main className="flex-1 w-dvw gap-6 items-center justify-center">
+          <main className="flex-1 w-dvw gap-6 flex items-center justify-center">
             {children}
           </main>
           <Footer translations={commonTranslations["footer"] ?? {}} />

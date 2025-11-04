@@ -1,15 +1,15 @@
 import Image, { ImageProps } from "next/image";
 
 const images = [
-  { src: "/employers/employers-1.webp", alt: "Employer company logo 1" },
-  { src: "/employers/employers-2.webp", alt: "Employer company logo 2" },
-  { src: "/employers/employers-3.webp", alt: "Employer company logo 3" },
-  { src: "/employers/employers-4.webp", alt: "Employer company logo 4" },
-  { src: "/employers/employers-5.webp", alt: "Employer company logo 5" },
-  { src: "/employers/employers-6.webp", alt: "Employer company logo 6" },
-  { src: "/employers/employers-7.webp", alt: "Employer company logo 7" },
-  { src: "/employers/employers-8.webp", alt: "Employer company logo 8" },
-  { src: "/employers/employers-9.webp", alt: "Employer company logo 9" },
+  { src: "/images/employers/employers-1.webp", alt: "Employer company logo 1" },
+  { src: "/images/employers/employers-2.webp", alt: "Employer company logo 2" },
+  { src: "/images/employers/employers-3.webp", alt: "Employer company logo 3" },
+  { src: "/images/employers/employers-4.webp", alt: "Employer company logo 4" },
+  { src: "/images/employers/employers-5.webp", alt: "Employer company logo 5" },
+  { src: "/images/employers/employers-6.webp", alt: "Employer company logo 6" },
+  { src: "/images/employers/employers-7.webp", alt: "Employer company logo 7" },
+  { src: "/images/employers/employers-8.webp", alt: "Employer company logo 8" },
+  { src: "/images/employers/employers-9.webp", alt: "Employer company logo 9" },
 ];
 
 const ImageCustom = ({ ...props }: ImageProps) => (

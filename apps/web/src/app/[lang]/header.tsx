@@ -61,7 +61,7 @@ export const Header = ({ translations }: { translations: Translations }) => {
   ];
 
   return (
-    <div className="flex justify-between w-full mx-auto max-w-6xl py-6 px-4">
+    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 flex justify-between w-full mx-auto max-w-6xl py-6 px-4 bg-background">
       {/* <Image src="/logo.png" width={200} height={1081.06} alt="Logo" /> */}
       <TextLogo>{APP_NAME}</TextLogo>
 

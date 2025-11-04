@@ -15,10 +15,16 @@ export const scrollSmoothlyToSection = (sectionId: string) => {
 };
 
 export const SECTION_IDS = {
+  // home page:
   howItWork: "how-it-work",
   gallery: "gallery",
   advantages: "advantages",
   about: "about",
   contact: "contact",
   services: "services",
+  // service detail page:
+  requirements: "requirements",
+  included: "included",
+  gallery_service: "gallery-service",
+  reviews: "reviews",
 };

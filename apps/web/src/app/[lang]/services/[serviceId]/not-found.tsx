@@ -9,10 +9,10 @@ export default function NotFound() {
         <div className="space-y-2">
           <h1 className="text-9xl font-bold text-primary">404</h1>
           <h2 className="text-3xl font-semibold tracking-tight">
-            Page Not Found
+            Service Not Found
           </h2>
           <p className="text-muted-foreground text-lg">
-            The page you&apos;re looking for doesn&apos;t exist or has been
+            The service you&apos;re looking for doesn&apos;t exist or has been
             moved.
           </p>
         </div>

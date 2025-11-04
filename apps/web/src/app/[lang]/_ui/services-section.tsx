@@ -2,8 +2,7 @@ import { SectionHeader } from "@/components/section-header";
 import { scrollSmoothlyToSection, SECTION_IDS } from "../utils";
 import Image from "next/image";
 import Link from "next/link";
-
-type Services = "student" | "employer" | "ausbildung" | "fsj" | "fachkraft";
+import { Services } from "@/utils/models/service";
 
 const services: Record<
   Services,
