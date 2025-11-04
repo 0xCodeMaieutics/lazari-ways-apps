@@ -12,28 +12,28 @@ const services: Record<
   }
 > = {
   student: {
-    title: "For Students",
+    title: "სტუდენტური დასაქმება",
     description:
-      "We connect skilled professionals with verified employers across various industries and countries.",
+      "ჩვენ ვაკავშირებთ კვალიფიციურ პროფესიონალებს დამოწმებულ დამსაქმებლებთან სხვადასხვა ინდუსტრიასა და ქვეყანაში.",
   },
   employer: {
-    title: "For Employers",
+    title: "არასტუდენტური დასაქმება",
     description:
-      "Tailored job placement services for non-student applicants seeking international employment opportunities.",
+      "არასტუდენტი აპლიკანტებისთვის, რომლებიც საერთაშორისო დასაქმების შესაძლებლობებს ეძებენ, მორგებული დასაქმების სერვისები.",
   },
 
   ausbildung: {
-    title: "Ausbildung",
-    description: "Wir unterstützen Sie bei der Suche nach Ausbildungsplätzen.",
+    title: "ტრენინგი (Ausbildung)",
+    description: "ჩვენ გაწვდით დახმარებას ტრენინგის ადგილების ძიებაში.",
   },
   fsj: {
     title: "FSJ",
-    description: "Wir unterstützen Sie bei der Suche nach FSJ-Angeboten.",
+    description: "ჩვენ გაწვდით დახმარებას FSJ-შესაძლებლობების ძიებაში.",
   },
   fachkraft: {
-    title: "Fachkraft",
+    title: "სპეციალისტი (Fachkraft)",
     description:
-      "Comprehensive support for skilled workers seeking employment in Germany, including job matching and visa assistance.",
+      "გერმანიაში დასაქმების მაძიებელი კვალიფიციური მუშაკების ყოვლისმომცველი მხარდაჭერა, მათ შორის სამუშაოს შესაბამისობისა და ვიზის მიღებაში დახმარება.",
   },
 };
 
@@ -48,7 +48,7 @@ const ServiceCard = ({
 }) => {
   return (
     <Link href={`services/${type}`}>
-      <div className="group sm:h-[550px] rounded-lg overflow-hidden rounded-lg cursor-pointer border">
+      <div className="group sm:h-[600px] rounded-lg overflow-hidden rounded-lg cursor-pointer border">
         <div className="relative w-full h-[350px] overflow-hidden border">
           <Image
             // FIXME: change to proper images per service type when available
@@ -77,7 +77,7 @@ export const ServicesSection = () => {
             scrollSmoothlyToSection(SECTION_IDS.services);
           }}
         >
-          Our Services
+          ჩვენი სერვისები
         </SectionHeader>
         {/**
          * Service card information:

@@ -5,17 +5,24 @@ import { Footer } from "./footer";
 import { PropsWithChildren } from "react";
 import { i18n, Locale } from "@/i18n";
 import { getTranslations } from "@/i18n/translations";
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ lang: Locale }>;
-}) {
-  const { lang } = await params;
-  const t = await getTranslations(lang);
-  return {
-    title: t.hello,
-  };
-}
+
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: Promise<{ lang: Locale }>;
+// }) {
+//   const { lang } = await params;
+//   const t = await getTranslations(lang);
+//   return {
+//     title: t.hello,
+//   };
+// }
+
+export const metadata = {
+  title: "Lazari Ways - საკონსულტაციო ფირმა",
+  description:
+    "Lazari Ways - საკონსულტაციო ფირმა არის თქვენი სანდო პარტნიორი საერთაშორისო სამუშაოს განთავსებისა და დასაქმების სერვისებისათვის.",
+};
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }));

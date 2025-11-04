@@ -72,8 +72,7 @@ export const HomeClient = ({
 
         <ServicesSection />
 
-        {/* Contact */}
-        <section className="px-6 py-10 md:py-16">
+        <section id={SECTION_IDS.contact} className="px-6 py-10 md:py-16">
           <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-card shadow-lg bg-muted/30">
             <h2 className="text-3xl md:text-4xl font-bold">
               მზად ხართ დასაწყებად?
@@ -83,15 +82,15 @@ export const HomeClient = ({
               შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-              <Button
-                size="lg"
-                className="text-lg font-semibold h-12 px-10"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // TODO: Add application form link
-                }}
-              >
-                განაცხადის გაგზავნა
+              <Button size="lg" className="text-lg font-semibold h-12 px-10">
+                <a
+                  target="_blank"
+                  // FIXME: change the link to the actual application form
+                  href={"http://app.localhost:3000"}
+                  rel="noreferrer"
+                >
+                  განაცხადის გაგზავნა
+                </a>
                 <ExternalLink />
               </Button>
             </div>
