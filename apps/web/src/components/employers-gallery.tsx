@@ -15,7 +15,7 @@ const images = [
 const ImageCustom = ({ ...props }: ImageProps) => (
   <Image
     priority={false}
-    className="rounded-md object-cover"
+    className="rounded-md object-cover hover:scale-105 transition-transform duration-300"
     fill={true}
     sizes="350x400"
     {...props}

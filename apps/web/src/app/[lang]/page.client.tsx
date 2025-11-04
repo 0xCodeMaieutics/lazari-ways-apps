@@ -10,6 +10,7 @@ import { HeroVideo } from "@/components/hero-video";
 import { SectionHeader } from "@/components/section-header";
 
 import { createContext } from "react";
+import { ServicesSection } from "./_ui/services-section";
 
 const translationsContext = createContext<{
   translations: Record<string, string>;
@@ -25,6 +26,7 @@ export const HomeClient = ({
   return (
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full flex flex-col">
+        {/* Hero Section */}
         <section className="px-6 py-40 md:py-40">
           <div className="flex flex-col gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
             <div className="text-center md:text-left flex-1 space-y-6">
@@ -76,6 +78,9 @@ export const HomeClient = ({
           <EmployersGallery />
         </section>
 
+        <ServicesSection />
+
+        {/* How we work */}
         <section id={SECTION_IDS.howItWork} className="px-6 py-16 md:py-20">
           <div className="max-w-6xl mx-auto">
             <SectionHeader

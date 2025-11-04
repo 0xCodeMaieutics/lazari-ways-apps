@@ -20,4 +20,5 @@ export const SECTION_IDS = {
   advantages: "advantages",
   about: "about",
   contact: "contact",
+  services: "services",
 };
