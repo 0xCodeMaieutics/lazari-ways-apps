@@ -40,10 +40,16 @@ const servicesData: Record<Services, ServicePageData> = {
     ],
     reviews: [
       {
-        name: "Giorgi",
+        name: "ნინო ქათამაძე",
         rating: 5,
         review:
-          "This was amazing This was amazing This was amazing This was amazing This was amazing",
+          "ეს საოცარი იყო, მე და ჩემს მეგობრებს გერმანიაში შესანიშნავი სამუშაო მივიღეთ. Lazari Ways-მა ყველაფერი გააკეთა მარტივი და სტრესის გარეშე.",
+      },
+      {
+        name: "ნინო ქათამაძე",
+        rating: 5,
+        review:
+          "ეს საოცარი იყო, მე და ჩემს მეგობრებს გერმანიაში შესანიშნავი სამუშაო მივიღეთ. Lazari Ways-მა ყველაფერი გააკეთა მარტივი და სტრესის გარეშე.",
       },
     ],
   },
