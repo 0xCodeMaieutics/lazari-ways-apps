@@ -1,7 +1,5 @@
 "use client";
-import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
-import { WHATSAPP_TEXT, WHATSAPP_NUMBER, WHATSAPP_URL } from "./constants";
 import { ArrowDown, ExternalLink } from "lucide-react";
 import { EmployersGallery } from "@/components/employers-gallery";
 import { TypeAnimation } from "react-type-animation";
