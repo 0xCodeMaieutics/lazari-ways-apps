@@ -9,15 +9,9 @@ import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
 import { HeroVideo } from "@/components/hero-video";
 import { SectionHeader } from "@/components/section-header";
 
-import { createContext } from "react";
 import { ServicesSection } from "./_ui/services-section";
 import { HowDoWeWorkSection } from "./_ui/how-do-we-work-section";
-
-const translationsContext = createContext<{
-  translations: Record<string, string>;
-}>({
-  translations: {},
-});
+import { translationsContext } from "@/lib/context/translations";
 
 export const HomeClient = ({
   translations,

@@ -10,7 +10,9 @@ export const Footer = ({ translations }: { translations: Translations }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="flex flex-col gap-4">
             <TextLogo>{APP_NAME}</TextLogo>
-            <p>An employment agency that provides a wide range of services</p>
+            <p>
+              დასაქმების სააგენტო, რომელიც გთავაზობთ მომსახურების ფართო სპექტრს
+            </p>
           </div>
           <div className="flex md:justify-end gap-4 text-slate-600">
             <Link href="#" aria-label="Instagram" className="hover:text-black">
