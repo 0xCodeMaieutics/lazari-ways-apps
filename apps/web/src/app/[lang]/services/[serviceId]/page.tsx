@@ -44,12 +44,16 @@ const servicesData: Record<Services, ServicePageData> = {
         rating: 5,
         review:
           "ეს საოცარი იყო, მე და ჩემს მეგობრებს გერმანიაში შესანიშნავი სამუშაო მივიღეთ. Lazari Ways-მა ყველაფერი გააკეთა მარტივი და სტრესის გარეშე.",
+        instagram: "@nino.katamadze",
+        image: "/images/reviewers/reviewer-1.webp",
       },
       {
         name: "ნინო ქათამაძე",
         rating: 5,
         review:
           "ეს საოცარი იყო, მე და ჩემს მეგობრებს გერმანიაში შესანიშნავი სამუშაო მივიღეთ. Lazari Ways-მა ყველაფერი გააკეთა მარტივი და სტრესის გარეშე.",
+        instagram: "@nino.katamadze",
+        image: "/images/reviewers/reviewer-1.webp",
       },
     ],
   },

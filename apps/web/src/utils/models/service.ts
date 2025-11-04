@@ -15,5 +15,11 @@ export type ServicePageData = {
   requirements: string[];
   included: string[];
   photos?: string[];
-  reviews?: { name: string; review: string; rating: number }[];
+  reviews?: {
+    name: string;
+    review: string;
+    rating: number;
+    instagram?: string;
+    image?: string;
+  }[];
 };

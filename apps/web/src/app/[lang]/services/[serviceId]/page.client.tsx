@@ -12,15 +12,14 @@ import {
   Package,
   Star,
   User,
-  Link,
   ExternalLink,
+  Instagram,
 } from "lucide-react";
 import { ServicePageData } from "@/utils/models/service";
 import { SectionHeader } from "@/components/section-header";
 import { formatDistanceToNow } from "date-fns";
 
 import { ka } from "date-fns/locale"; // Georgian locale
-import { useParams } from "next/navigation";
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
 
@@ -31,8 +30,6 @@ export const ServicesClientPage = ({
   data: ServicePageData;
   translations: Translations;
 }) => {
-  const params = useParams();
-
   return (
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen">
@@ -207,13 +204,35 @@ export const ServicesClientPage = ({
                     <p className="text-base text-muted-foreground leading-relaxed italic">
                       &quot;{review.review}&quot;
                     </p>
-                    <div className="flex items-center gap-2 pt-2 border-t">
-                      <div className="p-2 rounded-full bg-primary/10">
-                        <User className="size-4 text-primary" />
+                    <div className="flex items-center justify-between pt-2 border-t">
+                      <div className="flex items-center gap-2">
+                        <div className="relative size-8 rounded-full bg-primary/10 overflow-hidden flex items-center justify-center">
+                          {review.image ? (
+                            <Image
+                              src={review.image}
+                              alt={review.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <User className="size-4 text-primary" />
+                          )}
+                        </div>
+                        <span className="font-semibold text-sm">
+                          {review.name}
+                        </span>
                       </div>
-                      <span className="font-semibold text-sm">
-                        {review.name}
-                      </span>
+                      {review.instagram && (
+                        <a
+                          href={`https://instagram.com/${review.instagram.replace("@", "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="p-2 rounded-full hover:bg-primary/10 transition-colors group"
+                          aria-label={`Visit ${review.name}'s Instagram`}
+                        >
+                          <Instagram className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                        </a>
+                      )}
                     </div>
                   </div>
                 ))}
