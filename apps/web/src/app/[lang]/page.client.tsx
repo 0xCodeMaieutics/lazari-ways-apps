@@ -65,7 +65,7 @@ export const HomeClient = ({
               scrollSmoothlyToSection(SECTION_IDS.gallery);
             }}
           >
-            Happy Employers
+            ჩვენი კლიენტების ფოტოები
           </SectionHeader>
           <EmployersGallery />
         </section>
@@ -73,7 +73,7 @@ export const HomeClient = ({
         <ServicesSection />
 
         <section id={SECTION_IDS.contact} className="px-6 py-10 md:py-16">
-          <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-card shadow-lg bg-muted/30">
+          <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-muted/50 shadow-lg">
             <h2 className="text-3xl md:text-4xl font-bold">
               მზად ხართ დასაწყებად?
             </h2>

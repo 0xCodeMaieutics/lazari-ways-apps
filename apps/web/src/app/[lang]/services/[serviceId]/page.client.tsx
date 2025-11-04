@@ -14,6 +14,7 @@ import {
   User,
   ExternalLink,
   Instagram,
+  ArrowLeft,
 } from "lucide-react";
 import { ServicePageData } from "@/utils/models/service";
 import { SectionHeader } from "@/components/section-header";
@@ -22,6 +23,7 @@ import { formatDistanceToNow } from "date-fns";
 import { ka } from "date-fns/locale"; // Georgian locale
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
+import Link from "next/link";
 
 export const ServicesClientPage = ({
   data,
@@ -35,6 +37,20 @@ export const ServicesClientPage = ({
       <main className="min-h-screen">
         {/* Hero Section */}
         <section className="px-6 py-24 md:py-30 max-w-6xl mx-auto">
+          <div className="py-5">
+            <Button
+              size={"lg"}
+              asChild
+              variant={"link"}
+              className="flex items-center gap-2 h-12 text-xl font-semibold max-w-max mr-auto"
+            >
+              <Link href="/">
+                <ArrowLeft />
+                დაბრუნება
+              </Link>
+            </Button>
+          </div>
+
           <div className="flex flex-col gap-12 lg:gap-20 md:flex-row md:items-center">
             <div className="text-center md:text-left flex-1 space-y-6">
               <div className="tracking-tight space-y-3">

@@ -19,7 +19,7 @@ export default function NotFound() {
         <Button
           size={"lg"}
           asChild
-          value={"link"}
+          variant={"link"}
           className="flex items-center gap-2 h-12 text-xl font-semibold"
         >
           <Link href="/" className="max-w-max mx-auto">
