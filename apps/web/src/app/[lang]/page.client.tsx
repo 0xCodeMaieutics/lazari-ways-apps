@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
 import { WHATSAPP_TEXT, WHATSAPP_NUMBER, WHATSAPP_URL } from "./constants";
-import { ArrowDown } from "lucide-react";
+import { ArrowDown, ExternalLink } from "lucide-react";
 import { EmployersGallery } from "@/components/employers-gallery";
 import { TypeAnimation } from "react-type-animation";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
@@ -10,7 +10,6 @@ import { HeroVideo } from "@/components/hero-video";
 import { SectionHeader } from "@/components/section-header";
 
 import { ServicesSection } from "./_ui/services-section";
-import { HowDoWeWorkSection } from "./_ui/how-do-we-work-section";
 import { translationsContext } from "@/lib/context/translations";
 
 export const HomeClient = ({
@@ -74,102 +73,29 @@ export const HomeClient = ({
         </section>
 
         <ServicesSection />
-        <HowDoWeWorkSection />
-        {/* Advantages */}
-        <section id={SECTION_IDS.advantages} className="px-6 py-16 md:py-20">
-          <div className="max-w-6xl mx-auto">
-            <SectionHeader
-              onClick={() => {
-                scrollSmoothlyToSection(SECTION_IDS.advantages);
-              }}
-            >
-              What sets us apart?
-            </SectionHeader>
-            <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="rounded-lg border p-6 ">
-                <h3 className="font-medium">Human-centered approach</h3>
-                <p className="mt-2 text-slate-700">
-                  We focus on your goals and long-term success.
-                </p>
-              </div>
-              <div className="rounded-lg border p-6 ">
-                <h3 className="font-medium">Verified employers</h3>
-                <p className="mt-2 text-slate-700">
-                  Work only with trusted partners across multiple countries.
-                </p>
-              </div>
-              <div className="rounded-lg border p-6 ">
-                <h3 className="font-medium">End-to-end support</h3>
-                <p className="mt-2 text-slate-700">
-                  From application to relocation and beyond.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-        {/* About Us */}
-        <section id={SECTION_IDS.about} className="px-6 py-16 md:py-20">
-          <div className="max-w-6xl mx-auto">
-            <SectionHeader
-              onClick={() => {
-                scrollSmoothlyToSection(SECTION_IDS.about);
-              }}
-            >
-              {translations["aboutUs.title"]}
-            </SectionHeader>
-            <div className="mt-6 space-y-4 text-slate-700">
-              <p>{translations["aboutUs.p1"]}</p>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="rounded-lg border p-4  text-center">
-                  <div className="text-2xl font-bold">11+</div>
-                  <div className="text-sm text-slate-500">
-                    Years of active work
-                  </div>
-                </div>
-                <div className="rounded-lg border p-4  text-center">
-                  <div className="text-2xl font-bold">1270</div>
-                  <div className="text-sm text-slate-500">
-                    Verified employers
-                  </div>
-                </div>
-                <div className="rounded-lg border p-4  text-center">
-                  <div className="text-2xl font-bold">8940</div>
-                  <div className="text-sm text-slate-500">
-                    Employed customers
-                  </div>
-                </div>
-                <div className="rounded-lg border p-4  text-center">
-                  <div className="text-2xl font-bold">18</div>
-                  <div className="text-sm text-slate-500">
-                    Countries for employment
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Contact */}
-        <section id={SECTION_IDS.contact} className="px-6 pb-16">
-          <div className="max-w-6xl mx-auto text-center border py-10 rounded-xl bg-accent text-accent-foreground">
-            <h2 className="text-background text-2xl md:text-3xl font-semibold">
-              Ready to start?
+        <section className="px-6 py-10 md:py-16">
+          <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-card shadow-lg bg-muted/30">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              მზად ხართ დასაწყებად?
             </h2>
-            <p className="mt-3 text-muted-foreground">
-              Reach out and we will get back to you shortly.
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
+              შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
             </p>
-            <div className="mt-6 flex items-center justify-center gap-3">
-              <Button asChild>
-                <Link
-                  href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
-                  target="_blank"
-                >
-                  WhatsApp
-                </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+              <Button
+                size="lg"
+                className="text-lg font-semibold h-12 px-10"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // TODO: Add application form link
+                }}
+              >
+                განაცხადის გაგზავნა
+                <ExternalLink />
               </Button>
-              {/* <Button asChild variant={"outline"}>
-              <Link href="mailto:contact@example.com">Email us</Link>
-            </Button> */}
             </div>
           </div>
         </section>
