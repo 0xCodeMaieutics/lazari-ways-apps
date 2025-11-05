@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -8,7 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@workspace/ui/components/sheet";
-import { Menu } from "lucide-react";
+import { Menu, Phone, PhoneCall, PhoneIcon } from "lucide-react";
 
 import { ExternalLink } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
@@ -23,8 +24,6 @@ import {
 import { useState } from "react";
 import { sleep } from "@/utils/sleep";
 import { Translations } from "@/i18n/translations";
-
-const APP_TAGLINE = "Connecting Talent with the World.";
 
 const WhatsappButton = () => (
   <Button
@@ -51,12 +50,12 @@ export const Header = ({ translations }: { translations: Translations }) => {
   const [open, setOpen] = useState(false);
   const NAV_LINKS = [
     {
-      href: SECTION_IDS.about,
-      label: translations.about,
+      href: SECTION_IDS.services,
+      label: "სერვისები",
     },
     {
       href: SECTION_IDS.contact,
-      label: translations.contact,
+      label: "კონტაქტი",
     },
   ];
 
@@ -82,18 +81,32 @@ export const Header = ({ translations }: { translations: Translations }) => {
         </nav>
         <div className="hidden sm:block">
           <WhatsappButton />
-          {/* <Image src={"/whatsapp2.png"} width={32} height={32} alt="Whatsapp" /> */}
         </div>
+
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger asChild>
-            <button className="sm:hidden">
-              <Menu size={24} />
-            </button>
-          </SheetTrigger>
-          <SheetContent className="w-full">
+          <div className="sm:hidden flex items-center gap-4">
+            <SheetTrigger asChild>
+              <button>
+                <Menu size={24} />
+              </button>
+            </SheetTrigger>
+            <a
+              href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex size-8 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
+            >
+              <PhoneIcon size={24} className="text-white" />
+            </a>
+          </div>
+          <SheetContent className="w-full py-10">
             <SheetHeader>
-              <SheetTitle>{APP_NAME}</SheetTitle>
-              <SheetDescription>{APP_TAGLINE}</SheetDescription>
+              <SheetTitle>
+                <TextLogo>{APP_NAME}</TextLogo>
+              </SheetTitle>
+              <SheetDescription className="max-w-xs">
+                სამუშაოს მაძიებლების დაკავშირება გერმანიასთან
+              </SheetDescription>
             </SheetHeader>
             <div className="flex flex-col items-center gap-y-3 mt-6">
               {NAV_LINKS.map((link) => (
