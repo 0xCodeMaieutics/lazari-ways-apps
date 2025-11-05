@@ -1,5 +1,12 @@
 "use client";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
 import { ArrowDown, ExternalLink } from "lucide-react";
 import { EmployersGallery } from "@/components/employers-gallery";
 import { TypeAnimation } from "react-type-animation";
@@ -73,15 +80,17 @@ export const HomeClient = ({
         <ServicesSection />
 
         <section id={SECTION_IDS.contact} className="px-6 py-10 md:py-16">
-          <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-muted/50 shadow-lg">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              მზად ხართ დასაწყებად?
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
-              შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <Card className="max-w-6xl mx-auto text-center shadow-lg">
+            <CardHeader className="space-y-6 p-8 md:p-12">
+              <CardTitle className="text-3xl md:text-4xl font-bold">
+                მზად ხართ დასაწყებად?
+              </CardTitle>
+              <CardDescription className="text-lg max-w-2xl mx-auto">
+                გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
+                შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col sm:flex-row gap-4 justify-center pb-8 md:pb-12">
               <Button size="lg" className="text-lg font-semibold h-12 px-10">
                 <a
                   target="_blank"
@@ -93,8 +102,8 @@ export const HomeClient = ({
                 </a>
                 <ExternalLink />
               </Button>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </section>
       </main>
     </translationsContext.Provider>

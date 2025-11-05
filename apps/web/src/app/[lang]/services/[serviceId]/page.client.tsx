@@ -24,6 +24,13 @@ import { ka } from "date-fns/locale"; // Georgian locale
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
 import Link from "next/link";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@workspace/ui/components/card";
 
 export const ServicesClientPage = ({
   data,
@@ -258,15 +265,17 @@ export const ServicesClientPage = ({
         )}
         {/* CTA Section */}
         <section className="px-6 py-10 md:py-16">
-          <div className="max-w-6xl mx-auto text-center space-y-6 p-8 md:p-12 rounded-2xl border bg-card shadow-lg bg-muted/30">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              მზად ხართ დასაწყებად?
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
-              შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+          <Card className="max-w-6xl mx-auto shadow-lg bg-muted/30">
+            <CardHeader className="text-center space-y-4 p-8 md:p-12">
+              <CardTitle className="text-3xl md:text-4xl font-bold">
+                მზად ხართ დასაწყებად?
+              </CardTitle>
+              <CardDescription className="text-lg max-w-2xl mx-auto">
+                გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
+                შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col sm:flex-row gap-4 justify-center pb-8 md:pb-12">
               <Button
                 size="lg"
                 className="text-lg font-semibold h-12 px-10"
@@ -278,8 +287,8 @@ export const ServicesClientPage = ({
                 განაცხადის გაგზავნა
                 <ExternalLink />
               </Button>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </section>
       </main>
     </translationsContext.Provider>
