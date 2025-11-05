@@ -17,6 +17,7 @@ import { SectionHeader } from "@/components/section-header";
 import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
 import { ContactVideo } from "@/components/contact-video";
+import { VacancySection } from "@/components/vacancies";
 
 export const HomeClient = ({
   translations,
@@ -80,6 +81,10 @@ export const HomeClient = ({
 
         <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">
           <ServicesSection />
+        </section>
+
+        <section id={SECTION_IDS.vacancies} className="px-6 py-16 md:py-24">
+          <VacancySection />
         </section>
 
         <section
