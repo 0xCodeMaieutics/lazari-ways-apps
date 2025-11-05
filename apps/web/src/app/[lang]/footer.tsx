@@ -10,7 +10,7 @@ export const Footer = ({ translations }: { translations: Translations }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="flex flex-col gap-4">
             <TextLogo>{APP_NAME}</TextLogo>
-            <p>
+            <p className="md:max-w-lg">
               დასაქმების სააგენტო, რომელიც გთავაზობთ მომსახურების ფართო სპექტრს
             </p>
           </div>
