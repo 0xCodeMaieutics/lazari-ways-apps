@@ -26,9 +26,9 @@ export const HomeClient = ({
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full flex flex-col">
         {/* Hero Section */}
-        <section className="px-6 py-40 md:py-40">
+        <section className="px-6 py-40">
           <div className="flex flex-col gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
-            <div className="text-center md:text-left flex-1 space-y-6">
+            <div className="text-center md:text-left flex-1">
               <div className="text-4xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
                 <div className="h-[42px] md:h-[70px]">
@@ -63,28 +63,30 @@ export const HomeClient = ({
         </section>
 
         {/* Gallery */}
-        <section
-          id={SECTION_IDS.gallery}
-          className="w-full space-y-6 max-w-6xl mx-auto px-6"
-        >
-          <SectionHeader
-            onClick={() => {
-              scrollSmoothlyToSection(SECTION_IDS.gallery);
-            }}
-          >
-            ჩვენი კლიენტების ფოტოები
-          </SectionHeader>
-          <EmployersGallery />
+        <section id={SECTION_IDS.gallery} className="px-6 py-16 md:py-24">
+          <div className="w-full max-w-6xl mx-auto">
+            <SectionHeader
+              onClick={() => {
+                scrollSmoothlyToSection(SECTION_IDS.gallery);
+              }}
+              className="max-w-xs bg-red-200"
+            >
+              ჩვენი კლიენტების ფოტოები
+            </SectionHeader>
+            <EmployersGallery />
+          </div>
         </section>
 
-        <ServicesSection />
+        <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">
+          <ServicesSection />
+        </section>
 
         <section
           id={SECTION_IDS.contact}
           className="px-6 py-16 md:py-24 bg-secondary"
         >
           <Card className="max-w-6xl mx-auto text-center shadow-lg">
-            <CardHeader className="space-y-6 p-8 md:p-12">
+            <CardHeader className=" p-8 md:p-12">
               <CardTitle className="text-3xl md:text-4xl font-bold">
                 მზად ხართ დასაწყებად?
               </CardTitle>

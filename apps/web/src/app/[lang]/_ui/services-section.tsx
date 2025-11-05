@@ -70,39 +70,37 @@ const ServiceCard = ({
 
 export const ServicesSection = () => {
   return (
-    <section id={SECTION_IDS.services} className="px-6 py-16 md:py-20">
-      <div className="max-w-6xl mx-auto">
-        <SectionHeader
-          onClick={() => {
-            scrollSmoothlyToSection(SECTION_IDS.services);
-          }}
-        >
-          ჩვენი სერვისები
-        </SectionHeader>
-        {/**
-         * Service card information:
-         * 1. title
-         * 2. description
-         * 3. picture
-         *
-         * Services list:
-         * 1. For Students - We connect skilled professionals with verified employers across various industries and countries.
-         * 2. For Non-student - Tailored job placement services for non-student applicants seeking international employment opportunities.
-         * 3. Ausbildung - Specialized recruitment for vocational training positions in Germany, connecting candidates with reputable companies.
-         * 4. FSJ - Facilitating placements in voluntary social year programs in Germany for personal and professional growth.
-         * 5. Fachkraft - Comprehensive support for skilled workers seeking employment in Germany, including job matching and visa assistance.
-         */}
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {Object.entries(services).map(([type, service]) => (
-            <ServiceCard
-              key={service.title}
-              title={service.title}
-              description={service.description}
-              type={type as Services}
-            />
-          ))}
-        </div>
+    <div className="max-w-6xl mx-auto">
+      <SectionHeader
+        onClick={() => {
+          scrollSmoothlyToSection(SECTION_IDS.services);
+        }}
+      >
+        ჩვენი სერვისები
+      </SectionHeader>
+      {/**
+       * Service card information:
+       * 1. title
+       * 2. description
+       * 3. picture
+       *
+       * Services list:
+       * 1. For Students - We connect skilled professionals with verified employers across various industries and countries.
+       * 2. For Non-student - Tailored job placement services for non-student applicants seeking international employment opportunities.
+       * 3. Ausbildung - Specialized recruitment for vocational training positions in Germany, connecting candidates with reputable companies.
+       * 4. FSJ - Facilitating placements in voluntary social year programs in Germany for personal and professional growth.
+       * 5. Fachkraft - Comprehensive support for skilled workers seeking employment in Germany, including job matching and visa assistance.
+       */}
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {Object.entries(services).map(([type, service]) => (
+          <ServiceCard
+            key={service.title}
+            title={service.title}
+            description={service.description}
+            type={type as Services}
+          />
+        ))}
       </div>
-    </section>
+    </div>
   );
 };
