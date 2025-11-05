@@ -29,7 +29,7 @@ export const HomeClient = ({
         {/* Hero Section */}
         <section className="px-6 py-40">
           <div className="flex flex-col gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
-            <div className="text-center md:text-left flex-1">
+            <div className="text-center space-y-6 md:text-left flex-1">
               <div className="text-4xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
                 <div className="h-[42px] md:h-[70px]">
@@ -86,7 +86,7 @@ export const HomeClient = ({
           id={SECTION_IDS.contact}
           className="px-6 py-16 md:py-24 bg-secondary mt-8 md:mt-16"
         >
-          <Card className="max-w-6xl mx-auto text-center shadow-lg pb-0 pt-0">
+          <Card className="max-w-6xl mx-auto text-center shadow-lg">
             <div className="flex flex-col lg:flex-row p-8 md:p-16">
               <div className="flex-1 flex flex-col justify-center">
                 <CardHeader className=" p-8 md:p-12">
