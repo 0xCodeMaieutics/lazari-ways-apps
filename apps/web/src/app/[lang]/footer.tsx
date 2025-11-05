@@ -14,7 +14,7 @@ export const Footer = ({ translations }: { translations: Translations }) => {
               დასაქმების სააგენტო, რომელიც გთავაზობთ მომსახურების ფართო სპექტრს
             </p>
           </div>
-          <div className="flex md:justify-end gap-4 text-slate-600">
+          <div className="flex flex-col md:flex-row md:justify-end gap-4 text-slate-600">
             <Link href="#" aria-label="Instagram" className="hover:text-black">
               Instagram
             </Link>
