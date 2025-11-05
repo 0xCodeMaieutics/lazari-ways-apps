@@ -15,7 +15,10 @@ import {
   Building2,
   CheckCircle2,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 /**
  * Vacancy Data:
@@ -37,11 +40,11 @@ interface Vacancy {
   priceInEuro: [number, number];
   requirements: string[];
   benefits: string[];
-  location: string;
-  company: string;
   employmentType: EmploymentType;
-  icon?: string;
+  imageUrl?: string;
 }
+
+const vacancyImageUrl = (filename: string) => `/images/vacancies/${filename}`;
 
 const vacancies: Record<string, Vacancy> = {
   hotels: {
@@ -59,10 +62,9 @@ const vacancies: Record<string, Vacancy> = {
       "საცხოვრებლის დახმარება",
       "კარიერული ზრდის შესაძლებლობა",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "🏨",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   bakery: {
     title: "საცხობები",
@@ -79,10 +81,9 @@ const vacancies: Record<string, Vacancy> = {
       "ტრენინგის პროგრამები",
       "მეგობრული გუნდი",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "🥖",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   restaurant: {
     title: "რესტორნები",
@@ -95,10 +96,9 @@ const vacancies: Record<string, Vacancy> = {
       "გერმანული ენის საბაზისო ცოდნა",
     ],
     benefits: ["საკვების ფასდაკლება", "მოქნილი გრაფიკი", "კარიერული წინსვლა"],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "🍽️",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   mcdonalds: {
     title: "McDonald's",
@@ -115,10 +115,8 @@ const vacancies: Record<string, Vacancy> = {
       "ტრენინგი და სერტიფიკატები",
       "კარიერული ზრდა",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
     employmentType: "full-time",
-    icon: "🍔",
+    imageUrl: vacancyImageUrl("mcdonalds.webp"),
   },
   cafe: {
     title: "კაფეები",
@@ -131,10 +129,8 @@ const vacancies: Record<string, Vacancy> = {
       "გერმანული ენის საბაზისო ცოდნა",
     ],
     benefits: ["კეთილი სამუშაო გარემო", "ბონუსები და პრემიები", "ტრენინგი"],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
     employmentType: "full-time",
-    icon: "☕",
+    imageUrl: vacancyImageUrl("cafe.webp"),
   },
   gasStation: {
     title: "ავტოგასამართი სადგურები",
@@ -147,10 +143,9 @@ const vacancies: Record<string, Vacancy> = {
       "საბაზისო გერმანული ენა",
     ],
     benefits: ["ღამის ზედნადები", "ჯანდაცვის დაზღვევა", "სტაბილური შემოსავალი"],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "⛽",
+    imageUrl: "/images/vacancies/gas-station.webp",
   },
   restStop: {
     title: "გზის კაფეები (Raststätte)",
@@ -167,10 +162,9 @@ const vacancies: Record<string, Vacancy> = {
       "სტაბილური შემოსავალი",
       "ტრანსპორტის კომპენსაცია",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "🛣️",
+    imageUrl: "/images/vacancies/rest-stop.webp",
   },
   factory: {
     title: "ქარხნები",
@@ -187,10 +181,9 @@ const vacancies: Record<string, Vacancy> = {
       "ზეგანაკვეთური ანაზღაურება",
       "სტაბილური დასაქმება",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "🏭",
+    imageUrl: "/images/vacancies/factory.webp",
   },
   warehouse: {
     title: "საწყობები (Lager)",
@@ -207,10 +200,9 @@ const vacancies: Record<string, Vacancy> = {
       "შიფთების ზედნადები",
       "კარიერული ზრდა",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "📦",
+    imageUrl: "/images/vacancies/warehouse.webp",
   },
   childrenAnimator: {
     title: "ბავშვთა ანიმატორი",
@@ -223,10 +215,9 @@ const vacancies: Record<string, Vacancy> = {
       "გერმანული ენის ცოდნა",
     ],
     benefits: ["საინტერესო სამუშაო", "მეგობრული გარემო", "მოქნილი გრაფიკი"],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "part-time",
-    icon: "🎨",
+    imageUrl: "/images/vacancies/children-animator.webp",
   },
   kindergartenAssistant: {
     title: "საბავშვო ბაღის თანაშემწე",
@@ -243,12 +234,13 @@ const vacancies: Record<string, Vacancy> = {
       "პროფესიული განვითარება",
       "ჯანდაცვის დაზღვევა",
     ],
-    location: "გერმანიის სხვადასხვა ქალაქი",
-    company: "Lazari Ways GmbH",
+
     employmentType: "full-time",
-    icon: "👶",
+    imageUrl: "/images/vacancies/kindergarten.webp",
   },
 } as const;
+
+type VacanciesKey = keyof typeof vacancies;
 
 const employmentTypeLabels: Record<EmploymentType, string> = {
   "full-time": "სრული განაკვეთი",
@@ -257,22 +249,35 @@ const employmentTypeLabels: Record<EmploymentType, string> = {
   internship: "სტაჟირება",
 };
 
-const VacancyCard = ({ vacancy }: { vacancy: Vacancy }) => {
+const VacancyCard = ({
+  vacancy,
+  id,
+}: {
+  vacancy: Vacancy;
+  id: VacanciesKey;
+}) => {
   return (
-    <Card className="group h-full hover:shadow-lg transition-shadow duration-300">
+    <Card className="group h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
+      {vacancy.imageUrl && (
+        <div className="relative w-full h-[300px] overflow-hidden">
+          <Image
+            src={vacancy.imageUrl}
+            alt={vacancy.title}
+            fill={true}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        </div>
+      )}
+
       <CardHeader className="space-y-3">
-        <div className="flex items-start justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-start md:justify-between gap-2">
           <div className="flex items-center gap-2">
-            {vacancy.icon && (
-              <span className="text-3xl" aria-hidden="true">
-                {vacancy.icon}
-              </span>
-            )}
-            <CardTitle className="text-xl group-hover:text-primary transition-colors">
+            <CardTitle className="text-xl transition-colors">
               {vacancy.title}
             </CardTitle>
           </div>
-          <span className="shrink-0 px-2.5 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-md">
+          <span className="max-w-max shrink-0 px-2.5 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-md">
             {employmentTypeLabels[vacancy.employmentType]}
           </span>
         </div>
@@ -294,20 +299,11 @@ const VacancyCard = ({ vacancy }: { vacancy: Vacancy }) => {
           </div>
         </div>
 
-        {/* Location */}
-        <div className="flex items-center gap-2 text-sm">
-          <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-muted-foreground">{vacancy.location}</span>
-        </div>
-
-        {/* Company */}
-        <div className="flex items-center gap-2 text-sm">
-          <Building2 className="h-4 w-4 text-muted-foreground shrink-0" />
-          <span className="text-muted-foreground">{vacancy.company}</span>
-        </div>
-
+        {/**
+         * TODO: create vacancy detail page and more the requirements and benefits there
+         * */}
         {/* Requirements */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-muted-foreground" />
             <h4 className="font-semibold text-sm">მოთხოვნები</h4>
@@ -323,10 +319,10 @@ const VacancyCard = ({ vacancy }: { vacancy: Vacancy }) => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
         {/* Benefits */}
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 text-primary" />
             <h4 className="font-semibold text-sm">უპირატესობები</h4>
@@ -342,12 +338,20 @@ const VacancyCard = ({ vacancy }: { vacancy: Vacancy }) => {
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
 
-        {/* Apply Button */}
-        <Button className="w-full" variant="default">
-          განაცხადის გაკეთება
-        </Button>
+        <div className="flex justify-center">
+          <Button
+            className="max-w-xs mx-auto text-xl font-semibold h-12"
+            size={"lg"}
+            asChild
+          >
+            <Link href={`/vacancies/${id}`}>
+              დეტალურად
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
@@ -364,9 +368,9 @@ export const VacancySection = () => {
         ვაკანსიები
       </SectionHeader>
 
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.values(vacancies).map((vacancy, index) => (
-          <VacancyCard key={index} vacancy={vacancy} />
+      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {Object.entries(vacancies).map(([id, vacancy], index) => (
+          <VacancyCard key={index} vacancy={vacancy} id={id} />
         ))}
       </div>
     </div>
