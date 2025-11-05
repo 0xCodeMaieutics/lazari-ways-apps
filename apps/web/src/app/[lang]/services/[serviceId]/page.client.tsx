@@ -264,7 +264,7 @@ export const ServicesClientPage = ({
           </section>
         )}
         {/* CTA Section */}
-        <section className="px-6 py-10 md:py-16">
+        <section className="px-6 py-16 md:py-24 bg-secondary">
           <Card className="max-w-6xl mx-auto shadow-lg bg-muted/30">
             <CardHeader className="text-center space-y-4 p-8 md:p-12">
               <CardTitle className="text-3xl md:text-4xl font-bold">

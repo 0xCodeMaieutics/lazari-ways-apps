@@ -79,7 +79,10 @@ export const HomeClient = ({
 
         <ServicesSection />
 
-        <section id={SECTION_IDS.contact} className="px-6 py-10 md:py-16">
+        <section
+          id={SECTION_IDS.contact}
+          className="px-6 py-16 md:py-24 bg-secondary"
+        >
           <Card className="max-w-6xl mx-auto text-center shadow-lg">
             <CardHeader className="space-y-6 p-8 md:p-12">
               <CardTitle className="text-3xl md:text-4xl font-bold">
