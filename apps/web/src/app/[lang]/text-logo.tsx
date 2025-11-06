@@ -5,7 +5,7 @@ export const Underline = () => (
 );
 export const TextLogo = ({ children }: PropsWithChildren) => {
   return (
-    <button className="relative group text-primary text-3xl font-bold max-w-max cursor-pointer pb-2">
+    <button className="relative group text-primary text-2xl sm:text-3xl font-bold max-w-max cursor-pointer pb-2">
       {children}
       <Underline />
     </button>

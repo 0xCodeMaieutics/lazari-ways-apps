@@ -6,7 +6,7 @@ import { Translations } from "@/i18n/translations";
 export const Footer = ({ translations }: { translations: Translations }) => {
   return (
     <footer className="mt-auto border-t">
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="flex flex-col gap-4">
             <TextLogo>{APP_NAME}</TextLogo>

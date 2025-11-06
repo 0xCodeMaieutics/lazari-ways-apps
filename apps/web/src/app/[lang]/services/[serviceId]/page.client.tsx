@@ -32,6 +32,7 @@ import {
   CardContent,
 } from "@workspace/ui/components/card";
 import { ContactVideo } from "@/components/contact-video";
+import { useParams } from "next/navigation";
 
 export const ServicesClientPage = ({
   data,
@@ -40,12 +41,13 @@ export const ServicesClientPage = ({
   data: ServicePageData;
   translations: Translations;
 }) => {
+  const { lang } = useParams();
   return (
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full">
         {/* Hero Section */}
-        <section className="px-6 py-24 md:py-30">
-          <div className="max-w-6xl mx-auto">
+        <section className="px-6 py-16 md:py-24">
+          <div className="max-w-7xl mx-auto">
             <div className="py-5">
               <Button
                 size={"lg"}
@@ -53,7 +55,7 @@ export const ServicesClientPage = ({
                 variant={"link"}
                 className="flex items-center gap-2 h-12 text-xl font-semibold max-w-max mr-auto"
               >
-                <Link href="/">
+                <Link href={`/${lang}#services`}>
                   <ArrowLeft />
                   დაბრუნება
                 </Link>
@@ -140,7 +142,7 @@ export const ServicesClientPage = ({
         </section>
         {/* Requirements Section */}
         <section id={SECTION_IDS.requirements} className="px-6 py-10">
-          <div className="md:py-16 max-w-6xl mx-auto">
+          <div className="md:py-16 max-w-7xl mx-auto">
             <SectionHeader
               onClick={() => scrollSmoothlyToSection(SECTION_IDS.requirements)}
             >
@@ -161,7 +163,7 @@ export const ServicesClientPage = ({
         </section>
         {/* What's Included Section */}
         <section className="px-6 py-10">
-          <div className="md:py-16 max-w-6xl mx-auto">
+          <div className="md:py-16 max-w-7xl mx-auto">
             <SectionHeader>რას მიიღებთ?</SectionHeader>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {data.included.map((item, index) => (
@@ -185,7 +187,7 @@ export const ServicesClientPage = ({
         {/* Photos Gallery Section */}
         {data.photos && data.photos.length > 0 && (
           <section className="px-6 py-10">
-            <div className="max-w-6xl mx-auto py-10 md:py-16 rounded-xl">
+            <div className="max-w-7xl mx-auto py-10 md:py-16 rounded-xl">
               <SectionHeader>ჩვენი კლიენტების ფოტოები</SectionHeader>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {data.photos.map((photo, index) => (
@@ -207,7 +209,7 @@ export const ServicesClientPage = ({
         )}
         {/* Reviews Section */}
         {data.reviews && data.reviews.length > 0 && (
-          <section className="px-6 py-10 md:py-16 max-w-6xl mx-auto">
+          <section className="px-6 py-10 md:py-16 max-w-7xl mx-auto">
             <div className="space-y-8">
               <SectionHeader>რას ამბობენ ჩვენი კლიენტები</SectionHeader>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -270,7 +272,7 @@ export const ServicesClientPage = ({
         )}
         {/* CTA Section */}
         <section className="w-full px-6 py-16 md:py-24 bg-secondary mt-8 md:mt-16">
-          <Card className="max-w-6xl mx-auto text-center shadow-lg pb-0 pt-0">
+          <Card className="max-w-7xl mx-auto text-center shadow-lg pb-0 pt-0">
             <div className="flex flex-col lg:flex-row p-8 md:p-16">
               <div className="flex-1 flex flex-col justify-center">
                 <CardHeader className="text-center space-y-4 p-8 md:p-12">

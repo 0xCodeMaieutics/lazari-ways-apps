@@ -1,21 +1,12 @@
-import { scrollSmoothlyToSection, SECTION_IDS } from "@/app/[lang]/utils";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
-import { Button } from "@workspace/ui/components/button";
-import { Euro, ArrowRight } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { SectionHeader } from "@/components/section-header";
-import { EmploymentType, Vacancy } from "@/utils/models/vacancy";
+import { notFound } from "next/navigation";
+import { VacanciesClientPage } from "./page.client";
+import { getTranslations } from "@/i18n/translations";
+import { Locale } from "@/i18n";
+import { Vacancy } from "@/utils/models/vacancy";
 
 const vacancyImageUrl = (filename: string) => `/images/vacancies/${filename}`;
 
-const vacancies: Record<string, Vacancy> = {
+const vacanciesData: Record<string, Vacancy> = {
   hotels: {
     title: "სასტუმროები",
     description:
@@ -209,139 +200,22 @@ const vacancies: Record<string, Vacancy> = {
   },
 } as const;
 
-type VacanciesKey = keyof typeof vacancies;
+type VacanciesKey = keyof typeof vacanciesData;
 
-const employmentTypeLabels: Record<EmploymentType, string> = {
-  "full-time": "სრული განაკვეთი",
-  "part-time": "ნახევარი განაკვეთი",
-  temporary: "დროებითი",
-  internship: "სტაჟირება",
-};
-
-const VacancyCard = ({
-  vacancy,
-  id,
+export default async function VacanciesDetailPage({
+  params,
 }: {
-  vacancy: Vacancy;
-  id: VacanciesKey;
-}) => {
-  return (
-    <Card className="group h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
-      {vacancy.imageUrl && (
-        <div className="relative w-full h-[300px] overflow-hidden">
-          <Image
-            src={vacancy.imageUrl}
-            alt={vacancy.title}
-            fill={true}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-        </div>
-      )}
+  params: Promise<{ lang: Locale; vacancyId: VacanciesKey }>;
+}) {
+  const { lang, vacancyId } = await params;
 
-      <CardHeader className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-start md:justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-xl transition-colors">
-              {vacancy.title}
-            </CardTitle>
-          </div>
-          <span className="max-w-max shrink-0 px-2.5 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-md">
-            {employmentTypeLabels[vacancy.employmentType]}
-          </span>
-        </div>
-        {/* Salary Info */}
-        <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
-          <Euro className="h-5 w-5 text-primary shrink-0" />
-          <div>
-            <p className="text-sm text-muted-foreground">ანაზღაურება</p>
-            <p className="font-semibold text-lg">
-              {vacancy.priceInEuro[0].toFixed(2)}€ -{" "}
-              {vacancy.priceInEuro[1].toFixed(2)}€/სთ
-            </p>
-          </div>
-        </div>
+  const translations = await getTranslations(lang, "services-detail");
 
-        <CardDescription className="text-base leading-relaxed">
-          {vacancy.description}
-        </CardDescription>
-      </CardHeader>
+  const data = vacanciesData[vacancyId];
 
-      <CardContent className="space-y-6">
-        {/**
-         * TODO: create vacancy detail page and more the requirements and benefits there
-         * */}
-        {/* Requirements */}
-        {/* <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <h4 className="font-semibold text-sm">მოთხოვნები</h4>
-          </div>
-          <ul className="space-y-1.5 ml-6">
-            {vacancy.requirements.slice(0, 3).map((req, idx) => (
-              <li
-                key={idx}
-                className="text-sm text-muted-foreground flex gap-2"
-              >
-                <span className="text-primary mt-1">•</span>
-                <span>{req}</span>
-              </li>
-            ))}
-          </ul>
-        </div> */}
+  if (!data) {
+    return notFound();
+  }
 
-        {/* Benefits */}
-        {/* <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <h4 className="font-semibold text-sm">უპირატესობები</h4>
-          </div>
-          <ul className="space-y-1.5 ml-6">
-            {vacancy.benefits.slice(0, 3).map((benefit, idx) => (
-              <li
-                key={idx}
-                className="text-sm text-muted-foreground flex gap-2"
-              >
-                <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <span>{benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-
-        <div className="flex justify-center">
-          <Button
-            className="max-w-xs mx-auto text-xl font-semibold h-12"
-            size={"lg"}
-            asChild
-          >
-            <Link href={`/vacancies/${id}`}>
-              დეტალურად
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-export const VacancySection = () => {
-  return (
-    <div className="max-w-6xl mx-auto">
-      <SectionHeader
-        onClick={() => {
-          scrollSmoothlyToSection(SECTION_IDS.vacancies);
-        }}
-      >
-        ვაკანსიები
-      </SectionHeader>
-
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 gap-6">
-        {Object.entries(vacancies).map(([id, vacancy], index) => (
-          <VacancyCard key={index} vacancy={vacancy} id={id} />
-        ))}
-      </div>
-    </div>
-  );
-};
+  return <VacanciesClientPage translations={translations} data={data} />;
+}
