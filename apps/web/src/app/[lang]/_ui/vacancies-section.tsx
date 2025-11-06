@@ -277,7 +277,7 @@ const VacancyCard = ({
           >
             <Link href={`/vacancies/${id}`}>
               დეტალურად
-              <div className="border border-primary rounded-full p-1 animate-bounce-right">
+              <div className="border border-primary rounded-full p-1 animate-bounce-left ml-1">
                 <ArrowRight className="size-4" />
               </div>
             </Link>

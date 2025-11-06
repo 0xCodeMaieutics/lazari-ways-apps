@@ -279,8 +279,8 @@ export const VacanciesClientPage = ({
                     asChild
                   >
                     <Link href={`/${lang}#vacancies`}>
-                      <ArrowLeft className="animate-bounce-left" />
                       სხვა ვაკანსიები
+                      <ArrowRight className="animate-bounce-left" />
                     </Link>
                   </Button>
                 </div>

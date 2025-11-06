@@ -72,7 +72,9 @@ const ServiceCard = ({
       >
         <Link href={`/services/${type}`}>
           დეტალურად
-          <ArrowRight className="animate-bounce-right size-4" />
+          <div className="border border-primary rounded-full p-1 animate-bounce-left ml-1">
+            <ArrowRight className="size-4" />
+          </div>
         </Link>
       </Button>
     </div>
