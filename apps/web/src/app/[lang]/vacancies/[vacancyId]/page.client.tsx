@@ -14,6 +14,7 @@ import {
   Sparkles,
   Award,
   Clock,
+  ArrowRight,
 } from "lucide-react";
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
@@ -239,10 +240,10 @@ export const VacanciesClientPage = ({
         {/* CTA Section with Video */}
         <section id="contact" className="w-full px-6 py-16 md:py-24">
           <Card className="max-w-7xl mx-auto shadow-2xl border-2 overflow-hidden">
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-0">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
               {/* Left - Content */}
-              <div className="flex flex-col justify-center p-8 md:p-12 lg:p-16 space-y-8">
-                <div className="space-y-4">
+              <div className="flex-1 flex flex-col justify-center p-8 md:p-12 lg:p-16 space-y-8">
+                <div className="space-y-4 text-center md:text-left">
                   <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
                     <Clock className="size-4" />
                     <span className="text-sm font-semibold">
@@ -269,7 +270,7 @@ export const VacanciesClientPage = ({
                     }}
                   >
                     განაცხადის გაგზავნა
-                    <ExternalLink className="size-5 group-hover:translate-x-1 transition-transform" />
+                    <ExternalLink className="size-5 animate-bounce" />
                   </Button>
                   <Button
                     size="lg"
@@ -277,7 +278,10 @@ export const VacanciesClientPage = ({
                     className="text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
                     asChild
                   >
-                    <Link href={`/${lang}#vacancies`}>სხვა ვაკანსიები</Link>
+                    <Link href={`/${lang}#vacancies`}>
+                      <ArrowLeft className="animate-bounce-left" />
+                      სხვა ვაკანსიები
+                    </Link>
                   </Button>
                 </div>
 
@@ -308,8 +312,7 @@ export const VacanciesClientPage = ({
                 </div>
               </div>
 
-              {/* Right - Video */}
-              <div className="relative lg:h-full min-h-[400px] bg-gradient-to-br from-primary/5 to-secondary/20">
+              <div className="flex flex-col justify-center items-center px-6 sm:pl-0">
                 <ContactVideo />
               </div>
             </div>

@@ -3,6 +3,8 @@ import { scrollSmoothlyToSection, SECTION_IDS } from "../utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Services } from "@/utils/models/service";
+import { Button } from "@workspace/ui/components/button";
+import { ArrowRight } from "lucide-react";
 
 const services: Record<
   Services,
@@ -45,28 +47,37 @@ const ServiceCard = ({
   title: string;
   description: string;
   type: Services;
-}) => {
-  return (
-    <Link href={`services/${type}`}>
-      <div className="group sm:h-[600px] rounded-lg overflow-hidden rounded-lg cursor-pointer border">
-        <div className="relative w-full h-[350px] overflow-hidden border">
-          <Image
-            // FIXME: change to proper images per service type when available
-            src={`/images/services/student.webp`}
-            alt={title}
-            fill={true}
-            sizes="382x348"
-            className="object-cover group-hover:scale-105 transition-transform duration-150"
-          />
-        </div>
-        <div className="space-y-1 py-6 px-6 sm:pb-0">
-          <h3 className="text-xl font-semibold">{title}</h3>
-          <p className="text-lg text-muted-foreground">{description}</p>
-        </div>
-      </div>
-    </Link>
-  );
-};
+}) => (
+  <div className="relative group sm:h-[670px] rounded-lg overflow-hidden rounded-lg border">
+    <div className="relative w-full h-[350px] overflow-hidden border">
+      <Image
+        // FIXME: change to proper images per service type when available
+        src={`/images/services/student.webp`}
+        alt={title}
+        fill={true}
+        sizes="382x348"
+        className="object-cover group-hover:scale-105 transition-transform duration-150"
+      />
+    </div>
+    <div className="space-y-1 py-6 px-6">
+      <h3 className="text-xl font-semibold">{title}</h3>
+      <p className="text-lg text-muted-foreground">{description}</p>
+    </div>
+    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-full flex justify-center">
+      <Button
+        className="max-w-xs mx-auto text-lg font-semibold h-12 cursor-pointer"
+        size={"lg"}
+        variant={"link"}
+        asChild
+      >
+        <Link href={`/services/${type}`}>
+          დეტალურად
+          <ArrowRight className="animate-bounce-right size-4" />
+        </Link>
+      </Button>
+    </div>
+  </div>
+);
 
 export const ServicesSection = () => {
   return (

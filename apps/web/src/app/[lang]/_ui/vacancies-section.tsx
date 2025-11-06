@@ -268,56 +268,18 @@ const VacancyCard = ({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/**
-         * TODO: create vacancy detail page and more the requirements and benefits there
-         * */}
-        {/* Requirements */}
-        {/* <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
-            <h4 className="font-semibold text-sm">მოთხოვნები</h4>
-          </div>
-          <ul className="space-y-1.5 ml-6">
-            {vacancy.requirements.slice(0, 3).map((req, idx) => (
-              <li
-                key={idx}
-                className="text-sm text-muted-foreground flex gap-2"
-              >
-                <span className="text-primary mt-1">•</span>
-                <span>{req}</span>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-
-        {/* Benefits */}
-        {/* <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <h4 className="font-semibold text-sm">უპირატესობები</h4>
-          </div>
-          <ul className="space-y-1.5 ml-6">
-            {vacancy.benefits.slice(0, 3).map((benefit, idx) => (
-              <li
-                key={idx}
-                className="text-sm text-muted-foreground flex gap-2"
-              >
-                <CheckCircle2 className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                <span>{benefit}</span>
-              </li>
-            ))}
-          </ul>
-        </div> */}
-
         <div className="flex justify-center">
           <Button
-            className="max-w-xs mx-auto text-xl font-semibold h-12"
+            className="max-w-xs mx-auto text-lg font-semibold h-12 cursor-pointer"
             size={"lg"}
+            variant={"link"}
             asChild
           >
             <Link href={`/vacancies/${id}`}>
               დეტალურად
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <div className="border border-primary rounded-full p-1 animate-bounce-right">
+                <ArrowRight className="size-4" />
+              </div>
             </Link>
           </Button>
         </div>
