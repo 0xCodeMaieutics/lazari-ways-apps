@@ -88,6 +88,9 @@ export const HomeClient = ({
         </section>
 
         <CTASection id={SECTION_IDS.contact}>
+          {/**
+           * TODO: look at vacancies detail page and copy some of the badges and information because this cta section looks too empty
+           * */}
           <div className="flex-1 flex flex-col justify-center space-y-6">
             <CardHeader>
               <CardTitle className="text-3xl md:text-4xl font-bold">
