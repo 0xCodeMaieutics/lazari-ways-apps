@@ -226,7 +226,7 @@ const VacancyCard = ({
   id: VacanciesKey;
 }) => {
   return (
-    <Card className="group h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
+    <Card className="group flex flex-col h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
       {vacancy.imageUrl && (
         <div className="relative w-full h-[300px] overflow-hidden">
           <Image
@@ -240,7 +240,7 @@ const VacancyCard = ({
       )}
 
       <CardHeader className="space-y-3">
-        <div className="flex flex-col sm:flex-row sm:items-start md:justify-between gap-2">
+        <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-2">
             <CardTitle className="text-xl transition-colors">
               {vacancy.title}
@@ -267,7 +267,7 @@ const VacancyCard = ({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="flex-1 flex flex-col justify-end space-y-6">
         <div className="flex justify-center">
           <Button
             className="max-w-xs mx-auto text-lg font-semibold h-12 cursor-pointer"
@@ -290,7 +290,7 @@ const VacancyCard = ({
 
 export const VacancySection = () => {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <SectionHeader
         onClick={() => {
           scrollSmoothlyToSection(SECTION_IDS.vacancies);

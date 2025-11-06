@@ -11,7 +11,7 @@ export const CTASection = ({
       className="sm:px-6 py-6 md:py-24 bg-secondary mt-8 md:mt-16"
       {...props}
     >
-      <Card className="p-0 px-0 max-w-6xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl overflow-hidden">
+      <Card className="p-0 px-0 max-w-7xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl overflow-hidden">
         <div className="flex flex-col sm:flex-row">
           {children}
           <div className="flex-1 sm:max-w-lg">

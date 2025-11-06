@@ -29,7 +29,7 @@ export const HomeClient = ({
       <main className="min-h-screen w-full flex flex-col">
         {/* Hero Section */}
         <section className="px-6 pt-40 pb-8">
-          <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
+          <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-7xl mx-auto">
             <div className="text-center space-y-6 md:text-left flex-1">
               <div className="text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
@@ -66,7 +66,7 @@ export const HomeClient = ({
 
         {/* Gallery */}
         <section id={SECTION_IDS.gallery} className="px-6 py-16 md:py-24">
-          <div className="w-full max-w-6xl mx-auto">
+          <div className="w-full max-w-7xl mx-auto">
             <SectionHeader
               onClick={() => {
                 scrollSmoothlyToSection(SECTION_IDS.gallery);
