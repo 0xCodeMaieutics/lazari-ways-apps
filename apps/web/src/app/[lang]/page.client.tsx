@@ -16,10 +16,8 @@ import { SectionHeader } from "@/components/section-header";
 
 import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
-import { ContactVideo } from "@/components/contact-video";
 import { VacancySection } from "./_ui/vacancies-section";
-import { PropsWithChildren } from "react";
-import { ContactSection } from "@/components/contact-section";
+import { CTASection } from "@/components/cta-section";
 
 export const HomeClient = ({
   translations,
@@ -89,7 +87,7 @@ export const HomeClient = ({
           <VacancySection />
         </section>
 
-        <ContactSection id={SECTION_IDS.contact}>
+        <CTASection id={SECTION_IDS.contact}>
           <div className="flex-1 flex flex-col justify-center space-y-6">
             <CardHeader>
               <CardTitle className="text-3xl md:text-4xl font-bold">
@@ -118,7 +116,7 @@ export const HomeClient = ({
               </Button>
             </CardContent>
           </div>
-        </ContactSection>
+        </CTASection>
       </main>
     </translationsContext.Provider>
   );

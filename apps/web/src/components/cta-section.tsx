@@ -2,7 +2,7 @@ import { Card } from "@workspace/ui/components/card";
 import { ComponentProps, PropsWithChildren } from "react";
 import { ContactVideo } from "./contact-video";
 
-export const ContactSection = ({
+export const CTASection = ({
   children,
   ...props
 }: PropsWithChildren<ComponentProps<"section">>) => {
