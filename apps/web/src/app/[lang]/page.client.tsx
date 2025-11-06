@@ -58,7 +58,7 @@ export const HomeClient = ({
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
-            <div className="flex-1">
+            <div className="flex-1 mx-auto">
               <HeroVideo />
             </div>
           </div>
