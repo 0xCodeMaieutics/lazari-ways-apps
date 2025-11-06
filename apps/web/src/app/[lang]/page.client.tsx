@@ -30,7 +30,7 @@ export const HomeClient = ({
         {/* Hero Section */}
         <section className="px-6 pt-40 pb-8">
           <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-7xl mx-auto">
-            <div className="text-center space-y-6 md:text-left flex-1">
+            <div className="flex-1 text-center space-y-6 md:text-left">
               <div className="text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
                 <div className="h-[42px] md:h-[70px]">
@@ -51,14 +51,15 @@ export const HomeClient = ({
                 className="flex gap-2 items-center text-xl font-semibold h-12 px-10 mx-auto max-w-max"
                 onClick={(e) => {
                   e.preventDefault();
-                  scrollSmoothlyToSection(SECTION_IDS.contact);
+                  scrollSmoothlyToSection(SECTION_IDS.vacancies);
                 }}
               >
-                {translations["hero.callToAction"]}
+                {/* see vacancies */}
+                ვაკანსიების ნახვა
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
-            <div className="flex-1 mx-auto">
+            <div className="flex-1 flex justify-end px-10 sm:px-0 mx-auto">
               <HeroVideo />
             </div>
           </div>
@@ -79,12 +80,12 @@ export const HomeClient = ({
           </div>
         </section>
 
-        <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">
-          <ServicesSection />
-        </section>
-
         <section id={SECTION_IDS.vacancies} className="px-6 py-16 md:py-24">
           <VacancySection />
+        </section>
+
+        <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">
+          <ServicesSection />
         </section>
 
         <CTASection id={SECTION_IDS.contact}>
