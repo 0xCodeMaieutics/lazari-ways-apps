@@ -28,10 +28,10 @@ export const HomeClient = ({
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full flex flex-col">
         {/* Hero Section */}
-        <section className="px-6 py-40">
-          <div className="flex flex-col gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
+        <section className="px-6 pt-40 pb-8">
+          <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-6xl mx-auto">
             <div className="text-center space-y-6 md:text-left flex-1">
-              <div className="text-4xl md:text-6xl font-bold tracking-tight">
+              <div className="text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
                 <div className="h-[42px] md:h-[70px]">
                   <TypeAnimation
@@ -43,7 +43,7 @@ export const HomeClient = ({
                   />
                 </div>
               </div>
-              <p className="mt-6 text-lg md:text-xl text-muted-foreground">
+              <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium">
                 {translations["hero.slogan"]}
               </p>
               <Button
@@ -71,7 +71,7 @@ export const HomeClient = ({
               onClick={() => {
                 scrollSmoothlyToSection(SECTION_IDS.gallery);
               }}
-              className="max-w-xs bg-red-200"
+              className="max-w-xs md:max-w-sm"
             >
               ჩვენი კლიენტების ფოტოები
             </SectionHeader>
@@ -89,12 +89,12 @@ export const HomeClient = ({
 
         <section
           id={SECTION_IDS.contact}
-          className="px-6 py-16 md:py-24 bg-secondary mt-8 md:mt-16"
+          className="sm:px-6 py-6 md:py-24 bg-secondary mt-8 md:mt-16"
         >
-          <Card className="max-w-6xl mx-auto text-center shadow-lg">
-            <div className="flex flex-col lg:flex-row p-8 md:p-16">
-              <div className="flex-1 flex flex-col justify-center">
-                <CardHeader className=" p-8 md:p-12">
+          <Card className="max-w-6xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl">
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex-1 flex flex-col justify-center space-y-6">
+                <CardHeader>
                   <CardTitle className="text-3xl md:text-4xl font-bold">
                     მზად ხართ დასაწყებად?
                   </CardTitle>
@@ -106,7 +106,8 @@ export const HomeClient = ({
                 <CardContent className="flex flex-col sm:flex-row gap-4 justify-center pb-8 md:pb-12">
                   <Button
                     size="lg"
-                    className="text-lg font-semibold h-12 px-10"
+                    className="text-lg font-semibold h-12 w-full sm:max-w-xs"
+                    asChild
                   >
                     <a
                       target="_blank"
@@ -115,12 +116,14 @@ export const HomeClient = ({
                       rel="noreferrer"
                     >
                       განაცხადის გაგზავნა
+                      <ExternalLink className="animate-bounce" />
                     </a>
-                    <ExternalLink />
                   </Button>
                 </CardContent>
               </div>
-              <ContactVideo />
+              <div className="px-6 sm:pl-0">
+                <ContactVideo />
+              </div>
             </div>
           </Card>
         </section>

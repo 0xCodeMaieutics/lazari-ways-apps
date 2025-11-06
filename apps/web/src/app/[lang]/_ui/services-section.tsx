@@ -59,7 +59,7 @@ const ServiceCard = ({
             className="object-cover group-hover:scale-105 transition-transform duration-150"
           />
         </div>
-        <div className="space-y-1 pt-6 px-6">
+        <div className="space-y-1 py-6 px-6 sm:pb-0">
           <h3 className="text-xl font-semibold">{title}</h3>
           <p className="text-lg text-muted-foreground">{description}</p>
         </div>
