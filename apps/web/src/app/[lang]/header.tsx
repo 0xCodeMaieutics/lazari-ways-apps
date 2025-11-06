@@ -57,6 +57,10 @@ export const Header = ({ translations }: { translations: Translations }) => {
       href: SECTION_IDS.contact,
       label: "კონტაქტი",
     },
+    {
+      href: SECTION_IDS.vacancies,
+      label: "ვაკანსიები",
+    },
   ];
 
   return (
