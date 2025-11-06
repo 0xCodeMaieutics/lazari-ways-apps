@@ -7,7 +7,7 @@ export const ContactVideo = ({ className }: { className?: ClassValue }) => {
       muted
       loop
       playsInline
-      className={clsx("max-h-max mx-auto w-full sm:max-w-sm", className)}
+      className={clsx("w-full h-full", className)}
     >
       <source src="/images/employers/contact.mp4" type="video/mp4" />
       Your browser does not support the video tag.

@@ -14,7 +14,9 @@ export const CTASection = ({
       <Card className="p-0 px-0 max-w-6xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl overflow-hidden">
         <div className="flex flex-col sm:flex-row">
           {children}
-          <ContactVideo className="rounded-none max-w-none" />
+          <div className="flex-1 sm:max-w-lg">
+            <ContactVideo />
+          </div>
         </div>
       </Card>
     </section>

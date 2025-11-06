@@ -28,6 +28,7 @@ import {
 import { ContactVideo } from "@/components/contact-video";
 import { Vacancy, employmentTypeLabels } from "@/utils/models/vacancy";
 import { useParams } from "next/navigation";
+import { CTASection } from "@/components/cta-section";
 
 export const VacanciesClientPage = ({
   data,
@@ -237,87 +238,72 @@ export const VacanciesClientPage = ({
           </div>
         </section>
 
-        {/* CTA Section with Video */}
-        <section id="contact" className="w-full px-6 py-16 md:py-24">
-          <Card className="max-w-7xl mx-auto shadow-2xl border-2 overflow-hidden">
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-0">
-              {/* Left - Content */}
-              <div className="flex-1 flex flex-col justify-center p-8 md:p-12 lg:p-16 space-y-8">
-                <div className="space-y-4 text-center md:text-left">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
-                    <Clock className="size-4" />
-                    <span className="text-sm font-semibold">
-                      დაელოდეთ პასუხს 1 საათში
-                    </span>
-                  </div>
-                  <CardTitle className="text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                    მზად ხართ ახალი გამოწვევისთვის?
-                  </CardTitle>
-                  <CardDescription className="text-lg text-muted-foreground leading-relaxed">
-                    გადადგით პირველი ნაბიჯი თქვენი კარიერული წინსვლისკენ
-                    გერმანიაში. შეავსეთ განაცხადი და ჩვენი გუნდი დაუყოვნებლივ
-                    დაგიკავშირდებათ.
-                  </CardDescription>
-                </div>
+        <CTASection id={SECTION_IDS.contact}>
+          <div className="flex-1 flex flex-col justify-center p-8 md:p-10 space-y-8">
+            <div className="space-y-4 text-center md:text-left">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
+                <Clock className="size-4" />
+                <span className="text-sm font-semibold">
+                  დაელოდეთ პასუხს 1 საათში
+                </span>
+              </div>
+              <CardTitle className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                მზად ხართ ახალი გამოწვევისთვის?
+              </CardTitle>
+              <CardDescription className="md:text-lg text-muted-foreground leading-relaxed">
+                გადადგით პირველი ნაბიჯი თქვენი კარიერული წინსვლისკენ გერმანიაში.
+                შეავსეთ განაცხადი და ჩვენი გუნდი დაუყოვნებლივ დაგიკავშირდებათ.
+              </CardDescription>
+            </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Button
-                    size="lg"
-                    className="text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // TODO: Add application form link
-                    }}
-                  >
-                    განაცხადის გაგზავნა
-                    <ExternalLink className="size-5 animate-bounce" />
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
-                    asChild
-                  >
-                    <Link href={`/${lang}#vacancies`}>
-                      სხვა ვაკანსიები
-                      <ArrowRight className="animate-bounce-left" />
-                    </Link>
-                  </Button>
-                </div>
+            <div className="flex flex-col xs:flex-row gap-4">
+              <Button
+                size="lg"
+                className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // TODO: Add application form link
+                }}
+              >
+                განაცხადის გაგზავნა
+                <ExternalLink className="size-5 animate-bounce" />
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="xs:text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
+                asChild
+              >
+                <Link href={`/${lang}#vacancies`}>
+                  სხვა ვაკანსიები
+                  <ArrowRight className="animate-bounce-left" />
+                </Link>
+              </Button>
+            </div>
 
-                {/* Trust indicators */}
-                <div className="flex flex-wrap gap-6 pt-4 border-t">
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <CheckCircle2 className="size-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">100+ წარმატებული</p>
-                      <p className="text-xs text-muted-foreground">
-                        განთავსება
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                      <Award className="size-5 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold">სრული მხარდაჭერა</p>
-                      <p className="text-xs text-muted-foreground">
-                        A-დან Z-მდე
-                      </p>
-                    </div>
-                  </div>
+            {/* Trust indicators */}
+            <div className="flex flex-wrap gap-6 pt-4 border-t">
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <CheckCircle2 className="size-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">100+ წარმატებული</p>
+                  <p className="text-xs text-muted-foreground">განთავსება</p>
                 </div>
               </div>
-
-              <div className="flex flex-col justify-center items-center px-6 sm:pl-0">
-                <ContactVideo />
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Award className="size-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">სრული მხარდაჭერა</p>
+                  <p className="text-xs text-muted-foreground">A-დან Z-მდე</p>
+                </div>
               </div>
             </div>
-          </Card>
-        </section>
+          </div>
+        </CTASection>
       </main>
     </translationsContext.Provider>
   );
