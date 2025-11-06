@@ -105,7 +105,7 @@ export const VacanciesClientPage = ({
                             {maxPrice.toFixed(2)}
                           </span>
                           <span className="text-lg text-muted-foreground">
-                            /საათი
+                            /საათში
                           </span>
                         </div>
                       </div>
