@@ -8,15 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
-import {
-  MapPin,
-  Euro,
-  Clock,
-  Building2,
-  CheckCircle2,
-  Sparkles,
-  ArrowRight,
-} from "lucide-react";
+import { Euro, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -116,7 +108,7 @@ const vacancies: Record<string, Vacancy> = {
       "კარიერული ზრდა",
     ],
     employmentType: "full-time",
-    imageUrl: vacancyImageUrl("mcdonalds.webp"),
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   cafe: {
     title: "კაფეები",
@@ -130,7 +122,7 @@ const vacancies: Record<string, Vacancy> = {
     ],
     benefits: ["კეთილი სამუშაო გარემო", "ბონუსები და პრემიები", "ტრენინგი"],
     employmentType: "full-time",
-    imageUrl: vacancyImageUrl("cafe.webp"),
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   gasStation: {
     title: "ავტოგასამართი სადგურები",
@@ -145,7 +137,7 @@ const vacancies: Record<string, Vacancy> = {
     benefits: ["ღამის ზედნადები", "ჯანდაცვის დაზღვევა", "სტაბილური შემოსავალი"],
 
     employmentType: "full-time",
-    imageUrl: "/images/vacancies/gas-station.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   restStop: {
     title: "გზის კაფეები (Raststätte)",
@@ -164,7 +156,7 @@ const vacancies: Record<string, Vacancy> = {
     ],
 
     employmentType: "full-time",
-    imageUrl: "/images/vacancies/rest-stop.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   factory: {
     title: "ქარხნები",
@@ -183,7 +175,7 @@ const vacancies: Record<string, Vacancy> = {
     ],
 
     employmentType: "full-time",
-    imageUrl: "/images/vacancies/factory.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   warehouse: {
     title: "საწყობები (Lager)",
@@ -202,7 +194,7 @@ const vacancies: Record<string, Vacancy> = {
     ],
 
     employmentType: "full-time",
-    imageUrl: "/images/vacancies/warehouse.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   childrenAnimator: {
     title: "ბავშვთა ანიმატორი",
@@ -217,7 +209,7 @@ const vacancies: Record<string, Vacancy> = {
     benefits: ["საინტერესო სამუშაო", "მეგობრული გარემო", "მოქნილი გრაფიკი"],
 
     employmentType: "part-time",
-    imageUrl: "/images/vacancies/children-animator.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
   kindergartenAssistant: {
     title: "საბავშვო ბაღის თანაშემწე",
@@ -236,7 +228,7 @@ const vacancies: Record<string, Vacancy> = {
     ],
 
     employmentType: "full-time",
-    imageUrl: "/images/vacancies/kindergarten.webp",
+    imageUrl: vacancyImageUrl("hotels.webp"),
   },
 } as const;
 
