@@ -273,12 +273,6 @@ const VacancyCard = ({
             {employmentTypeLabels[vacancy.employmentType]}
           </span>
         </div>
-        <CardDescription className="text-base leading-relaxed">
-          {vacancy.description}
-        </CardDescription>
-      </CardHeader>
-
-      <CardContent className="space-y-6">
         {/* Salary Info */}
         <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
           <Euro className="h-5 w-5 text-primary shrink-0" />
@@ -291,6 +285,12 @@ const VacancyCard = ({
           </div>
         </div>
 
+        <CardDescription className="text-base leading-relaxed">
+          {vacancy.description}
+        </CardDescription>
+      </CardHeader>
+
+      <CardContent className="space-y-6">
         {/**
          * TODO: create vacancy detail page and more the requirements and benefits there
          * */}
