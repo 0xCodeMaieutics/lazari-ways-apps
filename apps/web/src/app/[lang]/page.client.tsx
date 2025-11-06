@@ -91,8 +91,8 @@ export const HomeClient = ({
           id={SECTION_IDS.contact}
           className="sm:px-6 py-6 md:py-24 bg-secondary mt-8 md:mt-16"
         >
-          <Card className="max-w-6xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl">
-            <div className="flex flex-col lg:flex-row">
+          <Card className="p-0 px-0 max-w-6xl mx-auto text-center shadow-lg rounded-none border-0 bg-transparent sm:bg-card sm:border sm:rounded-xl overflow-hidden">
+            <div className="flex flex-col sm:flex-row">
               <div className="flex-1 flex flex-col justify-center space-y-6">
                 <CardHeader>
                   <CardTitle className="text-3xl md:text-4xl font-bold">
@@ -106,7 +106,7 @@ export const HomeClient = ({
                 <CardContent className="flex flex-col sm:flex-row gap-4 justify-center pb-8 md:pb-12">
                   <Button
                     size="lg"
-                    className="text-lg font-semibold h-12 w-full sm:max-w-xs"
+                    className="text-lg font-semibold h-12 w-full mx-auto max-w-xs"
                     asChild
                   >
                     <a
@@ -121,9 +121,8 @@ export const HomeClient = ({
                   </Button>
                 </CardContent>
               </div>
-              <div className="px-6 sm:pl-0">
-                <ContactVideo />
-              </div>
+
+              <ContactVideo className="rounded-none max-w-none" />
             </div>
           </Card>
         </section>
