@@ -17,18 +17,18 @@ const ImageCustom = ({ ...props }: ImageProps) => (
     priority={false}
     className="rounded-md object-cover hover:scale-105 transition-transform duration-300"
     fill={true}
-    sizes="350x400"
+    sizes="400x400"
     {...props}
   />
 );
 
 export const EmployersGallery = () => {
   return (
-    <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+    <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       {images.map((image, index) => (
         <div
           key={index}
-          className="relative w-full h-[400px] sm:h-[350px max-w-sm mx-auto rounded-lg overflow-hidden"
+          className="relative h-[380px] w-full rounded-lg overflow-hidden"
         >
           <ImageCustom alt={image.alt} src={image.src} />
         </div>
