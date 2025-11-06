@@ -30,36 +30,34 @@ export const HomeClient = ({
         {/* Hero Section */}
         <section className="px-6 pt-40 pb-8">
           <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-7xl mx-auto">
-            <div className="flex-1 text-center space-y-6 md:text-left">
-              <div className="text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
+            <div className="flex-1 space-y-6">
+              <div className="max-w-2xl text-center md:text-left text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
-                <div className="h-[42px] md:h-[70px]">
-                  <TypeAnimation
-                    sequence={translations["hero.typeAnimationWords"] as any}
-                    wrapper="span"
-                    speed={60}
-                    className="h-[70px] text-primary"
-                    repeat={Infinity}
-                  />
-                </div>
+                <TypeAnimation
+                  sequence={translations["hero.typeAnimationWords"] as any}
+                  wrapper="span"
+                  speed={60}
+                  className="h-[70px] text-primary"
+                  repeat={Infinity}
+                />
+                <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium">
+                  {translations["hero.slogan"]}
+                </p>
               </div>
-              <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium">
-                {translations["hero.slogan"]}
-              </p>
+
               <Button
                 size={"lg"}
-                className="flex gap-2 items-center text-xl font-semibold h-12 px-10 mx-auto max-w-max"
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0"
                 onClick={(e) => {
                   e.preventDefault();
                   scrollSmoothlyToSection(SECTION_IDS.vacancies);
                 }}
               >
-                {/* see vacancies */}
                 ვაკანსიების ნახვა
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
-            <div className="flex-1 flex justify-end px-10 sm:px-0 mx-auto">
+            <div className="flex justify-end px-10 sm:px-0 mx-auto">
               <HeroVideo />
             </div>
           </div>
