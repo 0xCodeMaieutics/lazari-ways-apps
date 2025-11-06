@@ -1,5 +1,4 @@
 import { scrollSmoothlyToSection, SECTION_IDS } from "@/app/[lang]/utils";
-import { SectionHeader } from "./section-header";
 import {
   Card,
   CardContent,
@@ -11,6 +10,7 @@ import { Button } from "@workspace/ui/components/button";
 import { Euro, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SectionHeader } from "@/components/section-header";
 
 /**
  * Vacancy Data:

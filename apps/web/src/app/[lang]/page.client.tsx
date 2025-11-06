@@ -17,7 +17,7 @@ import { SectionHeader } from "@/components/section-header";
 import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
 import { ContactVideo } from "@/components/contact-video";
-import { VacancySection } from "@/components/vacancies";
+import { VacancySection } from "./_ui/vacancies-section";
 
 export const HomeClient = ({
   translations,
