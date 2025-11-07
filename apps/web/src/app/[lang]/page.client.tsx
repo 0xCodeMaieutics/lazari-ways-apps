@@ -1,13 +1,19 @@
 "use client";
 import { Button } from "@workspace/ui/components/button";
 import {
-  Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { ArrowDown, ExternalLink } from "lucide-react";
+import {
+  ArrowDown,
+  Award,
+  CheckCircle2,
+  Clock,
+  ExternalLink,
+} from "lucide-react";
 import { EmployersGallery } from "@/components/employers-gallery";
 import { TypeAnimation } from "react-type-animation";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
@@ -87,36 +93,62 @@ export const HomeClient = ({
         </section>
 
         <CTASection id={SECTION_IDS.contact}>
-          {/**
-           * TODO: look at vacancies detail page and copy some of the badges and information because this cta section looks too empty
-           * */}
-          <div className="flex-1 flex flex-col justify-center space-y-6">
-            <CardHeader>
-              <CardTitle className="text-3xl md:text-4xl font-bold">
-                მზად ხართ დასაწყებად?
-              </CardTitle>
-              <CardDescription className="text-lg max-w-2xl mx-auto">
-                გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
-                შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-col sm:flex-row gap-4 justify-center pb-8 md:pb-12">
-              <Button
-                size="lg"
-                className="text-lg font-semibold h-12 w-full mx-auto max-w-xs"
-                asChild
-              >
-                <a
-                  target="_blank"
-                  // FIXME: change the link to the actual application form
-                  href={"http://app.localhost:3000"}
-                  rel="noreferrer"
+          <div className="h-full flex flex-col justify-center space-y-12">
+            <div className="flex-1 flex flex-col justify-center space-y-12">
+              <CardHeader className="text-center md:text-left space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary max-w-max">
+                  <Clock className="size-4" />
+                  <span className="text-sm font-semibold">
+                    დაელოდეთ პასუხს 1 საათში
+                  </span>
+                </div>
+                <CardTitle className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight sm:max-w-sm">
+                  მზად ხართ დასაწყებად?
+                </CardTitle>
+                <CardDescription className="md:text-lg text-muted-foreground leading-relaxed">
+                  გადადგით პირველი ნაბიჯი თქვენი კარიერული გზისკენ. განაცხადი
+                  შეავსეთ ახლავე და ჩვენი გუნდი მალე დაგიკავშირდებათ.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button
+                  size="lg"
+                  className="text-lg font-semibold h-12 w-full mx-auto max-w-xs"
+                  asChild
                 >
-                  განაცხადის გაგზავნა
-                  <ExternalLink className="animate-bounce" />
-                </a>
-              </Button>
-            </CardContent>
+                  <a
+                    target="_blank"
+                    // FIXME: change the link to the actual application form
+                    href={"http://app.localhost:3000"}
+                    rel="noreferrer"
+                  >
+                    განაცხადის გაგზავნა
+                    <ExternalLink className="animate-bounce" />
+                  </a>
+                </Button>
+              </CardContent>
+            </div>
+            <CardFooter className="flex flex-wrap gap-6 border-t p-6">
+              {/* Trust indicators */}
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <CheckCircle2 className="size-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">100+ წარმატებული</p>
+                  <p className="text-xs text-muted-foreground">განთავსება</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Award className="size-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">სრული მხარდაჭერა</p>
+                  <p className="text-xs text-muted-foreground">A-დან Z-მდე</p>
+                </div>
+              </div>
+            </CardFooter>
           </div>
         </CTASection>
       </main>
