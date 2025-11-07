@@ -24,6 +24,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
+  CardHeader,
+  CardFooter,
 } from "@workspace/ui/components/card";
 import { ContactVideo } from "@/components/contact-video";
 import { Vacancy, employmentTypeLabels } from "@/utils/models/vacancy";
@@ -221,10 +223,10 @@ export const VacanciesClientPage = ({
                   key={index}
                   className="group relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/30"
                 >
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-primary/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 w-32 h-32 from-primary/10 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
                   <CardContent className="p-6 relative">
                     <div className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 rounded-xl from-primary to-primary/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                         <Sparkles className="size-6 text-primary-foreground" />
                       </div>
                       <p className="text-base md:text-lg text-foreground leading-relaxed pt-2 font-medium">
@@ -239,50 +241,53 @@ export const VacanciesClientPage = ({
         </section>
 
         <CTASection id={SECTION_IDS.contact}>
-          <div className="flex-1 flex flex-col justify-center p-8 md:p-10 space-y-8">
-            <div className="space-y-4 text-center md:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
-                <Clock className="size-4" />
-                <span className="text-sm font-semibold">
-                  დაელოდეთ პასუხს 1 საათში
-                </span>
-              </div>
-              <CardTitle className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
-                მზად ხართ ახალი გამოწვევისთვის?
-              </CardTitle>
-              <CardDescription className="md:text-lg text-muted-foreground leading-relaxed">
-                გადადგით პირველი ნაბიჯი თქვენი კარიერული წინსვლისკენ გერმანიაში.
-                შეავსეთ განაცხადი და ჩვენი გუნდი დაუყოვნებლივ დაგიკავშირდებათ.
-              </CardDescription>
+          <div className="h-full flex flex-col justify-center space-y-12">
+            <div className="flex-1 flex flex-col justify-center space-y-12">
+              <CardHeader className="text-center md:text-left space-y-4">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary max-w-max">
+                  <Clock className="size-4" />
+                  <span className="text-sm font-semibold">
+                    დაელოდეთ პასუხს 1 საათში
+                  </span>
+                </div>
+                <CardTitle className="text-2xl md:text-4xl lg:text-5xl font-bold leading-tight">
+                  მზად ხართ ახალი გამოწვევისთვის?
+                </CardTitle>
+                <CardDescription className="md:text-lg text-muted-foreground leading-relaxed">
+                  გადადგით პირველი ნაბიჯი თქვენი კარიერული წინსვლისკენ
+                  გერმანიაში. შეავსეთ განაცხადი და ჩვენი გუნდი დაუყოვნებლივ
+                  დაგიკავშირდებათ.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Button
+                    size="lg"
+                    className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      // TODO: Add application form link
+                    }}
+                  >
+                    განაცხადის გაგზავნა
+                    <ExternalLink className="size-5 animate-bounce" />
+                  </Button>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="xs:text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
+                    asChild
+                  >
+                    <Link href={`/${lang}#vacancies`}>
+                      სხვა ვაკანსიები
+                      <ArrowRight className="animate-bounce-left" />
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
             </div>
-
-            <div className="flex flex-col xs:flex-row gap-4">
-              <Button
-                size="lg"
-                className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // TODO: Add application form link
-                }}
-              >
-                განაცხადის გაგზავნა
-                <ExternalLink className="size-5 animate-bounce" />
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="xs:text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
-                asChild
-              >
-                <Link href={`/${lang}#vacancies`}>
-                  სხვა ვაკანსიები
-                  <ArrowRight className="animate-bounce-left" />
-                </Link>
-              </Button>
-            </div>
-
-            {/* Trust indicators */}
-            <div className="flex flex-wrap gap-6 pt-4 border-t">
+            <CardFooter className="flex flex-wrap gap-6 border-t p-6">
+              {/* Trust indicators */}
               <div className="flex items-center gap-2">
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <CheckCircle2 className="size-5 text-primary" />
@@ -301,7 +306,7 @@ export const VacanciesClientPage = ({
                   <p className="text-xs text-muted-foreground">A-დან Z-მდე</p>
                 </div>
               </div>
-            </div>
+            </CardFooter>
           </div>
         </CTASection>
       </main>
