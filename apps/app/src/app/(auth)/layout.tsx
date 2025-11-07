@@ -8,5 +8,6 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
     headers: await headers(),
   });
   if (!session?.session || !session.user) redirect("/login");
+
   return children;
 }
