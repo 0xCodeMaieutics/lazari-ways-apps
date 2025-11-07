@@ -12,6 +12,7 @@ import { Mail, Calendar, CheckCircle2, XCircle } from "lucide-react";
 import { Session, User } from "better-auth";
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
+import { ApplicationsList } from "@/components/applications-list";
 
 function AccountDetail({
   label,
