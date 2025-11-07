@@ -14,8 +14,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
-const DEV_EMAIL = "anna@application.com";
-const DEV_PASSWORD = "#AdminIsCool2025";
+const DEV_EMAIL = "applicant@lazaryways.eu";
+const DEV_PASSWORD = "#ApplicantIsCool2025!";
 
 export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
   const [isSignUp, setIsSignUp] = useState(loginType === "signup");
@@ -142,8 +142,8 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
                 ? "Signing up..."
                 : "Sign Up"
               : signInMutation.isPending
-              ? "Logging in..."
-              : "Login"}
+                ? "Logging in..."
+                : "Login"}
           </Button>
         </div>
       </form>

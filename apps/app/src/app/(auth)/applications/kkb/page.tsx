@@ -7,7 +7,6 @@ import Link from "next/link";
 const KKBPage = async ({
   searchParams,
 }: {
-  // searchParams
   searchParams: Promise<{ visa_duration_in_months?: string | string[] }>;
 }) => {
   const { visa_duration_in_months } = await searchParams;
