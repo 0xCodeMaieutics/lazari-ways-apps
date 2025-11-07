@@ -40,7 +40,7 @@ export const HomeClient = ({
                   className="h-[70px] text-primary"
                   repeat={Infinity}
                 />
-                <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium">
+                <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium sm:max-w-lg">
                   {translations["hero.slogan"]}
                 </p>
               </div>
