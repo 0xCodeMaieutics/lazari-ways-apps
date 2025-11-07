@@ -7,24 +7,49 @@ import { $Enums, EmployerType, Prisma, PrismaClient } from "@prisma/client";
 import { createAdmin } from "./admin";
 import { createApplications } from "./application";
 import { createUsers } from "./user";
+import z from "zod";
+import { auth } from "../../lib/auth";
 
 void (async function () {
   const prisma = new PrismaClient();
+  console.log();
+  console.log("🗑️  Clearing existing data...");
+  z.array(
+    z.object({
+      table_name: z.string(),
+    })
+  )
+    .parse(
+      await prisma.$queryRaw`SELECT table_name
+  FROM information_schema.tables
+  WHERE table_schema = 'public'
+  `
+    )
+    .filter(
+      (tableNames) => !["_prisma_migrations"].includes(tableNames.table_name)
+    )
+    .map(async (tableInfo) => {
+      console.log(`Truncating table: ${tableInfo.table_name}`);
+      await prisma.$executeRawUnsafe(
+        `TRUNCATE TABLE "${tableInfo.table_name}" RESTART IDENTITY CASCADE;`
+      );
+    });
+  console.log("✅ Existing data cleared!");
+
+  console.log("👤 Creating applicant user...");
+  await auth.api.signUpEmail({
+    body: {
+      email: "applicant@lazaryways.eu",
+
+      name: "Applicant User",
+      password: "#ApplicantIsCool2025!",
+    },
+  });
 
   await prisma.$transaction(async (tx) => {
-    // Clear existing data
-    console.log("🗑️  Clearing existing data...");
-    await tx.employer.deleteMany();
-    await tx.userSettings.deleteMany();
-    await tx.application.deleteMany();
-    await tx.session.deleteMany();
-    await tx.account.deleteMany();
-    await tx.user.deleteMany();
-
-    console.log("👤 Creating admin user...");
+    console.log("👤 Creating admin and applicant user...");
     await createAdmin(tx);
-
-    console.log("👤 Creating users with faker data...");
+    console.log("👤 Creating users data...");
 
     const userCount = 100;
 
