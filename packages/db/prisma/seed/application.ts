@@ -16,8 +16,6 @@ export const createApplications = ({
         data: {
           id: appId,
           type: $Enums.ApplicationType.STUDENT,
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
           email: faker.internet.email(),
           status: faker.helpers.arrayElement(
             Object.values($Enums.ApplicationStatus)
@@ -26,21 +24,13 @@ export const createApplications = ({
           phone: faker.phone.number(),
           instagram: faker.internet.username(),
           agencyName: faker.company.name(),
-          birthCountry: faker.location.country(),
-          birthDate: faker.date.birthdate({ min: 18, max: 45, mode: "age" }),
-          city: faker.location.city(),
-          birthPlace: faker.location.city(),
-          country: faker.location.country(),
           emergencyContactPhone: faker.phone.number(),
           emergencyContactName: faker.person.fullName(),
           fotoKey: "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/foto.png",
           passportKey:
             "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/passport.png",
-          gender: faker.helpers.arrayElement(["male", "female", "diverse"]),
           hasBeenInCountryBefore: faker.datatype.boolean(),
-          nationality: faker.location.country(),
-          postalCode: faker.location.zipCode(),
-          street: faker.location.streetAddress(),
+
           allergies:
             faker.helpers.maybe(() => faker.lorem.sentence(), {
               probability: 0.3,
@@ -73,32 +63,7 @@ export const createApplications = ({
             faker.helpers.maybe(() => faker.lorem.sentence(), {
               probability: 0.2,
             }) || null,
-          semesterBreakFrom: faker.helpers.maybe(
-            () => faker.date.future({ years: 1 }),
-            { probability: 0.6 }
-          ),
-          semesterBreakTo: faker.helpers.maybe(
-            () => faker.date.future({ years: 1 }),
-            { probability: 0.6 }
-          ),
-          university: faker.helpers.maybe(
-            () => faker.company.name() + " University",
-            { probability: 0.7 }
-          ),
-          studySubject: faker.helpers.maybe(
-            () =>
-              faker.helpers.arrayElement([
-                "Computer Science",
-                "Business Administration",
-                "Engineering",
-                "Medicine",
-                "Psychology",
-                "Law",
-                "Economics",
-                "International Relations",
-              ]),
-            { probability: 0.7 }
-          ),
+
           otherLanguages: faker.helpers.maybe(
             () =>
               faker.helpers
@@ -150,6 +115,36 @@ export const createApplications = ({
           user: {
             connect: {
               id: userIds[index],
+            },
+          },
+          applicationStudent: {
+            create: {
+              semesterBreakFrom: faker.helpers.maybe(
+                () => faker.date.future({ years: 1 }),
+                { probability: 0.6 }
+              ),
+              semesterBreakTo: faker.helpers.maybe(
+                () => faker.date.future({ years: 1 }),
+                { probability: 0.6 }
+              ),
+              university: faker.helpers.maybe(
+                () => faker.company.name() + " University",
+                { probability: 0.7 }
+              ),
+              studySubject: faker.helpers.maybe(
+                () =>
+                  faker.helpers.arrayElement([
+                    "Computer Science",
+                    "Business Administration",
+                    "Engineering",
+                    "Medicine",
+                    "Psychology",
+                    "Law",
+                    "Economics",
+                    "International Relations",
+                  ]),
+                { probability: 0.7 }
+              ),
             },
           },
         } satisfies Prisma.ApplicationCreateInput,

@@ -19,10 +19,11 @@ model User {
   image         String?
   role          UserRole? @default(USER)
 
-  sessions     Session[]
-  accounts     Account[]
-  applications Application[]
-  userSettings UserSettings?
+  sessions        Session[]
+  accounts        Account[]
+  applications    Application[]
+  userSettings    UserSettings?
+  userInformation UserInformation?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -44,4 +45,28 @@ model UserSettings {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@map("user_settings")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  DIVERSE
+}
+
+model UserInformation {
+  id           String    @id
+  firstName    String?
+  lastName     String?
+  gender       Gender?
+  nationality  String?
+  birthDate    DateTime?
+  birthPlace   String?
+  birthCountry String?
+  street       String?
+  postalCode   String?
+  country      String?
+  city         String?
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
 }

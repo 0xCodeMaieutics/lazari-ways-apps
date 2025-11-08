@@ -8,7 +8,9 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "codegen": "prisma generate",
-    "seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "db:studio": "prisma studio",
+    "db:push": "prisma db push --force-reset"
   },
   "exports": {
     ".": "./src/index.ts"

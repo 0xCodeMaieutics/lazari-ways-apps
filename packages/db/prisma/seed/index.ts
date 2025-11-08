@@ -1,12 +1,13 @@
 import "dotenv/config";
 import { generateRandomString } from "../../src/lib/random";
-import { $Enums, EmployerType, Prisma } from "@prisma/client";
 import { createAdmin } from "./admin";
 import { createApplications } from "./application";
 import { createUsers } from "./user";
 import z from "zod";
 import { auth } from "../../src/auth";
 import { prisma } from "../../src/client";
+import { Prisma, $Enums } from "../../src/generated/client";
+
 void (async function () {
   console.log("🗑️  Clearing existing data...");
   z.array(
@@ -61,16 +62,6 @@ void (async function () {
     const applicationIds = Array.from({ length: userCount }).map(() =>
       generateRandomString(32)
     );
-
-    await tx.employer.createMany({
-      data: Object.entries($Enums.EmployerType).map(([, value]) => {
-        return {
-          id: generateRandomString(32),
-          name: EmployerType[value],
-          type: value,
-        } satisfies Prisma.EmployerCreateInput;
-      }),
-    });
 
     await createApplications({
       applicationIds,

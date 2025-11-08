@@ -40,6 +40,26 @@ export const createUsers = async ({
               id: generateRandomString(32),
             },
           },
+          userInformation: {
+            create: {
+              id: generateRandomString(32),
+              firstName: faker.person.firstName(),
+              lastName: faker.person.lastName(),
+              birthCountry: faker.location.country(),
+              birthDate: faker.date.birthdate({
+                min: 18,
+                max: 45,
+                mode: "age",
+              }),
+              city: faker.location.city(),
+              birthPlace: faker.location.city(),
+              country: faker.location.country(),
+              gender: faker.helpers.arrayElement(Object.values($Enums.Gender)),
+              nationality: faker.location.country(),
+              postalCode: faker.location.zipCode(),
+              street: faker.location.streetAddress(),
+            },
+          },
           sessions: {
             create: {
               id: generateRandomString(32),
