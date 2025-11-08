@@ -1,6 +1,6 @@
 import { env } from "@/env";
-import { prisma } from "@/lib/db/prisma-client";
-import { generateRandomString } from "@/lib/random";
+import { prisma } from "@workspace/db";
+import { generateRandomString } from "@workspace/db";
 import { putObjects } from "@/lib/s3/s3.server";
 import { getImageExtension, ImageFileType } from "@/utils/file";
 import { applicationFormSchema } from "@/utils/models/applications";

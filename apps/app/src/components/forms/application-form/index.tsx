@@ -25,9 +25,9 @@ import {
   ApplicationFormData,
   applicationFormSchema,
 } from "@/utils/models/applications";
-import { ApplicationType } from "@/utils/models/applications";
+import { ApplicationTypeKey } from "@workspace/db";
 
-export function ApplicationForm({ type }: { type: ApplicationType }) {
+export function ApplicationForm({ type }: { type: ApplicationTypeKey }) {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof applicationFormSchema>>({

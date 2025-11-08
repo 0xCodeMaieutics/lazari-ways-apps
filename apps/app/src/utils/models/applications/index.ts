@@ -1,4 +1,3 @@
-import { $Enums, Prisma } from "@prisma/client";
 import z from "zod";
 
 const acceptedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
@@ -14,10 +13,7 @@ const isFilePDF = (errorMsg: string) =>
   });
 
 const germanLevels = z.enum(["A1", "A2", "B1", "B2", "C1"]);
-export type GermanLevel = z.infer<typeof germanLevels>;
-
 const gender = z.enum(["male", "female", "diverse"]);
-export type Gender = z.infer<typeof gender>;
 
 export const applicationFormSchema = z.object({
   // Personal Information
@@ -78,44 +74,3 @@ export const applicationFormSchema = z.object({
 });
 
 export type ApplicationFormData = z.infer<typeof applicationFormSchema>;
-
-export type Application = Prisma.ApplicationGetPayload<{
-  select: {
-    id: true;
-    type: true;
-    firstName: true;
-    lastName: true;
-    email: true;
-    instagram: true;
-    phone: true;
-    status: true;
-  };
-}>;
-
-type ApplicationStatusKey = keyof typeof $Enums.ApplicationStatus;
-export type ApplicationStatus = $Enums.ApplicationStatus;
-export const ApplicationStatus: Record<
-  ApplicationStatusKey,
-  $Enums.ApplicationStatus
-> = {
-  PENDING: $Enums.ApplicationStatus.PENDING,
-  APPROVED: $Enums.ApplicationStatus.APPROVED,
-  REJECTED: $Enums.ApplicationStatus.REJECTED,
-};
-
-type ApplicationTypeKey = keyof typeof $Enums.ApplicationType;
-export type ApplicationType = $Enums.ApplicationType;
-export const ApplicationType: Record<
-  ApplicationTypeKey,
-  $Enums.ApplicationType
-> = {
-  STUDENT: $Enums.ApplicationType.STUDENT,
-  KKB8: $Enums.ApplicationType.KKB8,
-  KKB3: $Enums.ApplicationType.KKB3,
-};
-
-export const applicationTypeToLabel: Record<$Enums.ApplicationType, string> = {
-  KKB3: "KKB 3 months",
-  KKB8: "KKB 8 months",
-  STUDENT: "Student",
-};

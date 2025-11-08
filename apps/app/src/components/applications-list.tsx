@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -20,24 +19,15 @@ import {
 import Link from "next/link";
 import { format } from "date-fns";
 import {
-  ApplicationType,
   ApplicationStatus,
-  applicationTypeToLabel,
-} from "@/utils/models/applications";
-
-type Application = {
-  id: string;
-  type: ApplicationType;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  status: ApplicationStatus;
-  createdAt: string;
-};
+  ApplicationStatusKey,
+  ApplicationType,
+  ApplicationTypeKey,
+  GetAllUserApplications,
+} from "@workspace/db";
 
 const statusConfig: Record<
-  ApplicationStatus,
+  ApplicationStatusKey,
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
@@ -61,8 +51,18 @@ const statusConfig: Record<
   },
 };
 
-function ApplicationCard({ application }: { application: Application }) {
-  const status = statusConfig[application.status];
+const applicationTypeToLabel = {
+  KKB3: "KKB 3 months",
+  KKB8: "KKB 8 months",
+  STUDENT: "Student",
+} satisfies Record<ApplicationTypeKey, string>;
+
+function ApplicationCard({
+  application,
+}: {
+  application: GetAllUserApplications[0];
+}) {
+  const status = statusConfig[application.status ?? ApplicationStatus.PENDING];
 
   return (
     <Card>
@@ -74,7 +74,11 @@ function ApplicationCard({ application }: { application: Application }) {
             </div>
             <div className="space-y-1">
               <h3 className="font-semibold text-lg">
-                {applicationTypeToLabel[application.type]}
+                {
+                  applicationTypeToLabel[
+                    application.type ?? ApplicationType.STUDENT
+                  ]
+                }
               </h3>
               <p className="text-sm text-muted-foreground">
                 {application.firstName} {application.lastName}
@@ -127,18 +131,11 @@ function ApplicationTypeButton({
   );
 }
 
-export function ApplicationsList() {
-  const { data: applications, isLoading } = useQuery<Application[]>({
-    queryKey: ["applications"],
-    queryFn: async () => {
-      const response = await fetch("/api/applications");
-      if (!response.ok) {
-        throw new Error("Failed to fetch applications");
-      }
-      return response.json();
-    },
-  });
-
+export function ApplicationsList({
+  applications,
+}: {
+  applications: GetAllUserApplications;
+}) {
   return (
     <Card>
       <CardHeader>
@@ -174,11 +171,7 @@ export function ApplicationsList() {
           <h3 className="text-sm font-medium text-muted-foreground mb-3">
             თქვენი აპლიკაციები
           </h3>
-          {isLoading ? (
-            <div className="text-center py-8 text-muted-foreground">
-              Loading applications...
-            </div>
-          ) : applications && applications.length > 0 ? (
+          {applications && applications.length > 0 ? (
             <div className="space-y-3">
               {applications.map((application) => (
                 <ApplicationCard

@@ -1,0 +1,20 @@
+enum EmployerType {
+    DHL
+    GUILI
+    FILDER_PERSONAL
+
+    @@map("employer_type")
+}
+
+model Employer {
+    id   String       @id
+    name String       @unique
+    type EmployerType @unique
+
+    applications Application[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@map("employer")
+}

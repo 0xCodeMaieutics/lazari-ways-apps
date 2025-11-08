@@ -1,6 +1,6 @@
 import { ApplicationForm } from "@/components/forms/application-form";
+import { ApplicationType } from "@workspace/db";
 import { Button } from "@workspace/ui/components/button";
-import { ApplicationType } from "@prisma/client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 

@@ -1,0 +1,47 @@
+enum UserRole {
+  ADMIN
+  USER
+
+  @@map("user_role")
+}
+
+enum Lang {
+  EN
+  GE
+  DE
+}
+
+model User {
+  id            String    @id
+  name          String
+  email         String
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          UserRole? @default(USER)
+
+  sessions     Session[]
+  accounts     Account[]
+  applications Application[]
+  userSettings UserSettings?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@unique([email])
+  @@map("user")
+}
+
+model UserSettings {
+  id String @id
+
+  theme String? @default("light")
+  lang  Lang?   @default(EN)
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@map("user_settings")
+}

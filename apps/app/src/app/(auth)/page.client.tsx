@@ -13,6 +13,7 @@ import { Session, User } from "better-auth";
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import { ApplicationsList } from "@/components/applications-list";
+import { GetAllUserApplications } from "@workspace/db";
 
 function AccountDetail({
   label,
@@ -42,8 +43,10 @@ function AccountDetail({
 
 export function OnboardingPageClient({
   data,
+  applications,
 }: {
   data: { session: Session; user: User };
+  applications: GetAllUserApplications;
 }) {
   const { user, session } = data;
 
@@ -129,6 +132,8 @@ export function OnboardingPageClient({
             </div>
           </CardContent>
         </Card>
+
+        <ApplicationsList applications={applications} />
       </div>
     </div>
   );

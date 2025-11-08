@@ -1,4 +1,4 @@
-import { auth } from "@/lib/auth";
+import { auth } from "@workspace/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
