@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { generateRandomString } from "../../src/lib/random";
+import { generateRandomString, zodParse } from "@workspace/shared";
 import { createAdmin } from "./admin";
 import { createApplications } from "./application";
 import { createUsers } from "./user";
@@ -7,6 +7,11 @@ import z from "zod";
 import { auth } from "../../src/auth";
 import { prisma } from "../../src/client";
 import { Prisma, $Enums } from "../../src/generated/client";
+import {
+  getSignedUrlForDownload,
+  uploadFileToStorage,
+} from "../../src/s3/s3-client";
+import path from "path";
 
 void (async function () {
   console.log("🗑️  Clearing existing data...");
@@ -36,7 +41,6 @@ void (async function () {
   await auth.api.signUpEmail({
     body: {
       email: "applicant@lazaryways.eu",
-
       name: "Anna Malazonia",
       password: "#ApplicantIsCool2025!",
     },
@@ -67,6 +71,62 @@ void (async function () {
       applicationIds,
       userIds,
       tx,
+    });
+
+    const BASE_VACANCY_ID = 375;
+    const VACANCY_ID_PREFIX = "LZRY-";
+    const s3Env = zodParse(
+      process.env,
+      z.object({
+        S3_BUCKET_NAME: z.string(),
+      })
+    );
+
+    if (s3Env.isErr()) process.exit(1);
+
+    const fileKey = "vacancies/hotels.webp";
+    const uploadResult = await uploadFileToStorage({
+      bucket: s3Env.value.S3_BUCKET_NAME,
+      fileKey: fileKey,
+      filePath: path.resolve(__dirname, "hotels.webp"),
+    });
+
+    if (uploadResult.isErr()) process.exit(1);
+
+    await getSignedUrlForDownload({
+      bucket: s3Env.value.S3_BUCKET_NAME,
+      fileKey,
+    });
+
+    await tx.vacancy.createMany({
+      data: Array.from({ length: 20 }).map(
+        (_, index) =>
+          ({
+            id: generateRandomString(32),
+            description: `Vacancy Description ${index + 1}`,
+            title: `Vacancy Title ${index + 1}`,
+            location: `Location ${index + 1}`,
+            employmentType:
+              $Enums.EmploymentType[
+                Object.keys($Enums.EmploymentType)[
+                  index % Object.keys($Enums.EmploymentType).length
+                ] as keyof typeof $Enums.EmploymentType
+              ],
+            priceMax: 50000 + index * 1000,
+            priceMin: 30000 + index * 1000,
+            startDate: new Date(2024, 0, 1 + index),
+            vacancyId: BASE_VACANCY_ID + index,
+            vacancyName: `${VACANCY_ID_PREFIX}${BASE_VACANCY_ID + index}`,
+            benefits: Array.from({ length: 3 }).map(
+              (_, benefitIndex) => `Benefit ${benefitIndex + 1}`
+            ),
+            requirements: Array.from({ length: 5 }).map(
+              (_, reqIndex) => `Requirement ${reqIndex + 1}`
+            ),
+            // TODO: replace me with real images
+            imageUrl: `/images/vacancy-${index + 1}.jpg`,
+          }) satisfies Prisma.VacancyCreateManyInput
+      ),
     });
 
     console.log("✅ Seed completed successfully!");

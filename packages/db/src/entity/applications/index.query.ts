@@ -6,8 +6,6 @@ export type GetAllUserApplications = Prisma.ApplicationGetPayload<{
     id: true;
     status: true;
     type: true;
-    firstName: true;
-    lastName: true;
     createdAt: true;
   };
 }>[];
@@ -19,8 +17,6 @@ export const applicationQueries = {
         id: true,
         status: true,
         type: true,
-        firstName: true,
-        lastName: true,
         createdAt: true,
       },
       where: {

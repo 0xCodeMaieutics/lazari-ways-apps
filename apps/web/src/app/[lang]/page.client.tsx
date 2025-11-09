@@ -24,11 +24,14 @@ import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
 import { VacancySection } from "./_ui/vacancies-section";
 import { CTASection } from "@/components/cta-section";
+import { GetVacancies } from "@workspace/db";
 
 export const HomeClient = ({
   translations,
+  vacancies,
 }: {
   translations: Record<string, string>;
+  vacancies: GetVacancies;
 }) => {
   return (
     <translationsContext.Provider value={{ translations }}>
@@ -85,7 +88,7 @@ export const HomeClient = ({
         </section>
 
         <section id={SECTION_IDS.vacancies} className="px-6 py-16 md:py-24">
-          <VacancySection />
+          <VacancySection vacancies={vacancies} />
         </section>
 
         <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">

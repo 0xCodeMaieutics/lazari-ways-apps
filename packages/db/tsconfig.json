@@ -1,21 +1,13 @@
 {
   "compilerOptions": {
-    "declaration": true,
-    "declarationMap": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
-    "incremental": false,
-    "isolatedModules": true,
-    "lib": ["es2022", "DOM", "DOM.Iterable"],
-    "moduleDetection": "force",
-    "noUncheckedIndexedAccess": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
+    
+    // Enable all strict type-checking options
     "strict": true,
-    "target": "ES2022",
-    "noEmit": true,
-    "jsx": "react-jsx"
-  },
-  "include": ["src"],
-  "exclude": ["node_modules"]
+    "strictNullChecks": true,
+    "noUncheckedIndexedAccess": true,
+    "checkJs": true
+  }
 }
