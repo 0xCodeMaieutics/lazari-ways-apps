@@ -130,11 +130,13 @@ export async function uploadFileToStorage({
   bucket,
   fileKey,
   lockUntil = null,
+  ACL = "public-read",
 }: {
   filePath: string;
   bucket: string;
   fileKey: string;
   lockUntil?: Date | null;
+  ACL?: "private" | "public-read" | "public-read-write";
 }) {
   return await tryCatchAsync(
     () =>
@@ -164,6 +166,7 @@ export async function uploadFileToStorage({
             Bucket: bucket,
             Key: fileKey,
             Body: fileStream,
+            ACL,
             ChecksumAlgorithm: "SHA1",
             ChecksumSHA1: sha1Checksum,
             ...(lockUntil === null

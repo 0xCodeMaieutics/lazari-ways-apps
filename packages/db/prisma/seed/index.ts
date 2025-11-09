@@ -89,14 +89,18 @@ void (async function () {
       bucket: s3Env.value.S3_BUCKET_NAME,
       fileKey: fileKey,
       filePath: path.resolve(__dirname, "hotels.webp"),
+      ACL: "public-read",
     });
 
     if (uploadResult.isErr()) process.exit(1);
 
-    await getSignedUrlForDownload({
+    const signedUrl = await getSignedUrlForDownload({
       bucket: s3Env.value.S3_BUCKET_NAME,
       fileKey,
+      expiresInSeconds: 100 * 60 * 60, // 100 hours
     });
+
+    if (signedUrl.isErr()) process.exit(1);
 
     await tx.vacancy.createMany({
       data: Array.from({ length: 20 }).map(
@@ -123,8 +127,7 @@ void (async function () {
             requirements: Array.from({ length: 5 }).map(
               (_, reqIndex) => `Requirement ${reqIndex + 1}`
             ),
-            // TODO: replace me with real images
-            imageUrl: `/images/vacancy-${index + 1}.jpg`,
+            imageUrl: signedUrl.value,
           }) satisfies Prisma.VacancyCreateManyInput
       ),
     });
