@@ -12,6 +12,7 @@ import {
   uploadFileToStorage,
 } from "../../src/s3/s3-client";
 import path from "path";
+import { faker } from "@faker-js/faker";
 
 void (async function () {
   console.log("🗑️  Clearing existing data...");
@@ -103,33 +104,34 @@ void (async function () {
     if (signedUrl.isErr()) process.exit(1);
 
     await tx.vacancy.createMany({
-      data: Array.from({ length: 20 }).map(
-        (_, index) =>
-          ({
-            id: generateRandomString(32),
-            description: `Vacancy Description ${index + 1}`,
-            title: `Vacancy Title ${index + 1}`,
-            location: `Location ${index + 1}`,
-            employmentType:
-              $Enums.EmploymentType[
-                Object.keys($Enums.EmploymentType)[
-                  index % Object.keys($Enums.EmploymentType).length
-                ] as keyof typeof $Enums.EmploymentType
-              ],
-            priceMax: 50000 + index * 1000,
-            priceMin: 30000 + index * 1000,
-            startDate: new Date(2024, 0, 1 + index),
-            vacancyId: BASE_VACANCY_ID + index,
-            vacancyName: `${VACANCY_ID_PREFIX}${BASE_VACANCY_ID + index}`,
-            benefits: Array.from({ length: 3 }).map(
-              (_, benefitIndex) => `Benefit ${benefitIndex + 1}`
-            ),
-            requirements: Array.from({ length: 5 }).map(
-              (_, reqIndex) => `Requirement ${reqIndex + 1}`
-            ),
-            imageUrl: signedUrl.value,
-          }) satisfies Prisma.VacancyCreateManyInput
-      ),
+      data: Array.from({ length: 20 }).map((_, index) => {
+        const vacancyId = BASE_VACANCY_ID + index;
+        const vacancyName = `${VACANCY_ID_PREFIX}${vacancyId}`;
+        return {
+          id: generateRandomString(32),
+          description: `ვაკანსია ${vacancyName} მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
+          title: faker.person.jobTitle(),
+          location: "ნიუბერგის ახლოს",
+          employmentType:
+            $Enums.EmploymentType[
+              Object.keys($Enums.EmploymentType)[
+                index % Object.keys($Enums.EmploymentType).length
+              ] as keyof typeof $Enums.EmploymentType
+            ],
+          priceMax: 50000 + index * 1000,
+          priceMin: 30000 + index * 1000,
+          startDate: new Date(2024, 0, 1 + index),
+          vacancyId,
+          vacancyName,
+          benefits: Array.from({ length: 3 }).map(
+            (_, benefitIndex) => `Benefit ${benefitIndex + 1}`
+          ),
+          requirements: Array.from({ length: 5 }).map(
+            (_, reqIndex) => `Requirement ${reqIndex + 1}`
+          ),
+          imageUrl: signedUrl.value,
+        } satisfies Prisma.VacancyCreateManyInput;
+      }),
     });
 
     console.log("✅ Seed completed successfully!");

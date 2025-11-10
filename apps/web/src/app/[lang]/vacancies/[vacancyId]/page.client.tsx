@@ -27,20 +27,25 @@ import {
   CardHeader,
   CardFooter,
 } from "@workspace/ui/components/card";
-import { ContactVideo } from "@/components/contact-video";
-import { Vacancy, employmentTypeLabels } from "@/utils/models/vacancy";
 import { useParams } from "next/navigation";
 import { CTASection } from "@/components/cta-section";
+import { EmploymentTypeKey, GetVacancyById } from "@workspace/db";
+
+const employmentTypeLabels = {
+  FULL_TIME: "სრული განაკვეთი",
+  PART_TIME: "ნახევარი განაკვეთი",
+  INTERN: "სტაჟირება",
+  VOLUNTEER: "სტაჟირება",
+} satisfies Record<EmploymentTypeKey, string>;
 
 export const VacanciesClientPage = ({
   data,
   translations,
 }: {
-  data: Vacancy;
+  data: GetVacancyById;
   translations: Translations;
 }) => {
   const { lang } = useParams();
-  const [minPrice, maxPrice] = data.priceInEuro;
   return (
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full bg-gradient-to-b from-background via-background to-secondary/20">
@@ -76,7 +81,11 @@ export const VacanciesClientPage = ({
                   <div className="flex items-center gap-3 flex-wrap">
                     <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium shadow-md">
                       <Briefcase className="size-4" />
-                      {employmentTypeLabels[data.employmentType]}
+                      {
+                        employmentTypeLabels[
+                          data?.employmentType as EmploymentTypeKey
+                        ]
+                      }
                     </span>
                     <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-secondary text-secondary-foreground text-sm font-medium">
                       <MapPin className="size-4" />
@@ -85,7 +94,7 @@ export const VacanciesClientPage = ({
                   </div>
 
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
-                    {data.title}
+                    {data?.title}
                   </h1>
                 </div>
 
@@ -100,13 +109,13 @@ export const VacanciesClientPage = ({
                         <div className="flex items-baseline gap-2">
                           <Euro className="size-5 text-primary" />
                           <span className="text-3xl md:text-4xl font-bold text-primary">
-                            {minPrice.toFixed(2)}
+                            {data?.priceMin.toFixed(2)}
                           </span>
                           <span className="text-2xl text-muted-foreground">
                             -
                           </span>
                           <span className="text-3xl md:text-4xl font-bold text-primary">
-                            {maxPrice.toFixed(2)}
+                            {data?.priceMax.toFixed(2)}
                           </span>
                           <span className="text-lg text-muted-foreground">
                             /საათში
@@ -122,7 +131,7 @@ export const VacanciesClientPage = ({
 
                 {/* Description */}
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  {data.description}
+                  {data?.description}
                 </p>
 
                 {/* Action Buttons */}
@@ -144,7 +153,7 @@ export const VacanciesClientPage = ({
 
               {/* Right Column - Image */}
               <div className="relative lg:sticky lg:top-8">
-                {data.imageUrl ? (
+                {data?.imageUrl ? (
                   <div className="relative group">
                     <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
                     <div className="relative w-full h-[400px] lg:h-[550px] overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10">
@@ -181,7 +190,7 @@ export const VacanciesClientPage = ({
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {data.requirements.map((req, index) => (
+              {data?.requirements.map((req, index) => (
                 <Card
                   key={index}
                   className="group hover:shadow-xl hover:border-primary/30 transition-all duration-300 hover:-translate-y-1"
@@ -218,7 +227,7 @@ export const VacanciesClientPage = ({
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {data.benefits.map((benefit, index) => (
+              {data?.benefits.map((benefit, index) => (
                 <Card
                   key={index}
                   className="group relative overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-2 hover:border-primary/30"

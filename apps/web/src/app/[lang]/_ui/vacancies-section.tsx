@@ -12,6 +12,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/section-header";
 import { EmploymentTypeKey, GetVacancies } from "@workspace/db";
+import { Badge } from "@workspace/ui/components/badge";
+import { tryCatchAsync } from "@workspace/shared";
+import { toast } from "sonner";
 
 const employmentTypeLabels = {
   FULL_TIME: "სრული განაკვეთი",
@@ -38,6 +41,29 @@ const VacancyCard = ({
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
+          <Badge className="absolute h-8 top-5 left-5 flex items-center gap-2 px-4">
+            <span className="size-2.5 bg-foreground rounded-full animate-pulse" />
+            <span>{vacancy.location}</span>
+          </Badge>
+          <Badge
+            role="button"
+            onClick={async () => {
+              (
+                await tryCatchAsync(() =>
+                  navigator.clipboard.writeText(vacancy.vacancyName)
+                )
+              ).match({
+                ok: () => {
+                  toast.success(`${vacancy.vacancyName} დააკოპირეთ`);
+                },
+                err: () => toast.error("მოხდა შეცდომა"),
+              });
+            }}
+            aria-description="This button is clickable to copy the vacancy name"
+            className="absolute h-8 top-5 right-5 flex items-center gap-2 px-4 bg-foreground text-background font-semibold cursor-default"
+          >
+            <span>{vacancy.vacancyName}</span>
+          </Badge>
         </div>
       )}
 
@@ -76,7 +102,7 @@ const VacancyCard = ({
             variant={"link"}
             asChild
           >
-            <Link href={`/vacancies/${id}`}>
+            <Link href={`/vacancies/${vacancy.id}`}>
               დეტალურად
               <div className="border border-primary rounded-full p-1 animate-bounce-left ml-1">
                 <ArrowRight className="size-4" />
