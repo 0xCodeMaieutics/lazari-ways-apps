@@ -1,5 +1,5 @@
 import { prisma } from "../../client";
-import { Prisma } from "../../generated/client";
+import { Prisma } from "../../generated/prisma";
 
 export type GetAllUserApplications = Prisma.ApplicationGetPayload<{
   select: {

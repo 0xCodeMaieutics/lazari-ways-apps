@@ -1,5 +1,5 @@
 export { prisma } from "./client";
-export { PrismaClient } from "./generated/client";
+export { PrismaClient } from "./generated/prisma";
 
 export { generateRandomString } from "@workspace/shared";
 export { decrypt, encrypt } from "../utils/encrypt";

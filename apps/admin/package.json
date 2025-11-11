@@ -8,7 +8,6 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "codegen": "prisma generate",
     "docker:up": "docker compose up --build --remove-orphans -d",
     "typecheck": "tsc --noEmit"
   },

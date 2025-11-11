@@ -1,6 +1,6 @@
 import { tryCatchAsync } from "@workspace/shared";
 import { prisma } from "../../client";
-import { Prisma } from "../../generated/client";
+import { Prisma } from "../../generated/prisma";
 
 export type GetVacancies = Prisma.VacancyGetPayload<{
   select: {
