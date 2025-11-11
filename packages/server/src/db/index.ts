@@ -1,8 +1,8 @@
 export { prisma } from "./client";
 export { PrismaClient } from "./generated/client";
-export { auth } from "./auth";
+
 export { generateRandomString } from "@workspace/shared";
-export { decrypt, encrypt } from "./utils/encrypt";
+export { decrypt, encrypt } from "../utils/encrypt";
 export {
   type Application,
   ApplicationStatus,
@@ -18,10 +18,3 @@ export {
   type GetVacancyById,
   vacancyQueries,
 } from "./entity/vacancy";
-
-/**
- * Task: rename this repo to server and split the exports in two components:
- * 1. auth
- * 2. db
- *
- */

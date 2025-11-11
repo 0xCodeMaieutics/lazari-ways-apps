@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { VacanciesClientPage } from "./page.client";
 import { getTranslations } from "@/i18n/translations";
 import { Locale } from "@/i18n";
-import { vacancyQueries } from "@workspace/db";
+import { vacancyQueries } from "@workspace/server/db";
 
 export default async function VacanciesDetailPage({
   params,

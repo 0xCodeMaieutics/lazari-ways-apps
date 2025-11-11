@@ -13,7 +13,7 @@ import { Session, User } from "better-auth";
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import { ApplicationsList } from "@/components/applications-list";
-import { GetAllUserApplications } from "@workspace/db";
+import { GetAllUserApplications } from "@workspace/server/db";
 
 function AccountDetail({
   label,

@@ -11,7 +11,7 @@ import { Euro, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeader } from "@/components/section-header";
-import { EmploymentTypeKey, GetVacancies } from "@workspace/db";
+import { EmploymentTypeKey, GetVacancies } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { tryCatchAsync } from "@workspace/shared";
 import { toast } from "sonner";

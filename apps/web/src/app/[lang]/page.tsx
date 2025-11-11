@@ -1,7 +1,7 @@
 import { getTranslations } from "@/i18n/translations";
 import { HomeClient } from "./page.client";
 import { Locale } from "@/i18n";
-import { vacancyQueries } from "@workspace/db";
+import { vacancyQueries } from "@workspace/server/db";
 import { notFound } from "next/navigation";
 
 export default async function Home({

@@ -25,7 +25,7 @@ import {
   ApplicationFormData,
   applicationFormSchema,
 } from "@/utils/models/applications";
-import { ApplicationTypeKey } from "@workspace/db";
+import { ApplicationTypeKey } from "@workspace/server/db";
 
 export function ApplicationForm({ type }: { type: ApplicationTypeKey }) {
   const router = useRouter();

@@ -24,7 +24,7 @@ import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
 import { VacancySection } from "./_ui/vacancies-section";
 import { CTASection } from "@/components/cta-section";
-import { GetVacancies } from "@workspace/db";
+import { GetVacancies } from "@workspace/server/db";
 
 export const HomeClient = ({
   translations,

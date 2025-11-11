@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "../client";
+import { prisma } from "../db/client";
 
 export const APP_SLUG = "lazari-ways";
 

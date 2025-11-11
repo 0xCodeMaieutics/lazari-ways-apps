@@ -7,7 +7,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "docker:dev": "docker compose up --build --remove-orphans -d"
+    "docker:dev": "docker compose up --build --remove-orphans -d",
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",

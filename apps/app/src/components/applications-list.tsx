@@ -24,7 +24,7 @@ import {
   ApplicationType,
   ApplicationTypeKey,
   GetAllUserApplications,
-} from "@workspace/db";
+} from "@workspace/server/db";
 
 const statusConfig: Record<
   ApplicationStatusKey,
@@ -34,18 +34,38 @@ const statusConfig: Record<
     icon: React.ReactNode;
   }
 > = {
-  PENDING: {
-    label: "Received by Admins",
+  USER_SUBMITTED: {
+    label: "Submitted",
     variant: "secondary",
     icon: <Clock className="h-3 w-3" />,
   },
-  APPROVED: {
-    label: "Confirmed",
+  IN_REVIEW_BY_AGENCY: {
+    label: "Under Review by Agency",
+    variant: "secondary",
+    icon: <Clock className="h-3 w-3" />,
+  },
+  APPROVED_BY_AGENCY: {
+    label: "Approved by Agency",
     variant: "default",
     icon: <CheckCircle className="h-3 w-3" />,
   },
-  REJECTED: {
-    label: "Rejected",
+  REJECTED_BY_AGENCY: {
+    label: "Rejected by Agency",
+    variant: "destructive",
+    icon: <XCircle className="h-3 w-3" />,
+  },
+  IN_REVIEW_BY_EMPLOYER: {
+    label: "Under Review by Employer",
+    variant: "secondary",
+    icon: <Clock className="h-3 w-3" />,
+  },
+  APPROVED_BY_EMPLOYER: {
+    label: "Approved by Employer",
+    variant: "default",
+    icon: <CheckCircle className="h-3 w-3" />,
+  },
+  REJECTED_BY_EMPLOYER: {
+    label: "Rejected by Employer",
     variant: "destructive",
     icon: <XCircle className="h-3 w-3" />,
   },
@@ -62,7 +82,8 @@ function ApplicationCard({
 }: {
   application: GetAllUserApplications[0];
 }) {
-  const status = statusConfig[application.status ?? ApplicationStatus.PENDING];
+  const status =
+    statusConfig[application.status ?? ApplicationStatus.USER_SUBMITTED];
 
   return (
     <Card>
@@ -81,7 +102,8 @@ function ApplicationCard({
                 }
               </h3>
               <p className="text-sm text-muted-foreground">
-                {application.firstName} {application.lastName}
+                {/* FIXME: fetch user information in the server component and display */}
+                {/* {application.firstName} {application.lastName} */}
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3" />

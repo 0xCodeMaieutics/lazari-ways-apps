@@ -1,6 +1,6 @@
 import { env } from "@/env";
-import { prisma } from "@workspace/db";
-import { generateRandomString } from "@workspace/db";
+import { prisma } from "@workspace/server/db";
+import { generateRandomString } from "@workspace/server/db";
 import { putObjects } from "@/lib/s3/s3.server";
 import { getImageExtension, ImageFileType } from "@/utils/file";
 import { applicationFormSchema } from "@/utils/models/applications";
@@ -97,29 +97,10 @@ export const POST = async (request: Request) => {
       data: {
         id: applicationId,
         type,
-        firstName: result.data.firstName,
-        lastName: result.data.lastName,
-        gender: result.data.gender,
-        nationality: result.data.nationality,
-        birthDate: new Date(result.data.birthDate),
-        birthPlace: result.data.birthPlace,
-        birthCountry: result.data.birthCountry,
-        street: result.data.street,
-        postalCode: result.data.postalCode,
-        city: result.data.city,
-        country: result.data.country,
         // Agency
         agencyName: result.data.agencyName,
         agencyAddress: result.data.agencyAddress,
         // Study Information
-        semesterBreakFrom: result.data.semesterBreakFrom
-          ? new Date(result.data.semesterBreakFrom)
-          : null,
-        semesterBreakTo: result.data.semesterBreakTo
-          ? new Date(result.data.semesterBreakTo)
-          : null,
-        university: result.data.university,
-        studySubject: result.data.studySubject,
         germanLevel: result.data.germanLevel,
         otherLanguages: result.data.otherLanguages,
         driverLicense: result.data.driverLicense,

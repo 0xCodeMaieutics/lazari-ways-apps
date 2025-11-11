@@ -29,7 +29,7 @@ import {
 } from "@workspace/ui/components/card";
 import { useParams } from "next/navigation";
 import { CTASection } from "@/components/cta-section";
-import { EmploymentTypeKey, GetVacancyById } from "@workspace/db";
+import { EmploymentTypeKey, GetVacancyById } from "@workspace/server/db";
 
 const employmentTypeLabels = {
   FULL_TIME: "სრული განაკვეთი",

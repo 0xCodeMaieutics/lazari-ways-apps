@@ -1,8 +1,8 @@
 import { headers } from "next/headers";
 import { OnboardingPageClient } from "./page.client";
-import { auth } from "@workspace/db";
+import { auth } from "@workspace/server/auth";
 import { redirect } from "next/navigation";
-import { applicationQueries } from "@workspace/db";
+import { applicationQueries } from "@workspace/server/db";
 
 export default async function OnboardingPage() {
   const session = await auth.api.getSession({
