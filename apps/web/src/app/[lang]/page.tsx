@@ -16,6 +16,7 @@ export default async function Home({
   const vacancies = await vacancyQueries.getVacancies();
 
   if (vacancies.isErr()) {
+    console.error(vacancies.error.message, vacancies.error.type);
     return notFound();
   }
 
