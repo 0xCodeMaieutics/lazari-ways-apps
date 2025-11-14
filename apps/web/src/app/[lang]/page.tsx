@@ -1,8 +1,6 @@
 import { getTranslations } from "@/i18n/translations";
 import { HomeClient } from "./page.client";
 import { Locale } from "@/i18n";
-import { vacancyQueries } from "@workspace/server/db";
-import { notFound } from "next/navigation";
 
 export default async function Home({
   params,
@@ -13,12 +11,5 @@ export default async function Home({
   // const lang = "ka";
   const translations = await getTranslations(lang as Locale, "home");
 
-  const vacancies = await vacancyQueries.getVacancies();
-
-  if (vacancies.isErr()) {
-    console.error(vacancies.error.message, vacancies.error.type);
-    return notFound();
-  }
-
-  return <HomeClient translations={translations} vacancies={vacancies.value} />;
+  return <HomeClient translations={translations} />;
 }

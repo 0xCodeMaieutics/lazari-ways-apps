@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import {
-  ArrowDown,
+  ArrowRight,
   Award,
   CheckCircle2,
   Clock,
@@ -22,17 +22,16 @@ import { SectionHeader } from "@/components/section-header";
 
 import { ServicesSection } from "./_ui/services-section";
 import { translationsContext } from "@/lib/context/translations";
-import { VacancySection } from "./_ui/vacancies-section";
 import { CTASection } from "@/components/cta-section";
-import { GetVacancies } from "@workspace/server/db";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 
 export const HomeClient = ({
   translations,
-  vacancies,
 }: {
   translations: Record<string, string>;
-  vacancies: GetVacancies;
 }) => {
+  const { lang } = useParams();
   return (
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full flex flex-col">
@@ -56,14 +55,13 @@ export const HomeClient = ({
 
               <Button
                 size={"lg"}
-                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollSmoothlyToSection(SECTION_IDS.vacancies);
-                }}
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 max-w-max"
+                asChild
               >
-                ვაკანსიების ნახვა
-                <ArrowDown className="animate-bounce size-4.5 font-semibold" />
+                <Link href={`/${lang}/vacancies`}>
+                  ვაკანსიების ნახვა
+                  <ArrowRight className="animate-bounce-right size-4.5 font-semibold" />
+                </Link>
               </Button>
             </div>
             <div className="flex justify-end px-10 sm:px-0 mx-auto">
@@ -72,7 +70,6 @@ export const HomeClient = ({
           </div>
         </section>
 
-        {/* Gallery */}
         <section id={SECTION_IDS.gallery} className="px-6 py-16 md:py-24">
           <div className="w-full max-w-7xl mx-auto">
             <SectionHeader
@@ -85,10 +82,6 @@ export const HomeClient = ({
             </SectionHeader>
             <EmployersGallery />
           </div>
-        </section>
-
-        <section id={SECTION_IDS.vacancies} className="px-6 py-16 md:py-24">
-          <VacancySection vacancies={vacancies} />
         </section>
 
         <section id={SECTION_IDS.services} className="px-6 py-16 md:py-24">

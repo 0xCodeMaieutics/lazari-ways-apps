@@ -1,4 +1,4 @@
-import { scrollSmoothlyToSection, SECTION_IDS } from "@/app/[lang]/utils";
+"use client";
 import {
   Card,
   CardContent,
@@ -7,14 +7,16 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
-import { Euro, ArrowRight } from "lucide-react";
+import { Euro, ArrowRight, Briefcase } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { SectionHeader } from "@/components/section-header";
 import { EmploymentTypeKey, GetVacancies } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { tryCatchAsync } from "@workspace/shared";
 import { toast } from "sonner";
+import { translationsContext } from "@/lib/context/translations";
+import { Translations } from "@/i18n/translations";
+import { useParams } from "next/navigation";
 
 const employmentTypeLabels = {
   FULL_TIME: "სრული განაკვეთი",
@@ -25,10 +27,10 @@ const employmentTypeLabels = {
 
 const VacancyCard = ({
   vacancy,
-  id,
+  lang,
 }: {
   vacancy: GetVacancies[0];
-  id: string;
+  lang: string;
 }) => {
   return (
     <Card className="group flex flex-col h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
@@ -60,7 +62,7 @@ const VacancyCard = ({
               });
             }}
             aria-description="This button is clickable to copy the vacancy name"
-            className="absolute h-8 top-5 right-5 flex items-center gap-2 px-4 bg-foreground text-background font-semibold cursor-default"
+            className="absolute h-8 top-5 right-5 flex items-center gap-2 px-4 bg-foreground text-background font-semibold cursor-pointer hover:bg-foreground/90 transition-colors"
           >
             <span>{vacancy.vacancyName}</span>
           </Badge>
@@ -102,7 +104,7 @@ const VacancyCard = ({
             variant={"link"}
             asChild
           >
-            <Link href={`/vacancies/${vacancy.id}`}>
+            <Link href={`/${lang}/vacancies/${vacancy.id}`}>
               დეტალურად
               <div className="border border-primary rounded-full p-1 animate-bounce-left ml-1">
                 <ArrowRight className="size-4" />
@@ -115,22 +117,87 @@ const VacancyCard = ({
   );
 };
 
-export const VacancySection = ({ vacancies }: { vacancies: GetVacancies }) => {
-  return (
-    <div className="max-w-7xl mx-auto">
-      <SectionHeader
-        onClick={() => {
-          scrollSmoothlyToSection(SECTION_IDS.vacancies);
-        }}
-      >
-        ვაკანსიები
-      </SectionHeader>
+export const VacanciesListingClient = ({
+  vacancies,
+  translations,
+}: {
+  vacancies: GetVacancies;
+  translations: Translations;
+}) => {
+  const { lang } = useParams();
 
-      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.entries(vacancies).map(([id, vacancy], index) => (
-          <VacancyCard key={index} vacancy={vacancy} id={id} />
-        ))}
-      </div>
-    </div>
+  return (
+    <translationsContext.Provider value={{ translations }}>
+      <main className="min-h-screen w-full bg-linear-to-b from-background via-background to-secondary/20">
+        {/* Hero Section */}
+        <section className="relative px-6 pt-40">
+          {/* Decorative background elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-20 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
+            <div className="absolute bottom-20 left-10 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+          </div>
+
+          <div className="max-w-7xl mx-auto relative z-10">
+            {/* Header */}
+            <div className="text-center mb-12 space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
+                <Briefcase className="size-4" />
+                <span className="text-sm font-semibold">
+                  {translations["header.badge"]}
+                </span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                {translations["header.title"]}
+              </h1>
+              <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
+                {translations["header.description"]}
+              </p>
+            </div>
+
+            {/* Vacancies Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Object.entries(vacancies).map(([id, vacancy]) => (
+                <VacancyCard key={id} vacancy={vacancy} lang={lang as string} />
+              ))}
+            </div>
+
+            {/* Empty State */}
+            {Object.keys(vacancies).length === 0 && (
+              <div className="text-center py-16">
+                <Briefcase className="size-16 text-muted-foreground/50 mx-auto mb-4" />
+                <h3 className="text-2xl font-semibold mb-2">
+                  {translations["empty.title"]}
+                </h3>
+                <p className="text-muted-foreground">
+                  {translations["empty.description"]}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="px-6 py-16 md:py-24 bg-secondary/30">
+          <div className="max-w-4xl mx-auto text-center space-y-6">
+            <h2 className="text-3xl md:text-4xl font-bold">
+              {translations["cta.title"]}
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              {translations["cta.description"]}
+            </p>
+            <Button
+              size="lg"
+              className="text-lg font-semibold h-14 px-10"
+              asChild
+            >
+              <Link href={`/${lang}#contact`}>
+                {translations["cta.button"]}
+                <ArrowRight className="size-5 ml-2" />
+              </Link>
+            </Button>
+          </div>
+        </section>
+      </main>
+    </translationsContext.Provider>
   );
 };
