@@ -26,9 +26,9 @@ const WhatsappLink = () => (
     href={WHATSAPP_URL}
     target="_blank"
     rel="noopener noreferrer"
-    className="flex size-8 sm:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
+    className="flex size-8 md:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
   >
-    <PhoneIcon className="text-white size-6 sm:size-3" />
+    <PhoneIcon className="text-white size-6 md:size-3" />
   </a>
 );
 
@@ -53,10 +53,10 @@ export const Header = ({ translations }: { translations: Translations }) => {
   };
 
   return (
-    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 sm:py-6 px-4 bg-background border-b">
+    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 md:py-6 px-4 bg-background border-b">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <LogoAndText lang={lang as Locale} />
-        <nav className="hidden sm:flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-4">
           <Button
             className="flex items-center gap-2 relative font-semibold group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max"
             variant={"link"}
@@ -85,7 +85,7 @@ export const Header = ({ translations }: { translations: Translations }) => {
             <Underline />
           </Button>
         </nav>
-        <div className="hidden sm:block">
+        <div className="hidden md:block">
           <Button
             variant={"link"}
             className="cursor-pointer font-semibold text-lg underline"
@@ -96,7 +96,7 @@ export const Header = ({ translations }: { translations: Translations }) => {
         </div>
 
         <Sheet open={open} onOpenChange={setOpen}>
-          <div className="sm:hidden flex items-center gap-4">
+          <div className="md:hidden flex items-center gap-4">
             <WhatsappLink />
             <SheetTrigger asChild>
               <button>

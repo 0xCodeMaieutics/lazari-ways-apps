@@ -18,13 +18,13 @@ export const LogoText = ({ children }: PropsWithChildren) => {
 export const LogoAndText = ({ lang }: { lang: Locale }) => {
   return (
     <Link href={`/${lang}`}>
-      <Image
-        src={"/images/logos/logo-text.svg"}
-        alt="Lazary Ways image Logo"
-        quality={100}
-        width={254}
-        height={60}
-      />
+      <div className="relative h-12 w-[190px]">
+        <Image
+          src={"/images/logos/logo-text.svg"}
+          alt="Lazary Ways image Logo"
+          fill
+        />
+      </div>
     </Link>
   );
 };
