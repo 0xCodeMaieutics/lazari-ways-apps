@@ -1,13 +1,6 @@
-enum EmploymentType {
-  FULL_TIME
-  PART_TIME
-  INTERN
-  VOLUNTEER
-}
-
 model Vacancy {
   id             String   @id @default(cuid())
-  vacancyId      Int   @unique // Special ID for the vacancy
+  vacancyId      Int      @unique // Special ID for the vacancy
   title          String // Bäcker
   location       String // Nähe Berlin, Germany
   beginDate      String
