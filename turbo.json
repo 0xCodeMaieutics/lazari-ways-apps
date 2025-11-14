@@ -31,6 +31,7 @@
     }
   },
   "globalEnv": [
+    "DIRECT_URL",
     "DATABASE_URL",
     "NODE_ENV",
     "ENCRYPTION_KEY",
