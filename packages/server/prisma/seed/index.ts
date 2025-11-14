@@ -6,7 +6,7 @@ import { createUsers } from "./user";
 import z from "zod";
 import { auth } from "../../src/auth";
 import { prisma } from "../../src/db/client";
-import { Prisma, $Enums } from "../../src/db/generated/prisma";
+import { Prisma, $Enums } from "../../src/db/generated/prisma/client";
 import {
   getSignedUrlForDownload,
   uploadFileToStorage,

@@ -1,4 +1,4 @@
-import { Prisma, $Enums } from "../../src/generated/client";
+import { Prisma, $Enums } from "../../src/db/generated/prisma/client";
 
 import { generateRandomString } from "@workspace/shared";
 
@@ -37,3 +37,16 @@ export const createAdmin = (tx: Prisma.TransactionClient) =>
       },
     },
   });
+
+if (require.main === module) {
+  void (async function () {
+    const email = "anna@lazaryways.eu";
+    const password = "#AnnaIsCool2025!";
+    console.log("Creating admin user...");
+    // const admin = await createAdmin("");
+    console.log("Admin user created:");
+    console.log(`Email: ${email}`);
+    console.log(`Password: ${password}`);
+    // console.log(admin);
+  })();
+}

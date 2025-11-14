@@ -1,4 +1,4 @@
-import { $Enums, Prisma } from "../../generated/prisma";
+import { $Enums, Prisma } from "../../generated/prisma/client";
 
 export type Application = Prisma.ApplicationGetPayload<{
   select: {
