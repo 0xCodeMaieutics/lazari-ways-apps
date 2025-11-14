@@ -1,2 +1,1 @@
-export { vacancyQueries, type GetVacancies, type GetVacancyById } from "./index.query";
-export { type EmploymentTypeKey } from "./model";
+export { vacancyQueries, type Vacancy } from "./index.query";

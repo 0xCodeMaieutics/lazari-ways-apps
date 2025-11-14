@@ -5,13 +5,12 @@ import { createApplications } from "./application";
 import { createUsers } from "./user";
 import z from "zod";
 import { auth } from "../../src/auth";
-import { Prisma, $Enums, PrismaClient } from "db/client";
+import { Prisma } from "db/client";
 import {
   getSignedUrlForDownload,
   uploadFileToStorage,
 } from "../../src/s3/s3-client";
 import path from "path";
-import { faker } from "@faker-js/faker";
 import { prisma } from "../../src/db/client";
 
 void (async function () {
@@ -54,7 +53,6 @@ void (async function () {
     });
 
     const BASE_VACANCY_ID = 375;
-    const VACANCY_ID_PREFIX = "LZRY-";
     const s3Env = zodParse(
       process.env,
       z.object({
@@ -85,20 +83,20 @@ void (async function () {
     await tx.vacancy.createMany({
       data: Array.from({ length: 20 }).map((_, index) => {
         const vacancyId = BASE_VACANCY_ID + index;
-        const vacancyName = `${VACANCY_ID_PREFIX}${vacancyId}`;
         return {
           id: generateRandomString(32),
-          title: "Bäcker/in",
-          jobDescription: `ვაკანსია ${vacancyName} მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
-          location: "ნიუბერგის ახლოს",
-          beginDate: new Date(2024, 0, 1 + index).toISOString(),
           vacancyId,
+          title: "Bäcker/in",
+          jobDescription: `ვაკანსია მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
+          location: "ნიუბერგის ახლოს",
+          beginDate: "2024-09-01",
           accommodation: "სასტუმროში",
           duration: `${30 + index} დღე`,
           meals: "სამჯერადი",
           salary: `${800 + index * 10} EUR`,
-          schedule: "სამუშაო დღეებში 8 საათი",
-          additionalInfo: faker.lorem.paragraphs(2),
+          schedule:
+            "- სამუშაო დღეებში 8 საათი\n- შაბათ-კვირას თავისუფალი\n- საღამოები თავისუფალი",
+          additionalInfo: "გამოცდილება სასურველია, მაგრამ არა აუცილებელი.",
           createdAt: new Date().toISOString(),
           photos: [],
           videos: [],

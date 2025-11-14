@@ -12,7 +12,7 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "db:push": "prisma db push --force-reset",
-    "db:push-seed": "prisma db push --force-reset"
+    "db:push-seed": "prisma db push --force-reset && pnpm db:seed"
   },
   "exports": {
     "./db": "./dist/db/index.js",

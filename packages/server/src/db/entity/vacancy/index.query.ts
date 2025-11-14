@@ -2,45 +2,26 @@ import { tryCatchAsync } from "@workspace/shared";
 import { prisma } from "../../client";
 import { Prisma } from "../../generated/prisma/client";
 
-export type GetVacancies = Prisma.VacancyGetPayload<{
+export type Vacancy = Prisma.VacancyGetPayload<{
   select: {
     id: true;
     location: true;
-    description: true;
     createdAt: true;
-    imageUrl: true;
     title: true;
-    employmentType: true;
-    priceMax: true;
-    priceMin: true;
-    requirements: true;
-    benefits: true;
     vacancyId: true;
-    // NOTE: might not need this since title
-    vacancyName: true;
-    startDate: true;
+    jobDescription: true;
+    beginDate: true;
+    accommodation: true;
+    duration: true;
+    meals: true;
+    salary: true;
+    schedule: true;
+    additionalInfo: true;
+    photos: true;
+    videos: true;
+    reviews: true;
   };
-}>[];
-
-export type GetVacancyById = Prisma.VacancyGetPayload<{
-  select: {
-    id: true;
-    location: true;
-    description: true;
-    createdAt: true;
-    imageUrl: true;
-    title: true;
-    employmentType: true;
-    priceMax: true;
-    priceMin: true;
-    requirements: true;
-    benefits: true;
-    vacancyId: true;
-    // NOTE: might not need this since title
-    vacancyName: true;
-    startDate: true;
-  };
-}> | null;
+}>;
 
 export const vacancyQueries = {
   getVacancies: async () =>
@@ -51,24 +32,25 @@ export const vacancyQueries = {
             select: {
               id: true,
               location: true,
-              description: true,
               createdAt: true,
-              imageUrl: true,
               title: true,
-              employmentType: true,
-              priceMax: true,
-              priceMin: true,
-              requirements: true,
-              benefits: true,
               vacancyId: true,
-              // NOTE: might not need this since title
-              vacancyName: true,
-              startDate: true,
+              jobDescription: true,
+              beginDate: true,
+              accommodation: true,
+              duration: true,
+              meals: true,
+              salary: true,
+              schedule: true,
+              additionalInfo: true,
+              photos: true,
+              videos: true,
+              reviews: true,
             },
             orderBy: {
               createdAt: "desc",
             },
-          }) satisfies Promise<GetVacancies>
+          }) satisfies Promise<Vacancy[]>
       )
     ).mapErr((err) => {
       console.log(err);
@@ -88,20 +70,21 @@ export const vacancyQueries = {
           select: {
             id: true,
             location: true,
-            description: true,
             createdAt: true,
-            imageUrl: true,
             title: true,
-            employmentType: true,
-            priceMax: true,
-            priceMin: true,
-            requirements: true,
-            benefits: true,
             vacancyId: true,
-            // NOTE: might not need this since title
-            vacancyName: true,
-            startDate: true,
+            jobDescription: true,
+            beginDate: true,
+            accommodation: true,
+            reviews: true,
+            additionalInfo: true,
+            duration: true,
+            meals: true,
+            salary: true,
+            schedule: true,
+            photos: true,
+            videos: true,
           },
-        }) satisfies Promise<GetVacancyById>
+        }) satisfies Promise<Vacancy | null>
     ),
 };

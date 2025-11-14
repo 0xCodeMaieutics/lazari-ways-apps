@@ -13,8 +13,6 @@ export {
   applicationQueries,
 } from "./entity/applications";
 export {
-  type EmploymentTypeKey,
-  type GetVacancies,
-  type GetVacancyById,
+  type Vacancy,
   vacancyQueries,
 } from "./entity/vacancy";

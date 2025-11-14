@@ -7,111 +7,168 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
-import { Euro, ArrowRight, Briefcase } from "lucide-react";
+import {
+  Calendar,
+  ArrowRight,
+  Briefcase,
+  MapPin,
+  Clock,
+  Euro,
+  Copy,
+  CheckCircle2,
+  ImageIcon,
+  VideoIcon,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { EmploymentTypeKey, GetVacancies } from "@workspace/server/db";
+import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { tryCatchAsync } from "@workspace/shared";
 import { toast } from "sonner";
 import { translationsContext } from "@/lib/context/translations";
 import { Translations } from "@/i18n/translations";
 import { useParams } from "next/navigation";
+import { useState } from "react";
+import { sleep } from "@/utils/sleep";
 
-const employmentTypeLabels = {
-  FULL_TIME: "სრული განაკვეთი",
-  PART_TIME: "ნახევარი განაკვეთი",
-  INTERN: "სტაჟირება",
-  VOLUNTEER: "სტაჟირება",
-} satisfies Record<EmploymentTypeKey, string>;
+const VACANCY_ID_PREFIX = "LZRY-";
 
-const VacancyCard = ({
-  vacancy,
-  lang,
-}: {
-  vacancy: GetVacancies[0];
-  lang: string;
-}) => {
+const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
+  const [copied, setCopied] = useState(false);
+  const vacancyIdWithPrefix = `${VACANCY_ID_PREFIX}${vacancy.vacancyId}`;
+  const handleCopyVacancyId = async () => {
+    (
+      await tryCatchAsync(() =>
+        navigator.clipboard.writeText(vacancyIdWithPrefix)
+      )
+    ).match({
+      ok: () => {
+        setCopied(true);
+        toast.success(`ვაკანსიის ID ${vacancyIdWithPrefix} დააკოპირეთ`);
+        sleep(2000).then(() => setCopied(false));
+      },
+      err: () => toast.error("მოხდა შეცდომა"),
+    });
+  };
+
+  const firstPhoto = vacancy.photos?.[0];
+  const hasMedia = vacancy.photos?.length > 0 || vacancy.videos?.length > 0;
+
   return (
-    <Card className="group flex flex-col h-full hover:shadow-lg transition-shadow duration-300 overflow-hidden pt-0">
-      {vacancy.imageUrl && (
-        <div className="relative w-full h-[300px] overflow-hidden">
-          <Image
-            src={vacancy.imageUrl}
-            alt={vacancy.title}
-            fill={true}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-          />
-          <Badge className="absolute h-8 top-5 left-5 flex items-center gap-2 px-4">
-            <span className="size-2.5 bg-accent rounded-full animate-pulse" />
-            <span>{vacancy.location}</span>
-          </Badge>
-          <Badge
-            role="button"
-            onClick={async () => {
-              (
-                await tryCatchAsync(() =>
-                  navigator.clipboard.writeText(vacancy.vacancyName)
-                )
-              ).match({
-                ok: () => {
-                  toast.success(`${vacancy.vacancyName} დააკოპირეთ`);
-                },
-                err: () => toast.error("მოხდა შეცდომა"),
-              });
-            }}
-            aria-description="This button is clickable to copy the vacancy name"
-            className="absolute h-8 top-5 right-5 flex items-center gap-2 px-4 bg-foreground text-background font-semibold cursor-pointer hover:bg-foreground/90 transition-colors"
-          >
-            <span>{vacancy.vacancyName}</span>
-          </Badge>
-        </div>
-      )}
-
-      <CardHeader className="space-y-3">
-        <div className="flex items-start justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <CardTitle className="text-xl transition-colors">
-              {vacancy.title}
-            </CardTitle>
+    <Card className="group py-0 flex flex-col h-full overflow-hidden border-2">
+      {/* Image Header with Overlays */}
+      <div className="relative w-full h-[280px] overflow-hidden bg-linear-to-br from-primary/10 to-primary/5">
+        {firstPhoto ? (
+          <>
+            <Image
+              src={firstPhoto}
+              alt={vacancy.title}
+              fill={true}
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              className="object-cover transition-transform duration-700"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
+          </>
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <Briefcase className="size-24 text-primary/20" />
           </div>
-          <span className="max-w-max shrink-0 px-2.5 py-1 text-xs font-medium bg-secondary text-secondary-foreground rounded-md">
-            {employmentTypeLabels[vacancy.employmentType as EmploymentTypeKey]}
-          </span>
-        </div>
-        {/* Salary Info */}
-        <div className="flex items-center gap-2 p-3 bg-primary/5 rounded-lg">
-          <Euro className="h-5 w-5 text-primary shrink-0" />
-          <div>
-            <p className="text-sm text-muted-foreground">ანაზღაურება</p>
-            <p className="font-semibold text-lg">
-              {vacancy.priceMin.toFixed(2)}€ - {vacancy.priceMax.toFixed(2)}€/სთ
-            </p>
+        )}
+
+        <Badge className="absolute top-4 left-4 h-9 flex items-center gap-2 px-4 bg-background/95 backdrop-blur-sm shadow-lg border-primary/20">
+          <MapPin className="size-4 text-primary" />
+          <span className="font-semibold text-primary">{vacancy.location}</span>
+        </Badge>
+
+        <Badge
+          role="button"
+          onClick={handleCopyVacancyId}
+          className="absolute top-4 right-4 h-9 flex items-center gap-2 px-4 bg-foreground text-background font-bold cursor-pointer hover:bg-foreground/90 transition-all shadow-lg"
+        >
+          {copied ? (
+            <CheckCircle2 className="size-4 animate-in zoom-in" />
+          ) : (
+            <Copy className="size-4" />
+          )}
+          <span>{vacancyIdWithPrefix}</span>
+        </Badge>
+
+        {hasMedia && (
+          <div className="absolute bottom-4 left-4 flex gap-2">
+            {vacancy.photos?.length > 0 && (
+              <Badge className="h-8 flex items-center gap-1.5 px-3 bg-background/95 backdrop-blur-sm">
+                <ImageIcon className="size-3.5" />
+                <span className="text-xs font-semibold">
+                  {vacancy.photos.length}
+                </span>
+              </Badge>
+            )}
+            {vacancy.videos?.length > 0 && (
+              <Badge className="h-8 flex items-center gap-1.5 px-3 bg-background/95 backdrop-blur-sm">
+                <VideoIcon className="size-3.5" />
+                <span className="text-xs font-semibold">
+                  {vacancy.videos.length}
+                </span>
+              </Badge>
+            )}
           </div>
+        )}
+      </div>
+
+      <CardHeader className="space-y-4 pb-4">
+        <div className="space-y-2">
+          <CardTitle className="text-2xl font-bold leading-tight transition-colors">
+            {vacancy.title}
+          </CardTitle>
+          <CardDescription className="text-sm leading-relaxed line-clamp-2">
+            {vacancy.jobDescription}
+          </CardDescription>
         </div>
 
-        <CardDescription className="text-base leading-relaxed">
-          {vacancy.description}
-        </CardDescription>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="flex items-start gap-2 p-3 bg-primary/5 rounded-lg border border-primary/10">
+            <Euro className="size-5 text-primary shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground font-medium">
+                ანაზღაურება
+              </p>
+              <p className="font-bold text-sm truncate">{vacancy.salary}</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+            <Clock className="size-5 text-foreground shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground font-medium">
+                ხანგრძლივობა
+              </p>
+              <p className="font-bold text-sm truncate">{vacancy.duration}</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+            <Calendar className="size-5 text-foreground shrink-0 mt-0.5" />
+            <div className="min-w-0">
+              <p className="text-xs text-muted-foreground font-medium">
+                დაწყება
+              </p>
+              <p className="font-bold text-sm truncate">{vacancy.beginDate}</p>
+            </div>
+          </div>
+        </div>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col justify-end space-y-6">
-        <div className="flex justify-center">
-          <Button
-            className="max-w-xs mx-auto text-lg font-semibold h-12 cursor-pointer"
-            size={"lg"}
-            variant={"link"}
-            asChild
-          >
-            <Link href={`/${lang}/vacancies/${vacancy.id}`}>
-              დეტალურად
-              <div className="border border-primary rounded-full p-1 animate-bounce-left ml-1">
-                <ArrowRight className="size-4" />
-              </div>
-            </Link>
-          </Button>
-        </div>
+      <CardContent className="pt-0 pb-6 mt-auto">
+        <Button
+          className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
+          size="lg"
+          asChild
+        >
+          <Link href={`/${lang}/vacancies/${vacancy.id}`}>
+            დეტალურად ნახვა
+            <ArrowRight className="size-5 ml-2-x-1 transition-transform" />
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );
@@ -121,7 +178,7 @@ export const VacanciesListingClient = ({
   vacancies,
   translations,
 }: {
-  vacancies: GetVacancies;
+  vacancies: Vacancy[];
   translations: Translations;
 }) => {
   const { lang } = useParams();
