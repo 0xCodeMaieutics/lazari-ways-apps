@@ -61,7 +61,7 @@
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.412 0.0893 273.78);
+  --accent: oklch(0.9661 0.0162 278.51);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
@@ -126,7 +126,8 @@
 }
 
 @keyframes bounce-left {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-25%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
@@ -141,7 +142,8 @@
 }
 
 @keyframes bounce-right {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(25%);
     animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
   }
