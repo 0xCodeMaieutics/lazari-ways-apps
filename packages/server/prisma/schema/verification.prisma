@@ -5,6 +5,4 @@ model Verification {
   expiresAt  DateTime
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
-
-  @@map("verification")
 }

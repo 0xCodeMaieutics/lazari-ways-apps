@@ -3,22 +3,18 @@ enum ApplicationStatus {
 
   IN_REVIEW_BY_AGENCY
   IN_REVIEW_BY_EMPLOYER
-  
+
   APPROVED_BY_AGENCY
   APPROVED_BY_EMPLOYER
 
   REJECTED_BY_AGENCY
   REJECTED_BY_EMPLOYER
-
-  @@map("application_status") 
 }
 
 enum ApplicationType {
   KKB3
   KKB8
   STUDENT
-  
-  @@map("application_type")
 }
 
 model Application {
@@ -54,10 +50,10 @@ model Application {
   instagram String?
 
   // Files
-  fotoKey                    String
-  passportKey                String
-  languageCertificateKey     String?
-  studyCertificateKey        String?
+  fotoKey                String
+  passportKey            String
+  languageCertificateKey String?
+  studyCertificateKey    String?
 
   // Emergency Contact
   emergencyContactName  String
@@ -72,21 +68,16 @@ model Application {
   updatedAt DateTime @default(now()) @updatedAt
 
   applicationStudent ApplicationStudent?
-
-  @@map("application")
 }
 
 model ApplicationStudent {
-  id   String          @id
+  id          String      @id
   application Application @relation(fields: [id], references: [id])
-  
 
-  university         String?
-  studySubject       String?
-  semesterBreakFrom  DateTime?
-  semesterBreakTo    DateTime?
+  university        String?
+  studySubject      String?
+  semesterBreakFrom DateTime?
+  semesterBreakTo   DateTime?
 
   certificateOfEnrollmentKey String? // Only for STUDENT visa
-
-  @@map("application_student")
 }

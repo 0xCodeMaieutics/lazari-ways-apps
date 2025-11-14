@@ -1,8 +1,6 @@
 enum UserRole {
   ADMIN
   USER
-
-  @@map("user_role")
 }
 
 enum Lang {
@@ -29,7 +27,6 @@ model User {
   updatedAt DateTime @default(now()) @updatedAt
 
   @@unique([email])
-  @@map("user")
 }
 
 model UserSettings {
@@ -43,8 +40,6 @@ model UserSettings {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  @@map("user_settings")
 }
 
 enum Gender {

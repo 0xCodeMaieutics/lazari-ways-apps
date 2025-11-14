@@ -1,11 +1,11 @@
 -- CreateEnum
-CREATE TYPE "application_status" AS ENUM ('USER_SUBMITTED', 'IN_REVIEW_BY_AGENCY', 'IN_REVIEW_BY_EMPLOYER', 'APPROVED_BY_AGENCY', 'APPROVED_BY_EMPLOYER', 'REJECTED_BY_AGENCY', 'REJECTED_BY_EMPLOYER');
+CREATE TYPE "ApplicationStatus" AS ENUM ('USER_SUBMITTED', 'IN_REVIEW_BY_AGENCY', 'IN_REVIEW_BY_EMPLOYER', 'APPROVED_BY_AGENCY', 'APPROVED_BY_EMPLOYER', 'REJECTED_BY_AGENCY', 'REJECTED_BY_EMPLOYER');
 
 -- CreateEnum
-CREATE TYPE "application_type" AS ENUM ('KKB3', 'KKB8', 'STUDENT');
+CREATE TYPE "ApplicationType" AS ENUM ('KKB3', 'KKB8', 'STUDENT');
 
 -- CreateEnum
-CREATE TYPE "user_role" AS ENUM ('ADMIN', 'USER');
+CREATE TYPE "UserRole" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
 CREATE TYPE "Lang" AS ENUM ('EN', 'GE', 'DE');
@@ -17,7 +17,7 @@ CREATE TYPE "Gender" AS ENUM ('MALE', 'FEMALE', 'DIVERSE');
 CREATE TYPE "EmploymentType" AS ENUM ('FULL_TIME', 'PART_TIME', 'INTERN', 'VOLUNTEER');
 
 -- CreateTable
-CREATE TABLE "account" (
+CREATE TABLE "Account" (
     "id" TEXT NOT NULL,
     "accountId" TEXT NOT NULL,
     "providerId" TEXT NOT NULL,
@@ -32,13 +32,13 @@ CREATE TABLE "account" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "account_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Account_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "application" (
+CREATE TABLE "Application" (
     "id" TEXT NOT NULL,
-    "type" "application_type" NOT NULL,
+    "type" "ApplicationType" NOT NULL,
     "agencyName" TEXT NOT NULL,
     "agencyAddress" TEXT NOT NULL,
     "germanLevel" TEXT,
@@ -65,16 +65,16 @@ CREATE TABLE "application" (
     "studyCertificateKey" TEXT,
     "emergencyContactName" TEXT NOT NULL,
     "emergencyContactPhone" TEXT NOT NULL,
-    "status" "application_status" DEFAULT 'USER_SUBMITTED',
+    "status" "ApplicationStatus" DEFAULT 'USER_SUBMITTED',
     "userId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "application_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Application_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "application_student" (
+CREATE TABLE "ApplicationStudent" (
     "id" TEXT NOT NULL,
     "university" TEXT,
     "studySubject" TEXT,
@@ -82,11 +82,11 @@ CREATE TABLE "application_student" (
     "semesterBreakTo" TIMESTAMP(3),
     "certificateOfEnrollmentKey" TEXT,
 
-    CONSTRAINT "application_student_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ApplicationStudent_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "session" (
+CREATE TABLE "Session" (
     "id" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
@@ -96,25 +96,25 @@ CREATE TABLE "session" (
     "userAgent" TEXT,
     "userId" TEXT NOT NULL,
 
-    CONSTRAINT "session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "user" (
+CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
-    "role" "user_role" DEFAULT 'USER',
+    "role" "UserRole" DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "user_settings" (
+CREATE TABLE "UserSettings" (
     "id" TEXT NOT NULL,
     "theme" TEXT DEFAULT 'light',
     "lang" "Lang" DEFAULT 'EN',
@@ -122,7 +122,7 @@ CREATE TABLE "user_settings" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "user_settings_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "UserSettings_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -145,7 +145,7 @@ CREATE TABLE "UserInformation" (
 );
 
 -- CreateTable
-CREATE TABLE "vacancy" (
+CREATE TABLE "Vacancy" (
     "id" TEXT NOT NULL,
     "vacancyId" INTEGER NOT NULL,
     "vacancyName" TEXT NOT NULL,
@@ -162,11 +162,11 @@ CREATE TABLE "vacancy" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "vacancy_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Vacancy_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "verification" (
+CREATE TABLE "Verification" (
     "id" TEXT NOT NULL,
     "identifier" TEXT NOT NULL,
     "value" TEXT NOT NULL,
@@ -174,38 +174,38 @@ CREATE TABLE "verification" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "verification_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Verification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "session_token_key" ON "session"("token");
+CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_email_key" ON "user"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "user_settings_userId_key" ON "user_settings"("userId");
+CREATE UNIQUE INDEX "UserSettings_userId_key" ON "UserSettings"("userId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "UserInformation_userId_key" ON "UserInformation"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "vacancy_vacancyId_key" ON "vacancy"("vacancyId");
+CREATE UNIQUE INDEX "Vacancy_vacancyId_key" ON "Vacancy"("vacancyId");
 
 -- AddForeignKey
-ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "application" ADD CONSTRAINT "application_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "Application" ADD CONSTRAINT "Application_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "application_student" ADD CONSTRAINT "application_student_id_fkey" FOREIGN KEY ("id") REFERENCES "application"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "ApplicationStudent" ADD CONSTRAINT "ApplicationStudent_id_fkey" FOREIGN KEY ("id") REFERENCES "Application"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "user_settings" ADD CONSTRAINT "user_settings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserSettings" ADD CONSTRAINT "UserSettings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "UserInformation" ADD CONSTRAINT "UserInformation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "UserInformation" ADD CONSTRAINT "UserInformation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
