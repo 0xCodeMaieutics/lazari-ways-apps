@@ -17,8 +17,9 @@ import { WHATSAPP_NUMBER, WHATSAPP_URL } from "./constants";
 import { useState } from "react";
 import { Translations } from "@/i18n/translations";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import { Locale } from "@/i18n";
+import { sleep } from "@/utils/sleep";
 
 const WhatsappLink = () => (
   <a
@@ -33,7 +34,23 @@ const WhatsappLink = () => (
 
 export const Header = ({ translations }: { translations: Translations }) => {
   const { lang } = useParams();
+  const router = useRouter();
+  const _path = usePathname();
   const [open, setOpen] = useState(false);
+
+  const extractLangFromParams = () => _path.replace(`${lang}`, "");
+
+  const path = extractLangFromParams();
+
+  const onHomeSectionClicked = (sectionId: string) => {
+    if (path === "/") {
+      sleep(300).then(() => {
+        scrollSmoothlyToSection(sectionId);
+      });
+    } else {
+      router.push(`/${lang}/#${sectionId}`);
+    }
+  };
 
   return (
     <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 sm:py-6 px-4 bg-background border-b">
@@ -100,7 +117,10 @@ export const Header = ({ translations }: { translations: Translations }) => {
               <Button
                 className="relative font-semibold group hover:no-underline text-lg px-0.5 cursor-pointer"
                 variant={"link"}
-                onClick={() => scrollSmoothlyToSection(SECTION_IDS.services)}
+                onClick={() => {
+                  setOpen(false);
+                  onHomeSectionClicked(SECTION_IDS.services);
+                }}
               >
                 სერვისები
                 <Underline />
@@ -108,7 +128,10 @@ export const Header = ({ translations }: { translations: Translations }) => {
               <Button
                 className="relative font-semibold group hover:no-underline text-lg px-0.5 cursor-pointer"
                 variant={"link"}
-                onClick={() => scrollSmoothlyToSection(SECTION_IDS.contact)}
+                onClick={() => {
+                  setOpen(false);
+                  onHomeSectionClicked(SECTION_IDS.contact);
+                }}
               >
                 კონტაქტი
                 <Underline />
@@ -118,7 +141,12 @@ export const Header = ({ translations }: { translations: Translations }) => {
                 variant={"link"}
                 asChild
               >
-                <Link href={`/${lang}/vacancies`}>
+                <Link
+                  href={`/${lang}/vacancies`}
+                  onNavigate={() => {
+                    setOpen(false);
+                  }}
+                >
                   ვაკანსიები
                   <Underline />
                 </Link>
