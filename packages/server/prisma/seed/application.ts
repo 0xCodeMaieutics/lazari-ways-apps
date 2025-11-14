@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Prisma, $Enums } from "../../src/db/generated/prisma/client";
+import { Prisma, $Enums } from "db/client";
 
 export const createApplications = ({
   applicationIds,
