@@ -13,7 +13,7 @@ import { ExternalLink, Menu, PhoneIcon } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { LogoAndText, Underline } from "./text-logo";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
-import { WHATSAPP_NUMBER, WHATSAPP_TEXT, WHATSAPP_URL } from "./constants";
+import { WHATSAPP_NUMBER, WHATSAPP_URL } from "./constants";
 import { useState } from "react";
 import { Translations } from "@/i18n/translations";
 import Link from "next/link";
@@ -22,7 +22,7 @@ import { Locale } from "@/i18n";
 
 const WhatsappLink = () => (
   <a
-    href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
+    href={WHATSAPP_URL}
     target="_blank"
     rel="noopener noreferrer"
     className="flex size-8 sm:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
