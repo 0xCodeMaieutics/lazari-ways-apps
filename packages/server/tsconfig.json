@@ -9,7 +9,12 @@
     "strictNullChecks": true,
     "noUncheckedIndexedAccess": true,
     "checkJs": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "outDir": "dist",
+
+    // Generate corresponding '.d.ts' file
+    "declaration": true,
+    "sourceMap": true
   },
   "include": ["./src/**/*"],
   "exclude": ["**/generated/**"]

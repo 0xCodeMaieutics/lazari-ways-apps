@@ -217,6 +217,9 @@ importers:
       '@prisma/adapter-pg':
         specifier: ^6.19.0
         version: 6.19.0
+      '@prisma/client':
+        specifier: ^6.18.0
+        version: 6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)
       '@workspace/server':
         specifier: workspace:*
         version: link:../../packages/server
@@ -247,6 +250,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       react:
         specifier: ^19.1.1
         version: 19.1.1

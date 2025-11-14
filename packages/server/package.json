@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "test": "vitest run",
+    "build": "tsc",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:reset": "dotenv -e .env -- pnpm prisma migrate reset --skip-seed",
@@ -10,11 +11,12 @@
     "db:deploy": "dotenv -e .env.prod -- prisma migrate deploy",
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
-    "db:push": "prisma db push --force-reset && pnpm db:seed"
+    "db:push": "prisma db push --force-reset",
+    "db:push-seed": "prisma db push --force-reset"
   },
   "exports": {
-    "./db": "./src/db/index.ts",
-    "./auth": "./src/auth/index.ts"
+    "./db": "./dist/db/index.js",
+    "./auth": "./dist/auth/index.js"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.1.0",
