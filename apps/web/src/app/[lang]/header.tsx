@@ -36,7 +36,7 @@ export const Header = ({ translations }: { translations: Translations }) => {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-6 pb-2 sm:py-6 px-4 bg-background border-b">
+    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 sm:py-6 px-4 bg-background border-b">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <LogoAndText lang={lang as Locale} />
         <nav className="hidden sm:flex items-center gap-4">
