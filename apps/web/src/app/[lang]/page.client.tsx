@@ -40,7 +40,7 @@ export const HomeClient = ({
         <section className="px-6 pt-40 pb-8">
           <div className="flex flex-col gap-12 md:gap-20 md:flex-row md:items-center max-w-7xl mx-auto">
             <div className="flex-1 space-y-6">
-              <div className="max-w-2xl text-center md:text-left text-4xl md:text-5xl md:text-6xl font-bold tracking-tight">
+              <div className="max-w-2xl text-center md:text-left text-4xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
                 <TypeAnimation
                   sequence={translations["hero.typeAnimationWords"] as any}
