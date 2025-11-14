@@ -1,7 +1,7 @@
 import { encrypt } from "../../src/utils/encrypt";
 import { generateRandomString } from "@workspace/shared";
 import { faker } from "@faker-js/faker";
-import { Prisma, $Enums } from "../../src/generated/client";
+import { Prisma, $Enums } from "../../src/db/generated/prisma";
 
 export const createUsers = async ({
   tx,

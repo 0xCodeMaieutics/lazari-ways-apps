@@ -5,8 +5,8 @@ import { createApplications } from "./application";
 import { createUsers } from "./user";
 import z from "zod";
 import { auth } from "../../src/auth";
-import { prisma } from "../../src/client";
-import { Prisma, $Enums } from "../../src/generated/client";
+import { prisma } from "../../src/db/client";
+import { Prisma, $Enums } from "../../src/db/generated/prisma";
 import {
   getSignedUrlForDownload,
   uploadFileToStorage,
