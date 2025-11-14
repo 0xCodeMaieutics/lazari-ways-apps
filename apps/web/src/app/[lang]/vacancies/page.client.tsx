@@ -44,7 +44,7 @@ const VacancyCard = ({
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <Badge className="absolute h-8 top-5 left-5 flex items-center gap-2 px-4">
-            <span className="size-2.5 bg-foreground rounded-full animate-pulse" />
+            <span className="size-2.5 bg-accent rounded-full animate-pulse" />
             <span>{vacancy.location}</span>
           </Badge>
           <Badge
