@@ -58,10 +58,10 @@ export const HomeClient = ({
 
               <Button
                 size={"lg"}
-                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full max-w-xs"
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full sm:max-w-xs mb-2 mx-0"
                 asChild
               >
-                <Link href={`/${lang}/vacancies`}>
+                <Link href={`/${lang}/vacancies`} className="sm:mx-0">
                   ვაკანსიების ნახვა
                   <ArrowRight className="animate-bounce-right size-4.5 font-semibold" />
                 </Link>
@@ -69,14 +69,14 @@ export const HomeClient = ({
               <Button
                 size={"lg"}
                 variant={"outline"}
-                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full max-w-xs"
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full sm:max-w-xs mb-0 mx-0"
                 onClick={() => scrollSmoothlyToSection(SECTION_IDS.services)}
               >
                 სერვისების გაცნობა
                 <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
-            <div className="flex justify-end px-10 sm:px-0 mx-auto">
+            <div className="flex justify-end mx-auto">
               <HeroVideo />
             </div>
           </div>
