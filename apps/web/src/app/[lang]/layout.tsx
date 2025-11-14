@@ -3,7 +3,7 @@ import { Providers } from "@/components/providers";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { PropsWithChildren } from "react";
-import { i18n, Locale } from "@/i18n";
+import { Locale } from "@/i18n";
 import { getTranslations } from "@/i18n/translations";
 import { Toaster } from "@workspace/ui/components/sonner";
 
@@ -45,7 +45,10 @@ export default async function RootLayout({
           <main className="flex-1 w-dvw gap-6 flex items-center justify-center">
             {children}
           </main>
-          <Footer translations={commonTranslations["footer"] ?? {}} />
+          <Footer
+            translations={commonTranslations["footer"] ?? {}}
+            lang={lang as Locale}
+          />
         </Providers>
         <Toaster />
       </body>

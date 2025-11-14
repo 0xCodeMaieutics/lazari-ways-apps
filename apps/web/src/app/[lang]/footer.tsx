@@ -1,15 +1,15 @@
 import Link from "next/link";
-import { TextLogo } from "./text-logo";
-import { APP_NAME } from "./constants";
+import { LogoAndText } from "./text-logo";
 import { Translations } from "@/i18n/translations";
+import { Locale } from "@/i18n";
 
-export const Footer = ({ translations }: { translations: Translations }) => {
+export const Footer = ({ translations, lang }: { translations: Translations, lang: Locale }) => {
   return (
     <footer className="mt-auto border-t">
       <div className="max-w-7xl mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           <div className="flex flex-col gap-4">
-            <TextLogo>{APP_NAME}</TextLogo>
+            <LogoAndText lang={lang} />
             <p className="md:max-w-lg">
               დასაქმების სააგენტო, რომელიც გთავაზობთ მომსახურების ფართო სპექტრს
             </p>
