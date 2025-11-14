@@ -12,8 +12,8 @@ export function Providers({
   return (
     <NextThemesProvider
       attribute="class"
-      defaultTheme="system"
-      enableSystem
+      defaultTheme="light"
+      // enableSystem
       disableTransitionOnChange
       enableColorScheme
     >

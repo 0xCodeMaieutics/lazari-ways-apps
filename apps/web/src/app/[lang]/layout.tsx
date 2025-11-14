@@ -38,7 +38,7 @@ export default async function RootLayout({
   const { lang = DEFAULT_LOCALE } = await params;
   const commonTranslations = await getTranslations(lang as Locale, "common");
   return (
-    <html lang={lang} suppressHydrationWarning className="light">
+    <html lang={lang} suppressHydrationWarning>
       <body className={"font-sans antialiased"}>
         <Providers>
           <Header translations={commonTranslations["header"] ?? {}} />
