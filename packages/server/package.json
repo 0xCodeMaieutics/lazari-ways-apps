@@ -41,5 +41,6 @@
     "@workspace/shared": "workspace:*",
     "better-auth": "^1.3.34",
     "db": "link:src/db/generated/prisma"
-  }
+  },
+  "packageManager": "pnpm@9.4.0"
 }
