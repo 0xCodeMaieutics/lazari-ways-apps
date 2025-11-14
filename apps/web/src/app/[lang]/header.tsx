@@ -14,12 +14,13 @@ import { Button } from "@workspace/ui/components/button";
 import { LogoAndText, Underline } from "./text-logo";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
 import { WHATSAPP_NUMBER, WHATSAPP_URL } from "./constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Translations } from "@/i18n/translations";
 import Link from "next/link";
 import { useParams, usePathname, useRouter } from "next/navigation";
 import { Locale } from "@/i18n";
 import { sleep } from "@/utils/sleep";
+import clsx from "clsx";
 
 const WhatsappLink = () => (
   <a
@@ -31,6 +32,26 @@ const WhatsappLink = () => (
     <PhoneIcon className="text-white size-6 md:size-3" />
   </a>
 );
+
+export const useIsHeaderVisible = () => {
+  const [pagePosition, setPagePosition] = useState(0);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const moving = window.pageYOffset;
+
+      setIsHeaderVisible(pagePosition > moving);
+      setPagePosition(moving);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  });
+
+  return { isHeaderVisible, pagePosition };
+};
 
 export const Header = ({ translations }: { translations: Translations }) => {
   const { lang } = useParams();
@@ -52,8 +73,19 @@ export const Header = ({ translations }: { translations: Translations }) => {
     }
   };
 
+  const { isHeaderVisible, pagePosition } = useIsHeaderVisible();
+
   return (
-    <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 md:py-6 px-4 bg-background border-b">
+    <header
+      className={clsx(
+        `fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-4 pb-2 md:py-6 px-4 bg-background border-b transition-transform duration-300 ease-in-out`,
+        {
+          "-translate-y-24": !isHeaderVisible && pagePosition > 0,
+          "bg-background": isHeaderVisible && pagePosition > 0,
+          "translate-y-0": isHeaderVisible,
+        }
+      )}
+    >
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <LogoAndText lang={lang as Locale} />
         <nav className="hidden md:flex items-center gap-4">
@@ -155,6 +187,6 @@ export const Header = ({ translations }: { translations: Translations }) => {
           </SheetContent>
         </Sheet>
       </div>
-    </div>
+    </header>
   );
 };
