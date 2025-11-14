@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@formatjs/intl-localematcher": "^0.6.2",
+    "@prisma/adapter-pg": "^6.19.0",
     "@workspace/server": "workspace:*",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
