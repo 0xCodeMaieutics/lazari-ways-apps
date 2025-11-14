@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@workspace/ui/components/card";
 import {
+  ArrowDown,
   ArrowRight,
   Award,
   CheckCircle2,
@@ -55,13 +56,22 @@ export const HomeClient = ({
 
               <Button
                 size={"lg"}
-                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 max-w-max"
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full max-w-xs"
                 asChild
               >
                 <Link href={`/${lang}/vacancies`}>
                   ვაკანსიების ნახვა
                   <ArrowRight className="animate-bounce-right size-4.5 font-semibold" />
                 </Link>
+              </Button>
+              <Button
+                size={"lg"}
+                variant={"outline"}
+                className="flex items-center gap-2 text-lg sm:text-xl font-semibold h-12 px-12 mx-auto md:mx-0 w-full max-w-xs"
+                onClick={() => scrollSmoothlyToSection(SECTION_IDS.services)}
+              >
+                სერვისების გაცნობა
+                <ArrowDown className="animate-bounce size-4.5 font-semibold" />
               </Button>
             </div>
             <div className="flex justify-end px-10 sm:px-0 mx-auto">
