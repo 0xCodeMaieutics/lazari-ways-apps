@@ -42,13 +42,15 @@ export const HomeClient = ({
             <div className="flex-1 space-y-6">
               <div className="max-w-2xl text-center md:text-left text-4xl md:text-6xl font-bold tracking-tight">
                 {translations["hero.title"]}{" "}
-                <TypeAnimation
-                  sequence={translations["hero.typeAnimationWords"] as any}
-                  wrapper="span"
-                  speed={60}
-                  className="h-[70px] text-primary"
-                  repeat={Infinity}
-                />
+                <span className="block lg:inline">
+                  <TypeAnimation
+                    sequence={translations["hero.typeAnimationWords"] as any}
+                    wrapper="span"
+                    speed={60}
+                    className="h-[70px] text-primary"
+                    repeat={Infinity}
+                  />
+                </span>
                 <p className="mt-6 text-lg md:text-xl text-muted-foreground font-medium sm:max-w-lg">
                   {translations["hero.slogan"]}
                 </p>
