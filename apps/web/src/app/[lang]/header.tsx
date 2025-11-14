@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import {
   Sheet,
   SheetContent,
@@ -9,9 +8,8 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@workspace/ui/components/sheet";
-import { Menu, Phone, PhoneCall, PhoneIcon } from "lucide-react";
+import { Menu, PhoneIcon } from "lucide-react";
 
-import { ExternalLink } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { TextLogo, Underline } from "./text-logo";
 import { scrollSmoothlyToSection, SECTION_IDS } from "./utils";
@@ -25,25 +23,15 @@ import { useState } from "react";
 import { sleep } from "@/utils/sleep";
 import { Translations } from "@/i18n/translations";
 
-const WhatsappButton = () => (
-  <Button
-    variant={"link"}
-    asChild
-    className="font-semibold text-lg relative group inline-flex items-center gap-1 hover:no-underline px-0.5"
+const WhatsappLink = () => (
+  <a
+    href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="flex size-8 sm:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
   >
-    <a
-      href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Whatsapp
-      <ExternalLink
-        className="ml-1 size-4 opacity-70 group-hover:opacity-100 transition-opacity"
-        aria-label="External link"
-      />
-      <Underline />
-    </a>
-  </Button>
+    <PhoneIcon className="text-white size-6 sm:size-3" />
+  </a>
 );
 
 export const Header = ({ translations }: { translations: Translations }) => {
@@ -66,7 +54,6 @@ export const Header = ({ translations }: { translations: Translations }) => {
   return (
     <div className="fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full pt-6 pb-2 sm:py-6 px-4 bg-background border-b">
       <div className="flex justify-between max-w-7xl mx-auto">
-        {/* <Image src="/logo.png" width={200} height={1081.06} alt="Logo" /> */}
         <TextLogo>{APP_NAME}</TextLogo>
         <nav className="hidden sm:flex items-center gap-4">
           {NAV_LINKS.map((link) => (
@@ -84,24 +71,23 @@ export const Header = ({ translations }: { translations: Translations }) => {
           ))}
         </nav>
         <div className="hidden sm:block">
-          <WhatsappButton />
+          <Button
+            variant={"link"}
+            className="cursor-pointer font-semibold text-lg underline"
+          >
+            {WHATSAPP_NUMBER}
+            <WhatsappLink />
+          </Button>
         </div>
 
         <Sheet open={open} onOpenChange={setOpen}>
           <div className="sm:hidden flex items-center gap-4">
+            <WhatsappLink />
             <SheetTrigger asChild>
               <button>
                 <Menu size={24} />
               </button>
             </SheetTrigger>
-            <a
-              href={`${WHATSAPP_URL}/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex size-8 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce"
-            >
-              <PhoneIcon size={24} className="text-white" />
-            </a>
           </div>
           <SheetContent className="w-full py-10">
             <SheetHeader>
@@ -129,7 +115,6 @@ export const Header = ({ translations }: { translations: Translations }) => {
                   <Underline />
                 </Button>
               ))}
-              <WhatsappButton />
             </div>
           </SheetContent>
         </Sheet>
