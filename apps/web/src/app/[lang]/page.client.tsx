@@ -124,12 +124,7 @@ export const HomeClient = ({
                   className="text-lg font-semibold h-12 w-full mx-auto max-w-xs"
                   asChild
                 >
-                  <a
-                    target="_blank"
-                    // FIXME: change the link to the actual application form
-                    href={"http://app.localhost:3000"}
-                    rel="noreferrer"
-                  >
+                  <a target="_blank" rel="noreferrer">
                     განაცხადის გაგზავნა
                     <ExternalLink className="animate-bounce" />
                   </a>

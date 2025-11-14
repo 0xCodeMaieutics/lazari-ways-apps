@@ -273,10 +273,6 @@ export const VacanciesClientPage = ({
                   <Button
                     size="lg"
                     className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // TODO: Add application form link
-                    }}
                   >
                     განაცხადის გაგზავნა
                     <ExternalLink className="size-5 animate-bounce" />

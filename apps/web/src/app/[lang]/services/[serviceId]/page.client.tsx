@@ -288,10 +288,6 @@ export const ServicesClientPage = ({
                   <Button
                     size="lg"
                     className="text-lg font-semibold h-12 px-10"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      // TODO: Add application form link
-                    }}
                   >
                     განაცხადის გაგზავნა
                     <ExternalLink />
