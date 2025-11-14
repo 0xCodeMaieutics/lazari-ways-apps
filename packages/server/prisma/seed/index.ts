@@ -12,29 +12,9 @@ import {
 } from "../../src/s3/s3-client";
 import path from "path";
 import { faker } from "@faker-js/faker";
+import { prisma } from "../../src/db/client";
 
 void (async function () {
-  console.log("🗑️  Clearing existing data...");
-  z.array(
-    z.object({
-      table_name: z.string(),
-    })
-  )
-    .parse(
-      await prisma.$queryRaw`SELECT table_name
-  FROM information_schema.tables
-  WHERE table_schema = 'public'
-  `
-    )
-    .filter(
-      (tableNames) => !["_prisma_migrations"].includes(tableNames.table_name)
-    )
-    .map(async (tableInfo) => {
-      console.log(`Truncating table: ${tableInfo.table_name}`);
-      await prisma.$executeRawUnsafe(
-        `TRUNCATE TABLE "${tableInfo.table_name}" RESTART IDENTITY CASCADE;`
-      );
-    });
   console.log("✅ Existing data cleared!");
 
   console.log("👤 Creating applicant user...");
@@ -108,27 +88,20 @@ void (async function () {
         const vacancyName = `${VACANCY_ID_PREFIX}${vacancyId}`;
         return {
           id: generateRandomString(32),
-          description: `ვაკანსია ${vacancyName} მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
-          title: faker.person.jobTitle(),
+          title: "Bäcker/in",
+          jobDescription: `ვაკანსია ${vacancyName} მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
           location: "ნიუბერგის ახლოს",
-          employmentType:
-            $Enums.EmploymentType[
-              Object.keys($Enums.EmploymentType)[
-                index % Object.keys($Enums.EmploymentType).length
-              ] as keyof typeof $Enums.EmploymentType
-            ],
-          priceMax: 50000 + index * 1000,
-          priceMin: 30000 + index * 1000,
-          startDate: new Date(2024, 0, 1 + index),
+          beginDate: new Date(2024, 0, 1 + index).toISOString(),
           vacancyId,
-          vacancyName,
-          benefits: Array.from({ length: 3 }).map(
-            (_, benefitIndex) => `Benefit ${benefitIndex + 1}`
-          ),
-          requirements: Array.from({ length: 5 }).map(
-            (_, reqIndex) => `Requirement ${reqIndex + 1}`
-          ),
-          imageUrl: signedUrl.value,
+          accommodation: "სასტუმროში",
+          duration: `${30 + index} დღე`,
+          meals: "სამჯერადი",
+          salary: `${800 + index * 10} EUR`,
+          schedule: "სამუშაო დღეებში 8 საათი",
+          additionalInfo: faker.lorem.paragraphs(2),
+          createdAt: new Date().toISOString(),
+          photos: [],
+          videos: [],
         } satisfies Prisma.VacancyCreateManyInput;
       }),
     });
