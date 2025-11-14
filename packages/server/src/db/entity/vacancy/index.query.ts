@@ -70,10 +70,14 @@ export const vacancyQueries = {
             },
           }) satisfies Promise<GetVacancies>
       )
-    ).mapErr((err) => ({
-      type: "DB_GET_VACANCIES_ERROR" as const,
-      message: "Failed to get vacancies",
-    })),
+    ).mapErr((err) => {
+      console.log(err);
+
+      return {
+        type: "DB_GET_VACANCIES_ERROR" as const,
+        message: "Failed to get vacancies",
+      };
+    }),
   getVacancyById: (vacancyId: string) =>
     tryCatchAsync(
       () =>
