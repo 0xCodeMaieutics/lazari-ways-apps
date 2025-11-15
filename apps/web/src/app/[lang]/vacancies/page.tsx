@@ -13,7 +13,9 @@ export default async function VacanciesPage({
 
   const translations = await getTranslations(lang, "vacancies");
 
-  const vacancies = await vacancyQueries.getVacancies();
+  const vacancies = await vacancyQueries.getVacancies({
+    hide: false,
+  });
 
   if (vacancies.isErr()) {
     console.error(vacancies.error.message, vacancies.error.type);

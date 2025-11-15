@@ -20,11 +20,12 @@ export type Vacancy = Prisma.VacancyGetPayload<{
     photos: true;
     videos: true;
     reviews: true;
+    hide: true;
   };
 }>;
 
 export const vacancyQueries = {
-  getVacancies: async () =>
+  getVacancies: async (where?: Prisma.VacancyWhereInput) =>
     (
       await tryCatchAsync(
         () =>
@@ -46,7 +47,9 @@ export const vacancyQueries = {
               photos: true,
               videos: true,
               reviews: true,
+              hide: true,
             },
+            where,
             orderBy: {
               createdAt: "desc",
             },
@@ -84,6 +87,7 @@ export const vacancyQueries = {
             schedule: true,
             photos: true,
             videos: true,
+            hide: true,
           },
         }) satisfies Promise<Vacancy | null>
     ),

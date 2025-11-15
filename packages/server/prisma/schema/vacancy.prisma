@@ -11,6 +11,7 @@ model Vacancy {
   accommodation  String // Unterkunft wird gestellt
   meals          String // Mahlzeiten werden gestellt
   additionalInfo String? //  Additional information
+  hide           Boolean?  @default(false)
   photos         String[]
   videos         String[]
   createdAt      DateTime @default(now())
