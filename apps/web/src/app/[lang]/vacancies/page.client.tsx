@@ -30,6 +30,7 @@ import { Translations } from "@/i18n/translations";
 import { useParams } from "next/navigation";
 import { useState } from "react";
 import { sleep } from "@/utils/sleep";
+import { Pagination } from "@/components/pagination";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -177,9 +178,15 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
 export const VacanciesListingClient = ({
   vacancies,
   translations,
+  vacanciesTotal,
+  currentPage,
+  pageSize,
 }: {
   vacancies: Vacancy[];
   translations: Translations;
+  vacanciesTotal: number;
+  currentPage: number;
+  pageSize: number;
 }) => {
   const { lang } = useParams();
 
@@ -212,14 +219,38 @@ export const VacanciesListingClient = ({
             </div>
 
             {/* Vacancies Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Object.entries(vacancies).map(([id, vacancy]) => (
-                <VacancyCard key={id} vacancy={vacancy} lang={lang as string} />
-              ))}
+            <div className="space-y-6">
+              {vacanciesTotal > 0 && (
+                <div className="flex justify-end">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    სულ{" "}
+                    <span className="text-foreground font-bold">
+                      {vacanciesTotal}
+                    </span>{" "}
+                    ვაკანსია
+                  </p>
+                </div>
+              )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {vacancies.map((vacancy) => (
+                  <VacancyCard
+                    key={vacancy.id}
+                    vacancy={vacancy}
+                    lang={lang as string}
+                  />
+                ))}
+              </div>
+              {vacanciesTotal > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  pageSize={pageSize}
+                  total={vacanciesTotal}
+                />
+              )}
             </div>
 
             {/* Empty State */}
-            {Object.keys(vacancies).length === 0 && (
+            {vacancies.length === 0 && (
               <div className="text-center py-16">
                 <Briefcase className="size-16 text-muted-foreground/50 mx-auto mb-4" />
                 <h3 className="text-2xl font-semibold mb-2">

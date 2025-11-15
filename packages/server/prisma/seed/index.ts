@@ -81,7 +81,7 @@ void (async function () {
     if (signedUrl.isErr()) process.exit(1);
 
     await tx.vacancy.createMany({
-      data: Array.from({ length: 20 }).map((_, index) => {
+      data: Array.from({ length: 100 }).map((_, index) => {
         const vacancyId = BASE_VACANCY_ID + index;
         return {
           id: generateRandomString(32),
