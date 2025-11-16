@@ -7,8 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
-import { ApplicationStatus } from "@/utils/models/applications";
-
+import { ApplicationStatus } from "@workspace/server/db/models";
 import { updateApplicationStatus } from "@/utils/server-actions/application/update-status";
 import { useTransition } from "react";
 import { toast } from "sonner";
@@ -17,24 +16,23 @@ interface StatusSelectProps {
   applicationId: string;
   currentStatus: ApplicationStatus;
 }
-
 const statusOptions = [
   {
-    value: ApplicationStatus.PENDING,
+    value: ApplicationStatus.USER_SUBMITTED,
     label: "Pending",
     color: "text-yellow-700",
   },
   {
-    value: ApplicationStatus.APPROVED,
+    value: ApplicationStatus.APPROVED_BY_AGENCY,
     label: "Approved",
     color: "text-green-700",
   },
   {
-    value: ApplicationStatus.REJECTED,
+    value: ApplicationStatus.APPROVED_BY_EMPLOYER,
     label: "Rejected",
     color: "text-red-700",
   },
-];
+] satisfies { value: ApplicationStatus; label: string; color: string }[];
 
 export const StatusSelect = ({
   applicationId,
@@ -42,12 +40,11 @@ export const StatusSelect = ({
 }: StatusSelectProps) => {
   const [isPending, startTransition] = useTransition();
 
-  const handleStatusChange = (newStatus: string) => {
+  const handleStatusChange = (newStatus: ApplicationStatus) => {
     startTransition(async () => {
-      const result = await updateApplicationStatus(
-        applicationId,
-        newStatus as ApplicationStatus
-      );
+      const result = await updateApplicationStatus(applicationId, {
+        status: newStatus,
+      });
 
       if (result.success) {
         toast.success("Application status updated successfully");

@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/db/prisma-client";
 import { verifyToken } from "@/lib/token";
 import { ADMIN_SESSION_COOKIE } from "@/utils/constants";
 import { UserRole } from "@/utils/models/user";
+import { sessionQueries, userQueries } from "@workspace/server/db";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
@@ -14,27 +14,29 @@ export default async function Layout({ children }: PropsWithChildren) {
 
   if (tokenSession?.value === undefined) redirect(LOGIN_PATH);
 
-  const session = await prisma.session.findUnique({
-    where: {
-      token: tokenSession.value,
-    },
-  });
-  if (!session) {
+  const sessionResult = await sessionQueries.getSessionByToken(
+    tokenSession.value
+  );
+
+  if (sessionResult.isErr()) {
+    console.log("Session retrieval error:", sessionResult.error);
     redirect(LOGIN_PATH);
   }
+  const session = sessionResult.value;
   const currentDate = new Date();
-  if (session.expiresAt && session.expiresAt < currentDate) {
+  if (session?.expiresAt && session.expiresAt < currentDate) {
     redirect(LOGIN_PATH);
   }
 
   const tokenPayload = await verifyToken(tokenSession.value);
   if (tokenPayload.payload.userRole !== UserRole.ADMIN) redirect(LOGIN_PATH);
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: tokenPayload.payload.userId,
-    },
-  });
+  const userResult = await userQueries.getUserById(tokenPayload.payload.userId);
+  if (userResult.isErr()) {
+    console.log("User retrieval error:", userResult.error);
+    redirect(LOGIN_PATH);
+  }
+  const user = userResult.value;
   if (!user) redirect(LOGIN_PATH);
   if (tokenPayload.payload.userEmail !== user?.email) redirect(LOGIN_PATH);
   if (user?.role !== UserRole.ADMIN) redirect(LOGIN_PATH);

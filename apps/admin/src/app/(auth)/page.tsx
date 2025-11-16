@@ -1,4 +1,3 @@
-import { prisma } from "@/lib/db/prisma-client";
 import { DashboardTableContent } from "./page.client";
 import {
   Table,
@@ -12,8 +11,12 @@ import { LoaderCircle } from "lucide-react";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Pagination } from "@/components/pagination";
-import { Prisma } from "@prisma/client";
 import { SearchInput } from "@/components/search-input";
+import { Results } from "@workspace/shared";
+import {
+  applicationQueries,
+  ApplicationWhereInput,
+} from "@workspace/server/db";
 
 export const dynamic = "force-dynamic";
 
@@ -54,33 +57,8 @@ const buildApplicationSearchWhereClause = (search?: string) => {
     return {};
   }
   return {
-    OR: [
-      {
-        firstName: {
-          startsWith: search,
-          mode: "insensitive",
-        },
-      },
-      {
-        lastName: {
-          startsWith: search,
-          mode: "insensitive",
-        },
-      },
-      {
-        email: {
-          startsWith: search,
-          mode: "insensitive",
-        },
-      },
-      {
-        instagram: {
-          startsWith: search,
-          mode: "insensitive",
-        },
-      },
-    ],
-  } as Prisma.ApplicationWhereInput;
+    OR: [],
+  } as ApplicationWhereInput;
 };
 
 export default async function DashboardPage({
@@ -109,29 +87,23 @@ export default async function DashboardPage({
   const where = buildApplicationSearchWhereClause(search);
 
   const skip = (page - 1) * pageSize;
-  const [totalApplications, applications] = await Promise.all([
-    prisma.application.count({
-      where,
-    }),
-    prisma.application.findMany({
-      where,
-      select: {
-        id: true,
-        type: true,
-        firstName: true,
-        lastName: true,
-        email: true,
-        instagram: true,
-        phone: true,
-        status: true,
-      },
-      take: pageSize,
+  const applicationResult = await Results.allAsync([
+    applicationQueries.getApplicationsCount(where),
+    applicationQueries.getApplications(where, {
       skip,
+      take: pageSize,
       orderBy: {
-        createdAt: "asc",
+        createdAt: "desc",
       },
     }),
   ]);
+
+  if (applicationResult.isErr()) {
+    throw applicationResult.error;
+  }
+
+  const [totalApplications, applications] = applicationResult.value;
+
   return (
     <div className="w-full mx-auto space-y-6 pt-10 pb-10">
       <div className="flex justify-between items-center">

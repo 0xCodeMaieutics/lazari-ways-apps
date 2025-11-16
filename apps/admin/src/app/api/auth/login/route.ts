@@ -1,5 +1,4 @@
 import { env } from "@/env";
-import { prisma } from "@/lib/db/prisma-client";
 import { generateRandomString } from "@/lib/random";
 import { ADMIN_SESSION_COOKIE } from "@/utils/constants";
 import { decrypt } from "@/utils/encrypt";
@@ -7,6 +6,11 @@ import { UserRole } from "@/utils/models/user";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { signToken } from "@/lib/token";
+import {
+  accountQueries,
+  sessionQueries,
+  userQueries,
+} from "@workspace/server/db";
 
 export const POST = async (request: NextRequest) => {
   const c = await cookies();
@@ -18,27 +22,25 @@ export const POST = async (request: NextRequest) => {
     if (!email || !password) {
       throw new Error("Missing email or password");
     }
-    const user = await prisma.user.findUnique({
-      where: {
-        email: String(email),
-      },
-    });
-    if (!user) {
+    const userResult = await userQueries.getUserByEmail(String(email));
+    if (userResult.isErr()) {
       throw new Error("User not found");
     }
 
-    if (user.role !== UserRole.ADMIN) {
+    const user = userResult.value;
+
+    if (user?.role !== UserRole.ADMIN) {
       throw new Error("User is not an admin");
     }
-    const account = await prisma.account.findFirst({
-      where: {
-        userId: user?.id,
-        providerId: "credential",
-      },
-    });
+    const accountResult = await accountQueries.getAccountById(user.id);
 
-    if (!account || !account.password) {
+    if (accountResult.isErr()) {
       throw new Error("Account not found");
+    }
+    const account = accountResult.value;
+
+    if (!account?.password) {
+      throw new Error("Account password is null");
     }
 
     const storedDecryptedPassword = decrypt(
@@ -59,13 +61,13 @@ export const POST = async (request: NextRequest) => {
       expiresAt
     );
 
-    await prisma.session.create({
-      data: {
-        id: generateRandomString(32),
-        expiresAt,
-        userId: user.id,
-        token: signedToken,
+    await sessionQueries.createSession({
+      id: generateRandomString(32),
+      expiresAt,
+      user: {
+        connect: { id: user.id },
       },
+      token: signedToken,
     });
     c.set(ADMIN_SESSION_COOKIE, signedToken);
     return NextResponse.redirect(new URL("/", request.url));

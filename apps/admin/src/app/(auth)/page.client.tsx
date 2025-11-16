@@ -1,11 +1,8 @@
 "use client";
 import { StatusSelect } from "@/components/status-select";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
-import {
-  Application,
-  ApplicationStatus,
-  applicationTypeToLabel,
-} from "@/utils/models/applications";
+import { GetApplications } from "@workspace/server/db";
+import { ApplicationStatus } from "@workspace/server/db/models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -15,7 +12,7 @@ export const DashboardTableContent = ({
   currentPage,
   pageSize,
 }: {
-  applications: Application[];
+  applications: GetApplications[];
   totalApplications: number;
   currentPage: number;
   pageSize: number;
@@ -46,21 +43,20 @@ export const DashboardTableContent = ({
       key={application.id}
       className="h-14 cursor-pointer"
     >
+      <TableCell className="font-semibold">{application.user?.name}</TableCell>
+      <TableCell className="font-semibold">{application.user?.email}</TableCell>
       <TableCell className="font-semibold">
-        {application.firstName} {application.lastName}
-      </TableCell>
-      <TableCell className="font-semibold">{application.email}</TableCell>
-      <TableCell className="font-semibold">
-        {application.instagram || "-"}
+        {/* @ts-ignore TODO: added to database */}
+        {application.user?.userInformation?.instagram || "-"}
       </TableCell>
       <TableCell className="font-semibold">{application.phone}</TableCell>
       <TableCell className="font-semibold">
-        {applicationTypeToLabel[application.type] || "-"}
+        {/* {applicationTypeToLabel[application.type] || "-"} */}
       </TableCell>
       <TableCell onClick={(e) => e.stopPropagation()}>
         <StatusSelect
           applicationId={application.id}
-          currentStatus={application.status || ApplicationStatus.PENDING}
+          currentStatus={application.status || ApplicationStatus.USER_SUBMITTED}
         />
       </TableCell>
     </TableRow>

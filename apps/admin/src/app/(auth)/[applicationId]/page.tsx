@@ -1,7 +1,8 @@
 import { Button } from "@workspace/ui/components/button";
-import { prisma } from "@/lib/db/prisma-client";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import { applicationQueries } from "@workspace/server/db";
+import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
@@ -12,14 +13,15 @@ const ApplicationDetailPage = async ({
 }) => {
   const { applicationId } = await params;
 
-  const application = await prisma.application.findUnique({
-    where: { id: applicationId },
-  });
+  const applicationResult =
+    await applicationQueries.getApplication(applicationId);
 
-  const fullName = `${application?.firstName} ${application?.lastName}`;
+  if (applicationResult.isErr()) return notFound();
 
-  const formatValue = (value: string | number | boolean | null | Date) => {
-    if (value === null) return "N/A";
+  const application = applicationResult.value;
+
+  const formatValue = (value?: string | number | boolean | null | Date) => {
+    if (value === null || value === undefined) return "N/A";
     if (typeof value === "boolean") return value ? "Yes" : "No";
     if (value instanceof Date) {
       return value.toLocaleDateString();
@@ -43,7 +45,9 @@ const ApplicationDetailPage = async ({
       </div>
       <div className="space-y-6">
         <h1 className="text-2xl mt-4">
-          <span className="font-semibold">{fullName}&apos;s</span>{" "}
+          <span className="font-semibold">
+            {application?.user?.name}&apos;s
+          </span>{" "}
           Application{" "}
         </h1>
         <div className="space-y-4">
@@ -53,7 +57,9 @@ const ApplicationDetailPage = async ({
           {Object.entries(application || {}).map(([key, value]) => (
             <div key={key} className="flex flex-col gap-2 sm:gap-4 sm:flex-row">
               <span className="text-muted-foreground">{`${key}:`}</span>
-              <span className="font-semibold">{formatValue(value)}</span>
+              <span className="font-semibold">
+                {formatValue(application?.user?.name)}
+              </span>
             </div>
           ))}
         </div>

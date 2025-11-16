@@ -3,7 +3,9 @@
   "private": true,
   "scripts": {
     "test": "vitest run",
-    "build": "pnpm db:generate && tsc",
+    "build": "pnpm db:generate && node esbuild.config.js && tsc -p tsconfig.build.json",
+    "types": "tsc -p tsconfig.build.json",
+    "build:watch": "tsc --watch",
     "typecheck": "tsc --noEmit",
     "db:generate": "prisma generate",
     "db:reset": "dotenv -e .env -- pnpm prisma migrate reset --skip-seed",
@@ -16,6 +18,7 @@
   },
   "exports": {
     "./db": "./dist/db/index.js",
+    "./db/models": "./dist/db/models.js",
     "./auth": "./dist/auth/index.js"
   },
   "devDependencies": {
@@ -23,6 +26,8 @@
     "@types/node": "^20.19.9",
     "dotenv": "^17.2.3",
     "dotenv-cli": "^11.0.0",
+    "esbuild": "^0.27.0",
+    "esbuild-node-externals": "^1.20.1",
     "prisma": "^6.18.0",
     "tsx": "^4.20.6",
     "typescript": "^5.9.3",

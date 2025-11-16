@@ -1,22 +1,27 @@
 "use server";
 
-import { prisma } from "@/lib/db/prisma-client";
-import { ApplicationStatus } from "@/utils/models/applications";
+import {
+  applicationQueries,
+  ApplicationUpdateInput,
+} from "@workspace/server/db";
 import { revalidatePath } from "next/cache";
 
 export async function updateApplicationStatus(
   applicationId: string,
-  status: ApplicationStatus
+  input: ApplicationUpdateInput
 ) {
-  try {
-    await prisma.application.update({
-      where: { id: applicationId },
-      data: { status },
-    });
-    revalidatePath("/admin/dashboard");
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating application status:", error);
+  const updatedApplicationResult = await applicationQueries.updateApplication(
+    applicationId,
+    input
+  );
+  if (updatedApplicationResult.isErr()) {
+    console.error(
+      "Error updating application status:",
+      updatedApplicationResult.error
+    );
     return { success: false, error: "Failed to update status" };
   }
+
+  revalidatePath("/admin/dashboard");
+  return { success: true };
 }
