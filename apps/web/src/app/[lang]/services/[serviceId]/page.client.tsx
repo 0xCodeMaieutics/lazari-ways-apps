@@ -77,18 +77,14 @@ export const ServicesClientPage = ({
                     </div>
                     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
                       <Euro className="size-4" />
-                      <span className="font-semibold">{data.priceInEuro}</span>
+                      <span className="font-semibold">
+                        {data.priceRangeInEuro}
+                      </span>
                     </div>
                     {data.beginningDate && (
                       <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
                         <Calendar className="size-4" />
-                        <span className="font-semibold">
-                          დაწყება{" "}
-                          {formatDistanceToNow(new Date(data.beginningDate), {
-                            addSuffix: true,
-                            locale: ka,
-                          })}
-                        </span>
+                        <span className="font-semibold">მიღება ზაფხულში</span>
                       </div>
                     )}
                   </div>

@@ -9,7 +9,7 @@ export type ServicePageData = {
   title: string;
   description: string;
   picture: string;
-  priceInEuro: number;
+  priceRangeInEuro: string;
   beginningDate?: string;
   durationInMonths: number;
   requirements: string[];
