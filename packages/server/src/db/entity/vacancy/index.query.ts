@@ -15,8 +15,10 @@ export type Vacancy = Prisma.VacancyGetPayload<{
     duration: true;
     meals: true;
     salary: true;
+    availableTo: true;
     schedule: true;
     additionalInfo: true;
+    languageLevel: true;
     photos: true;
     videos: true;
     reviews: true;
@@ -24,9 +26,11 @@ export type Vacancy = Prisma.VacancyGetPayload<{
   };
 }>;
 
+export type VacancyWhereInput = Prisma.VacancyWhereInput;
+
 export const vacancyQueries = {
   getVacancies: async (
-    where?: Prisma.VacancyWhereInput,
+    where?: VacancyWhereInput,
     options?: {
       skip?: number;
       take?: number;
@@ -48,7 +52,9 @@ export const vacancyQueries = {
               duration: true,
               meals: true,
               salary: true,
+              availableTo: true,
               schedule: true,
+              languageLevel: true,
               additionalInfo: true,
               photos: true,
               videos: true,
@@ -104,10 +110,12 @@ export const vacancyQueries = {
             beginDate: true,
             accommodation: true,
             reviews: true,
+            availableTo: true,
             additionalInfo: true,
             duration: true,
             meals: true,
             salary: true,
+            languageLevel: true,
             schedule: true,
             photos: true,
             videos: true,

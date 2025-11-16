@@ -23,6 +23,8 @@ import {
   Instagram,
   User,
   ListChecks,
+  Languages,
+  UserCheck,
 } from "lucide-react";
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
@@ -109,6 +111,15 @@ export const VacancyClientPage = ({
                       <MapPin className="size-4" />
                       {data.location}
                     </Badge>
+                    {data.availableTo && (
+                      <Badge
+                        variant="secondary"
+                        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium shadow-md"
+                      >
+                        <UserCheck className="size-4" />
+                        {data.availableTo}
+                      </Badge>
+                    )}
                     <Badge
                       role="button"
                       onClick={handleCopyVacancyId}
@@ -184,6 +195,27 @@ export const VacancyClientPage = ({
                       </div>
                     </CardContent>
                   </Card>
+
+                  {/* Language Level */}
+                  {data.languageLevel && (
+                    <Card className="border-2 sm:col-span-2">
+                      <CardContent className="p-5">
+                        <div className="flex items-start gap-3">
+                          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                            <Languages className="size-5 text-primary" />
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground font-medium">
+                              ენის დონე
+                            </p>
+                            <p className="font-bold text-lg mt-1">
+                              {data.languageLevel}
+                            </p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
 
                   {/* Schedule */}
                   <Card className="border-2 sm:col-span-2">

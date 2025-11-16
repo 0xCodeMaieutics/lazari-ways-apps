@@ -10,8 +10,10 @@ model Vacancy {
   schedule       String // 40-50 საათი/კვირა; 9-10 საათი/დღე; 1 დღე/დასვენება
   accommodation  String // Unterkunft wird gestellt
   meals          String // Mahlzeiten werden gestellt
+  availableTo    String? // მხოლოდ ქალბატონებისთვის
+  languageLevel  String? // Grundkenntnisse in Deutsch
   additionalInfo String? //  Additional information
-  hide           Boolean?  @default(false)
+  hide           Boolean? @default(false)
   photos         String[]
   videos         String[]
   createdAt      DateTime @default(now())

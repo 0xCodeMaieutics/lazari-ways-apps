@@ -1,8 +1,8 @@
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { VacanciesListingClient } from "./page.client";
 import { getTranslations } from "@/i18n/translations";
 import { Locale } from "@/i18n";
-import { vacancyQueries } from "@workspace/server/db";
+import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
 import { Results } from "@workspace/shared";
 import { DeviceType } from "@/proxy";
 
@@ -55,7 +55,7 @@ export default async function VacanciesPage({
 
   const where = {
     hide: false,
-  };
+  } satisfies VacancyWhereInput;
   const vacanciesResult = await Results.allAsync([
     vacancyQueries.getVacancies(where, {
       skip: (page - 1) * getPageSize(viewport),
@@ -65,8 +65,7 @@ export default async function VacanciesPage({
   ]);
 
   if (vacanciesResult.isErr()) {
-    console.error(vacanciesResult?.error.message, vacanciesResult?.error.type);
-    return notFound();
+    throw vacanciesResult.error;
   }
 
   const [vacancies, vacanciesCount] = vacanciesResult.value;

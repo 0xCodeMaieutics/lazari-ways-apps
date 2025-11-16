@@ -1,1 +1,5 @@
-export { vacancyQueries, type Vacancy } from "./index.query";
+export {
+  vacancyQueries,
+  type Vacancy,
+  type VacancyWhereInput,
+} from "./index.query";
