@@ -15,8 +15,6 @@ const nextConfig = {
   images: {
     // domains: ["127.0.0.1", "localhost"], // 👈 Add this line
     remotePatterns,
-
-    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
 };
 
