@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { APP_SLUG } from "@/utils/constants";
-import { UserRole } from "@/utils/models/user";
+import { UserRole } from "@workspace/server/db/models";
 import * as jose from "jose";
 const SECRET = new TextEncoder().encode(env.JOSE_SECRET);
 const ALG = "HS256";

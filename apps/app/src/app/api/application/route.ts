@@ -1,10 +1,9 @@
 import { env } from "@/env";
-import { prisma } from "@workspace/server/db";
-import { generateRandomString } from "@workspace/server/db";
+import { applicationQueries, generateRandomString } from "@workspace/server/db";
 import { putObjects } from "@/lib/s3/s3.server";
 import { getImageExtension, ImageFileType } from "@/utils/file";
 import { applicationFormSchema } from "@/utils/models/applications";
-import { ApplicationType } from "@prisma/client";
+import { ApplicationType } from "@workspace/server/db/models";
 
 const APPLICATIONS = "applications";
 
@@ -93,8 +92,8 @@ export const POST = async (request: Request) => {
 
     const uploadedKeys = bodies.map((b) => b.key);
 
-    await prisma.application.create({
-      data: {
+    const createdApplicationResult = await applicationQueries.createApplication(
+      {
         id: applicationId,
         type,
         // Agency
@@ -148,8 +147,12 @@ export const POST = async (request: Request) => {
               result.data.languageCertificate?.type as ImageFileType
             )
           : null,
-      },
-    });
+      }
+    );
+
+    if (createdApplicationResult.isErr()) {
+      throw createdApplicationResult.error;
+    }
     return new Response("ok", {
       status: 200,
     });

@@ -18,16 +18,14 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { GetApplications } from "@workspace/server/db";
 import {
   ApplicationStatus,
-  ApplicationStatusKey,
   ApplicationType,
-  ApplicationTypeKey,
-  GetAllUserApplications,
-} from "@workspace/server/db";
+} from "@workspace/server/db/models";
 
 const statusConfig: Record<
-  ApplicationStatusKey,
+  ApplicationStatus,
   {
     label: string;
     variant: "default" | "secondary" | "destructive" | "outline";
@@ -75,15 +73,12 @@ const applicationTypeToLabel = {
   KKB3: "KKB 3 months",
   KKB8: "KKB 8 months",
   STUDENT: "Student",
-} satisfies Record<ApplicationTypeKey, string>;
+} satisfies Record<ApplicationType, string>;
 
-function ApplicationCard({
-  application,
-}: {
-  application: GetAllUserApplications[0];
-}) {
-  const status =
-    statusConfig[application.status ?? ApplicationStatus.USER_SUBMITTED];
+function ApplicationCard({ application }: { application: GetApplications }) {
+  const applicationStatus =
+    application.status ?? ApplicationStatus.USER_SUBMITTED;
+  const status = statusConfig[applicationStatus];
 
   return (
     <Card>
@@ -156,7 +151,7 @@ function ApplicationTypeButton({
 export function ApplicationsList({
   applications,
 }: {
-  applications: GetAllUserApplications;
+  applications: GetApplications[];
 }) {
   return (
     <Card>

@@ -2,12 +2,6 @@ import { tryCatchAsync } from "@workspace/shared";
 import { prisma } from "../../client";
 import { Prisma } from "../../generated/prisma/client";
 
-export type GetAllUserApplications = Prisma.ApplicationGetPayload<{
-  select: {
-    id: true;
-  };
-}>[];
-
 export type ApplicationWhereInput = Prisma.ApplicationWhereInput;
 
 export type ApplicationUpdateInput = Prisma.ApplicationUpdateInput;
@@ -32,6 +26,8 @@ export type GetApplications = Prisma.ApplicationGetPayload<{
     };
   };
 }>;
+
+export type ApplicationCreateInput = Prisma.ApplicationCreateInput;
 
 export const applicationQueries = {
   getApplication: (applicationId: string) =>
@@ -86,6 +82,12 @@ export const applicationQueries = {
     tryCatchAsync(() =>
       prisma.application.update({
         where: { id: applicationId },
+        data,
+      })
+    ),
+  createApplication: (data: ApplicationCreateInput) =>
+    tryCatchAsync(() =>
+      prisma.application.create({
         data,
       })
     ),

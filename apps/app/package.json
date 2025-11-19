@@ -16,12 +16,10 @@
     "@aws-sdk/lib-storage": "^3.922.0",
     "@aws-sdk/s3-request-presigner": "^3.922.0",
     "@hookform/resolvers": "^5.2.2",
-    "@prisma/client": "^6.18.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-query": "^5.90.5",
-    "@workspace/ui": "workspace:*",
     "@workspace/server": "workspace:*",
-    "better-auth": "^1.3.34",
+    "@workspace/ui": "workspace:*",
     "boring-avatars": "^2.0.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
@@ -33,7 +31,6 @@
     "react-hook-form": "^7.66.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
-    "uncrypto": "^0.1.3",
     "zod": "^4.1.12"
   },
   "devDependencies": {

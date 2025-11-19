@@ -10,9 +10,16 @@ export default async function OnboardingPage() {
   });
   if (!session?.session || !session.user) redirect("/login");
 
-  const applications = await applicationQueries.getAllUserApplications(
-    session.user.id
-  );
+  const applicationsResult = await applicationQueries.getApplications({
+    userId: session.user.id,
+  });
 
-  return <OnboardingPageClient data={session} applications={applications} />;
+  if (applicationsResult.isErr()) throw applicationsResult.error;
+
+  return (
+    <OnboardingPageClient
+      data={session}
+      applications={applicationsResult.value}
+    />
+  );
 }

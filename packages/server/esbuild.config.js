@@ -3,7 +3,7 @@ import { build } from "esbuild";
 import { nodeExternalsPlugin } from "esbuild-node-externals";
 
 build({
-  entryPoints: ["src/auth/index.ts", "src/db/index.ts", "src/db/models.ts"],
+  entryPoints: ["src/auth/index.ts", "src/db/index.ts", "src/db/models.ts", "src/auth/client.ts"],
   outdir: "dist",
   bundle: true,
   format: "esm",
@@ -13,10 +13,7 @@ build({
   splitting: false,
   minify: false,
 
-  // Avoid bundling prisma + other server-only stuff into browser bundle
   external: [
-    "@prisma/client",
-    "prisma",
     "fs",
     "node:path",
     "node:url",

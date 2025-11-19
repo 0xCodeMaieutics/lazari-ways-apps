@@ -1,7 +1,7 @@
 import { verifyToken } from "@/lib/token";
 import { ADMIN_SESSION_COOKIE } from "@/utils/constants";
-import { UserRole } from "@/utils/models/user";
 import { sessionQueries, userQueries } from "@workspace/server/db";
+import { UserRole } from "@workspace/server/db/models";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";

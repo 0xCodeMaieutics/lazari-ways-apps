@@ -1,5 +1,5 @@
 import { ApplicationForm } from "@/components/forms/application-form";
-import { ApplicationType } from "@workspace/server/db";
+import { ApplicationType } from "@workspace/server/db/models";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";

@@ -2,7 +2,6 @@ import { env } from "@/env";
 import { generateRandomString } from "@/lib/random";
 import { ADMIN_SESSION_COOKIE } from "@/utils/constants";
 import { decrypt } from "@/utils/encrypt";
-import { UserRole } from "@/utils/models/user";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { signToken } from "@/lib/token";
@@ -11,6 +10,7 @@ import {
   sessionQueries,
   userQueries,
 } from "@workspace/server/db";
+import { UserRole } from "@workspace/server/db/models";
 
 export const POST = async (request: NextRequest) => {
   const c = await cookies();

@@ -15,8 +15,12 @@ export default async function VacanciesDetailPage({
 
   const vacancyData = await vacancyQueries.getVacancyById(vacancyId);
 
-  if (vacancyData.isErr() || vacancyData.value === null) return notFound();
-  
+  if (vacancyData.isErr()) throw vacancyData.error;
+
+  if (!vacancyData.value) {
+    return notFound();
+  }
+
   return (
     <VacancyClientPage translations={translations} data={vacancyData.value} />
   );

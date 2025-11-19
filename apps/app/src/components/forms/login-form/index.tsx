@@ -12,7 +12,7 @@ import { FieldError } from "@workspace/ui/components/field";
 import { loginFormSchema } from "./schema";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from "@workspace/server/auth/client";
 
 const DEV_EMAIL = "applicant@lazaryways.eu";
 const DEV_PASSWORD = "#ApplicantIsCool2025!";

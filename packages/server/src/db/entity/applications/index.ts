@@ -1,8 +1,8 @@
 export {
   applicationQueries,
-  type GetAllUserApplications,
   type ApplicationWhereInput,
   type ApplicationUpdateInput,
   type GetApplications,
   type GetApplication,
+  type ApplicationCreateInput
 } from "./index.query";

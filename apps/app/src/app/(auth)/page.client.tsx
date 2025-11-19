@@ -9,11 +9,11 @@ import {
 } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Mail, Calendar, CheckCircle2, XCircle } from "lucide-react";
-import { Session, User } from "better-auth";
+import { Session, User } from "@workspace/server/auth";
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
 import { ApplicationsList } from "@/components/applications-list";
-import { GetAllUserApplications } from "@workspace/server/db";
+import { GetApplications } from "@workspace/server/db";
 
 function AccountDetail({
   label,
@@ -46,7 +46,7 @@ export function OnboardingPageClient({
   applications,
 }: {
   data: { session: Session; user: User };
-  applications: GetAllUserApplications;
+  applications: GetApplications[];
 }) {
   const { user, session } = data;
 
