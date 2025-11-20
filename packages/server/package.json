@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "build": "pnpm db:generate && node esbuild.config.js && tsc -p tsconfig.build.json",
+    "build": "node esbuild.config.js && tsc -p tsconfig.build.json",
     "types": "tsc -p tsconfig.build.json",
     "build:watch": "tsc --watch",
     "typecheck": "tsc --noEmit",
