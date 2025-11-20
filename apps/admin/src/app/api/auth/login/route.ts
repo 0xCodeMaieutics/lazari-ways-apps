@@ -45,7 +45,7 @@ export const POST = async (request: NextRequest) => {
 
     const storedDecryptedPassword = decrypt(
       account.password,
-      env.ENCRYPTION_KEY
+      env.PASSWORD_ENCRYPTION_KEY
     );
 
     if (storedDecryptedPassword !== String(password)) {

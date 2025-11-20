@@ -81,6 +81,7 @@ export function LoginForm() {
                   id="email"
                   aria-invalid={fieldState.invalid}
                   placeholder="Email"
+                  className="h-12"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -100,6 +101,7 @@ export function LoginForm() {
                   id="password"
                   aria-invalid={fieldState.invalid}
                   placeholder="Password"
+                  className="h-12"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
