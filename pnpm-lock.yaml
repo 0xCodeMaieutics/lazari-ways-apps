@@ -38,6 +38,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.66.0(react@19.1.1))
+      '@prisma/adapter-pg':
+        specifier: ^6.19.0
+        version: 6.19.0
+      '@prisma/client':
+        specifier: ^6.18.0
+        version: 6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.2)(zod@4.1.12)
@@ -68,6 +74,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -117,6 +126,12 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.66.0(react@19.1.1))
+      '@prisma/adapter-pg':
+        specifier: ^6.19.0
+        version: 6.19.0
+      '@prisma/client':
+        specifier: ^6.18.0
+        version: 6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(typescript@5.9.2)(zod@4.1.12)
@@ -147,6 +162,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -190,6 +208,12 @@ importers:
       '@formatjs/intl-localematcher':
         specifier: ^0.6.2
         version: 0.6.2
+      '@prisma/adapter-pg':
+        specifier: ^6.19.0
+        version: 6.19.0
+      '@prisma/client':
+        specifier: ^6.18.0
+        version: 6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)
       '@workspace/server':
         specifier: workspace:*
         version: link:../../packages/server
@@ -220,6 +244,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      pg:
+        specifier: ^8.16.3
+        version: 8.16.3
       react:
         specifier: ^19.1.1
         version: 19.1.1
@@ -5701,6 +5728,11 @@ snapshots:
     transitivePeerDependencies:
       - pg-native
 
+  '@prisma/client@6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)':
+    optionalDependencies:
+      prisma: 6.18.0(typescript@5.9.2)
+      typescript: 5.9.2
+
   '@prisma/client@6.18.0(prisma@6.18.0(typescript@5.9.3))(typescript@5.9.3)':
     optionalDependencies:
       prisma: 6.18.0(typescript@5.9.3)
@@ -8534,6 +8566,16 @@ snapshots:
   prelude-ls@1.2.1: {}
 
   prettier@3.6.2: {}
+
+  prisma@6.18.0(typescript@5.9.2):
+    dependencies:
+      '@prisma/config': 6.18.0
+      '@prisma/engines': 6.18.0
+    optionalDependencies:
+      typescript: 5.9.2
+    transitivePeerDependencies:
+      - magicast
+    optional: true
 
   prisma@6.18.0(typescript@5.9.3):
     dependencies:
