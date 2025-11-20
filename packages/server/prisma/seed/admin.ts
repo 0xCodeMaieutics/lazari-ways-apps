@@ -38,7 +38,7 @@ export const createAdmin = (tx: Prisma.TransactionClient) =>
     },
   });
 
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   void (async function () {
     const email = "anna@lazaryways.eu";
     const password = "#AnnaIsCool2025!";

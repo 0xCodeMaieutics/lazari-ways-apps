@@ -1,17 +1,17 @@
 import "dotenv/config";
 import { generateRandomString, zodParse } from "@workspace/shared";
-import { createAdmin } from "./admin";
-import { createApplications } from "./application";
-import { createUsers } from "./user";
+import { createAdmin } from "./admin.js";
+import { createApplications } from "./application.js";
+import { createUsers } from "./user.js";
 import z from "zod";
-import { auth } from "../../src/auth";
-import { Prisma } from "db/client";
+import { auth } from "../../src/auth/auth.js";
+import { Prisma } from "db/client.js";
 import {
   getSignedUrlForDownload,
   uploadFileToStorage,
-} from "../../src/s3/s3-client";
+} from "../../src/s3/s3-client.js";
 import path from "path";
-import { prisma } from "../../src/db/client";
+import { prisma } from "../../src/db/client.js";
 
 void (async function () {
   console.log("✅ Existing data cleared!");
@@ -60,17 +60,29 @@ void (async function () {
       })
     );
 
-    if (s3Env.isErr()) process.exit(1);
+    if (s3Env.isErr()) {
+      console.error(
+        "❌ Missing S3_BUCKET_NAME environment variable for seeding vacancies"
+      );
+
+      process.exit(1);
+    }
 
     const fileKey = "vacancies/hotels.webp";
     const uploadResult = await uploadFileToStorage({
       bucket: s3Env.value.S3_BUCKET_NAME,
       fileKey: fileKey,
-      filePath: path.resolve(__dirname, "hotels.webp"),
+      filePath: path.resolve(import.meta.dirname, "hotels.webp"),
       ACL: "public-read",
     });
 
-    if (uploadResult.isErr()) process.exit(1);
+    if (uploadResult.isErr()) {
+      console.error(
+        "❌ Failed to upload file to S3 storage for seeding vacancies",
+        uploadResult.error
+      );
+      process.exit(1);
+    }
 
     const signedUrl = await getSignedUrlForDownload({
       bucket: s3Env.value.S3_BUCKET_NAME,
@@ -78,7 +90,12 @@ void (async function () {
       expiresInSeconds: 100 * 60 * 60, // 100 hours
     });
 
-    if (signedUrl.isErr()) process.exit(1);
+    if (signedUrl.isErr()) {
+      console.error(
+        "❌ Failed to get signed URL from S3 storage for seeding vacancies"
+      );
+      process.exit(1);
+    }
 
     await tx.vacancy.createMany({
       data: Array.from({ length: 100 }).map((_, index) => {

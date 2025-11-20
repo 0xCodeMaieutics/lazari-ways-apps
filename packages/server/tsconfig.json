@@ -14,7 +14,11 @@
 
     // Generate corresponding '.d.ts' file
     "declaration": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@workspace/shared/*": ["../shared/src/index.ts"]
+    }
   },
   "include": ["./src/**/*"],
   "exclude": ["**/generated/**"]
