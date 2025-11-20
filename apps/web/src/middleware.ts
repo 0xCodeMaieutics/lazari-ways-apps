@@ -7,13 +7,18 @@ export type DeviceType = "desktop" | "mobile" | "tablet" | "console";
 const getDeviceType = (request: NextRequest) =>
   (userAgent(request).device.type ?? "desktop") as DeviceType;
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const pathnameHasLocale = i18n.locales.some(
     (locale) =>
       request.nextUrl.pathname.startsWith(`/${locale}/`) ||
       request.nextUrl.pathname === `/${locale}`
   );
   const searchParamsHasViewport = request.nextUrl.searchParams.has("viewport");
+
+  console.log({
+    pathnameHasLocale,
+    searchParamsHasViewport,
+  });
 
   if (pathnameHasLocale && searchParamsHasViewport) return;
   else if (!searchParamsHasViewport) {

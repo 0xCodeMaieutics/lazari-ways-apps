@@ -4,7 +4,7 @@ import { getTranslations } from "@/i18n/translations";
 import { Locale } from "@/i18n";
 import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
 import { Results } from "@workspace/shared";
-import { DeviceType } from "@/proxy";
+import { DeviceType } from "@/middleware";
 
 const DEFAULT_PAGE = "1";
 const getPaginationSearchParams = (searchParams: URLSearchParams) => {
