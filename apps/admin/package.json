@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "test:build": "turbo run build --filter=admin",
+    "build:turbo": "turbo run build --filter=admin",
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",

@@ -44,7 +44,7 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
 
-    PASSWORD_ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
+    PASSWORD_ENCRYPTION_KEY: process.env.PASSWORD_ENCRYPTION_KEY,
     JOSE_SECRET: process.env.JOSE_SECRET,
   },
   /**

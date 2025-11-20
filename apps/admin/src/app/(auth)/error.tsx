@@ -1,6 +1,6 @@
 "use client"; // Error components must be Client Components
 
-import { BaseError } from "@workspace/shared";
+import { BaseError } from "@workspace/shared/error-handling/result";
 
 import { useEffect } from "react";
 

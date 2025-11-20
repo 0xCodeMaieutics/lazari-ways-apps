@@ -12,7 +12,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Pagination } from "@/components/pagination";
 import { SearchInput } from "@/components/search-input";
-import { Results } from "@workspace/shared";
+import { Results } from "@workspace/shared/error-handling/result";
 import {
   applicationQueries,
   ApplicationWhereInput,

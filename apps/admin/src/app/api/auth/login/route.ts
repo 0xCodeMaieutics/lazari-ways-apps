@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { generateRandomString } from "@workspace/shared";
+import { generateRandomString } from "@workspace/shared/lib/random";
 import { ADMIN_SESSION_COOKIE } from "@/utils/constants";
 import { decrypt } from "@/utils/encrypt";
 import { cookies } from "next/headers";
