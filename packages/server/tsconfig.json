@@ -17,7 +17,7 @@
     "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@workspace/shared/*": ["../shared/src/index.ts"]
+      "db/client": ["./src/db/generated/prisma/client.ts"]
     }
   },
   "include": ["./src/**/*"],

@@ -23,7 +23,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
-import { tryCatchAsync } from "@workspace/shared";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { translationsContext } from "@/lib/context/translations";
 import { Translations } from "@/i18n/translations";

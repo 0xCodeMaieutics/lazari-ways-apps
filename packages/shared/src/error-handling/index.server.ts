@@ -1,11 +1,10 @@
 import {
   ok,
   asyncPipe,
-  type Result,
   tryCatch,
   tryCatchAsync,
   err,
-} from "./result";
+} from "@workspace/shared/error-handling";
 
 export async function fetchResponse(...args: Parameters<typeof global.fetch>) {
   return await asyncPipe(

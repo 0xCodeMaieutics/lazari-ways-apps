@@ -1,5 +1,5 @@
+import { err, ok, Result } from "@workspace/shared/error-handling/result";
 import { type z } from "zod";
-import { err, ok, type Result } from "./result";
 
 export {
   type Result,
@@ -15,7 +15,7 @@ export {
   Ok,
   Err,
   type SerializedResult,
-} from "./result";
+} from "@workspace/shared/error-handling/result";
 
 export type DataIntegrityError = {
   type: "DATA_INTEGRITY_ERROR";
@@ -26,7 +26,7 @@ export type DataIntegrityError = {
 
 export function zodParse<S extends z.ZodTypeAny>(
   data: unknown,
-  schema: S,
+  schema: S
 ): Result<
   z.infer<S>,
   {

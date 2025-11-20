@@ -1,4 +1,4 @@
-import { tryCatchAsync } from "@workspace/shared";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { prisma } from "../../client.js";
 import { Prisma } from "../../generated/prisma/client.js";
 

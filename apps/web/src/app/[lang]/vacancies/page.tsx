@@ -3,7 +3,7 @@ import { VacanciesListingClient } from "./page.client";
 import { getTranslations } from "@/i18n/translations";
 import { Locale } from "@/i18n";
 import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
-import { Results } from "@workspace/shared";
+import { Results } from "@workspace/shared/error-handling/result";
 import { DeviceType } from "@/middleware";
 
 const DEFAULT_PAGE = "1";

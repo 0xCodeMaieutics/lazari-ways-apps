@@ -1,6 +1,6 @@
 export { PrismaClient } from "./generated/prisma/client.js";
 
-export { generateRandomString } from "@workspace/shared";
+export { generateRandomString } from "@workspace/shared/lib/random";
 export { decrypt, encrypt } from "../utils/encrypt.js";
 export * from "./entity/applications/index.js";
 export * from "./entity/vacancy/index.js";

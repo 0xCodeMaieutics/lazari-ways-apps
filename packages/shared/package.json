@@ -1,13 +1,14 @@
 {
   "name": "@workspace/shared",
+  "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "lint": "eslint . --max-warnings 0"
   },
   "exports": {
-    ".": "./src/index.ts"
+    "./*": "./src/*.ts"
   },
   "devDependencies": {
     "@types/node": "^20.19.9",

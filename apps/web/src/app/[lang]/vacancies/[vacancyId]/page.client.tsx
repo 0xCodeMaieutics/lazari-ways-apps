@@ -42,7 +42,7 @@ import { CTASection } from "@/components/cta-section";
 import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { useState } from "react";
-import { tryCatchAsync } from "@workspace/shared";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 
 export const VacancyClientPage = ({

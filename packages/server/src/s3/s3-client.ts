@@ -9,7 +9,7 @@ import {
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import z from "zod";
-import { tryCatchAsync, Err } from "@workspace/shared";
+import { tryCatchAsync, Err } from "@workspace/shared/error-handling/result";
 
 const env = z
   .object({

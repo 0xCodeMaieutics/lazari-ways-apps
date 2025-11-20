@@ -1,8 +1,8 @@
 import { Prisma, $Enums } from "db/client";
 
-import { generateRandomString } from "@workspace/shared";
+import { generateRandomString } from "@workspace/shared/lib/random";
 import { faker } from "@faker-js/faker";
-import { encrypt } from "../../src/utils/encrypt";
+import { encrypt } from "../../src/utils/encrypt.js";
 
 const email = "anna@application.com";
 const password = "#AdminIsCool2025";

@@ -9,7 +9,7 @@ import {
   tryCatchAsync,
   usableErr,
   usableOk,
-} from "./result";
+} from "@workspace/shared/error-handling";
 
 describe("Results.all", () => {
   it("should correctly map an array of same-typed results to a single result", () => {
@@ -255,8 +255,8 @@ describe("asyncPipe", () => {
         err({
           type: "FIRST_ERROR",
           meta: "data",
-        }),
-      ),
+        })
+      )
     ).mapErr((error) => ({
       ...error,
       type: "SECOND_ERROR",
@@ -438,7 +438,7 @@ describe("Results.merge", () => {
       ok({ b: 2 }),
       ok({ a: 3, b: 5 }),
       ok({ c: "another string" }),
-      ok({ b: 6 }),
+      ok({ b: 6 })
     );
 
     // then
@@ -590,7 +590,7 @@ describe("Results.do", () => {
       // when
       const myFunction = Results.do(function* (
         startValue: number,
-        max: number,
+        max: number
       ) {
         const value1 = yield* ok(1);
         const value2 = yield* ok(2);
@@ -708,7 +708,7 @@ describe("Results.do", () => {
       // when
       const myFunction = Results.do(async function* (
         startValue: number,
-        max: number,
+        max: number
       ) {
         const value1 = yield* ok(1);
         const value2 = yield* ok(2);
