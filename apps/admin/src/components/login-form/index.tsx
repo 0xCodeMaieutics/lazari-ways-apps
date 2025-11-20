@@ -4,6 +4,8 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 
+import Image from "next/image";
+
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Field, FieldError } from "@workspace/ui/components/field";
@@ -64,12 +66,23 @@ export function LoginForm() {
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <h1 className="text-2xl text-center font-bold mb-6">Admin Login</h1>
       <form
         onSubmit={form.handleSubmit((data) => signInMutation.mutate(data))}
         noValidate
       >
         <div className="space-y-4">
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div className="relative h-12 w-[190px]">
+              <Image
+                src={"/images/logos/logo-text.svg"}
+                alt="Lazary Ways image Logo"
+                fill
+              />
+            </div>
+            <span className="font-semibold text-muted-foreground text-sm">
+              ადმინისტრატორებისთვის
+            </span>
+          </div>
           <Controller
             name="email"
             control={form.control}
@@ -114,7 +127,8 @@ export function LoginForm() {
         <div className="mt-6">
           <Button
             type="submit"
-            className="w-full"
+            className="w-full h-12 sm:text-lg"
+            size={"lg"}
             disabled={signInMutation.isPending}
           >
             {signInMutation.isPending ? "Logging in..." : "Login"}
