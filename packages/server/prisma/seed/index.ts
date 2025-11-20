@@ -1,5 +1,6 @@
 import "dotenv/config";
-import { generateRandomString, zodParse } from "@workspace/shared";
+import { generateRandomString } from "@workspace/shared/lib/random";
+import { zodParse } from "@workspace/shared/error-handling/index";
 import { createAdmin } from "./admin.js";
 import { createApplications } from "./application.js";
 import { createUsers } from "./user.js";
@@ -100,10 +101,13 @@ void (async function () {
     await tx.vacancy.createMany({
       data: Array.from({ length: 100 }).map((_, index) => {
         const vacancyId = BASE_VACANCY_ID + index;
+        const createdAt = new Date();
+        createdAt.setDate(createdAt.getDate() - index);
+
         return {
           id: generateRandomString(32),
           vacancyId,
-          title: "Bäcker/in",
+          title: "მცხობელი",
           jobDescription: `ვაკანსია მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
           location: "ნიუბერგის ახლოს",
           beginDate: "2024-09-01",
@@ -118,7 +122,7 @@ void (async function () {
           schedule:
             "- სამუშაო დღეებში 8 საათი\n- შაბათ-კვირას თავისუფალი\n- საღამოები თავისუფალი",
           additionalInfo: "გამოცდილება სასურველია, მაგრამ არა აუცილებელი.",
-          createdAt: new Date().toISOString(),
+          createdAt: createdAt.toISOString(),
           photos: [],
           videos: [],
         } satisfies Prisma.VacancyCreateManyInput;

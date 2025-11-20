@@ -1,11 +1,11 @@
-import { Prisma, $Enums } from "db/client";
+import { Prisma, UserRole } from "db/client";
 
 import { generateRandomString } from "@workspace/shared/lib/random";
 import { faker } from "@faker-js/faker";
 import { encrypt } from "../../src/utils/encrypt.js";
 
-const email = "anna@application.com";
-const password = "#AdminIsCool2025";
+const email = "admin-test@lazaryways.eu";
+const password = "#AdminIsCool2025@!";
 
 export const createAdmin = (tx: Prisma.TransactionClient) =>
   tx.user.create({
@@ -14,7 +14,7 @@ export const createAdmin = (tx: Prisma.TransactionClient) =>
       email,
       name: "Anna Admin",
       emailVerified: faker.datatype.boolean(),
-      role: $Enums.UserRole.ADMIN,
+      role: UserRole.ADMIN,
       sessions: {
         create: {
           id: generateRandomString(32),

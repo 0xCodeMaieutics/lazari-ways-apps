@@ -27,6 +27,9 @@ export type Vacancy = Prisma.VacancyGetPayload<{
 }>;
 
 export type VacancyWhereInput = Prisma.VacancyWhereInput;
+export type VacancyUpdateInput = Prisma.VacancyUpdateInput;
+export type VacancyOrderByWithRelationInput =
+  Prisma.VacancyOrderByWithRelationInput;
 
 export const vacancyQueries = {
   getVacancies: async (
@@ -34,6 +37,7 @@ export const vacancyQueries = {
     options?: {
       skip?: number;
       take?: number;
+      orderBy?: VacancyOrderByWithRelationInput;
     }
   ) =>
     (
@@ -64,9 +68,7 @@ export const vacancyQueries = {
             where,
             skip: options?.skip,
             take: options?.take,
-            orderBy: {
-              createdAt: "desc",
-            },
+            orderBy: options?.orderBy,
           }) satisfies Promise<Vacancy[]>
       )
     ).mapErr((err) => {
@@ -93,6 +95,14 @@ export const vacancyQueries = {
         message: "Failed to get vacancies count",
       };
     }),
+
+  updateVacancy: ({ id, data }: { id: string; data: VacancyUpdateInput }) =>
+    tryCatchAsync(() =>
+      prisma.vacancy.update({
+        where: { id },
+        data,
+      })
+    ),
   getVacancyById: (vacancyId: string) =>
     tryCatchAsync(
       () =>

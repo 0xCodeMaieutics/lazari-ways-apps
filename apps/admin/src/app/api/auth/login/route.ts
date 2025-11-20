@@ -12,6 +12,7 @@ import {
 } from "@workspace/server/db";
 import { UserRole } from "@workspace/server/db/models";
 
+const SUCCESS_REDIRECT_URL = "/vacancies";
 export const POST = async (request: NextRequest) => {
   const c = await cookies();
   const formData = await request.formData();
@@ -70,7 +71,7 @@ export const POST = async (request: NextRequest) => {
       token: signedToken,
     });
     c.set(ADMIN_SESSION_COOKIE, signedToken);
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL(SUCCESS_REDIRECT_URL, request.url));
   } catch (error) {
     if (error instanceof Error) {
       console.error("Error during admin login:", error.message);

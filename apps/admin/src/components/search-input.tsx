@@ -4,13 +4,14 @@ import { Input } from "@workspace/ui/components/input";
 import { useDebounce } from "@/utils/hooks/use-debouce";
 import { LoaderCircle, SearchIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ComponentPropsWithoutRef, useEffect, useState } from "react";
 
-export function SearchInput({ defaultValue }: { defaultValue?: string }) {
+export function SearchInput({ ...props }: ComponentPropsWithoutRef<"input">) {
+  const { defaultValue = "" } = props as { defaultValue?: string };
   const router = useRouter();
   const [search, setSearch] = useState(defaultValue);
   const debouncedSearch = useDebounce(search, 500);
-  const isLoading = (search ?? "") !== (defaultValue ?? "");
+  const isLoading = (search ?? "") !== defaultValue;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -32,11 +33,11 @@ export function SearchInput({ defaultValue }: { defaultValue?: string }) {
       <Input
         className="w-[300px]"
         type="search"
-        placeholder="Name, instagram, email, phone..."
-        defaultValue={defaultValue}
         onChange={(e) => {
           setSearch(e.target.value);
         }}
+        defaultValue={defaultValue}
+        {...props}
       />
     </div>
   );

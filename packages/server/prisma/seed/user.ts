@@ -1,5 +1,5 @@
 import { encrypt } from "../../src/utils/encrypt";
-import { generateRandomString } from "@workspace/shared";
+import { generateRandomString } from "@workspace/shared/lib/random";
 import { faker } from "@faker-js/faker";
 import { Prisma, $Enums } from "db/client";
 

@@ -56,6 +56,7 @@ export default async function VacanciesPage({
   const where = {
     hide: false,
   } satisfies VacancyWhereInput;
+
   const vacanciesResult = await Results.allAsync([
     vacancyQueries.getVacancies(where, {
       skip: (page - 1) * getPageSize(viewport),

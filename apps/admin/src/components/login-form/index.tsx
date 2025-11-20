@@ -12,9 +12,10 @@ import { Field, FieldError } from "@workspace/ui/components/field";
 import { adminLoginFormSchema } from "./schema";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 
-const DEV_EMAIL = "anna@application.com";
-const DEV_PASSWORD = "#AdminIsCool2025";
+const DEV_EMAIL = "admin-test@lazaryways.eu";
+const DEV_PASSWORD = "#AdminIsCool2025@!";
 
 export function LoginForm() {
   const signInMutation = useMutation<
@@ -32,12 +33,18 @@ export function LoginForm() {
       const formData = new FormData();
       formData.append("email", data.email);
       formData.append("password", data.password);
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        body: formData,
-      });
+      const result = await tryCatchAsync(() =>
+        fetch("/api/auth/login", {
+          method: "POST",
+          body: formData,
+        })
+      );
+
+      if (result.isErr()) throw new Error("Network error. Please try again.");
+      const response = result.value;
+
       if (!response.ok) {
-        throw new Error("Login failed");
+        throw new Error("Invalid credentials. Please try again.");
       }
       return {
         success: true,

@@ -1,4 +1,4 @@
-import { DashboardTableContent } from "./page.client";
+// import { DashboardTableContent } from "./page.client";
 import {
   Table,
   TableBody,
@@ -13,24 +13,22 @@ import { redirect } from "next/navigation";
 import { Pagination } from "@/components/pagination";
 import { SearchInput } from "@/components/search-input";
 import { Results } from "@workspace/shared/error-handling/result";
-import {
-  applicationQueries,
-  ApplicationWhereInput,
-} from "@workspace/server/db";
+import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
+import { VacanciesTableContent } from "./page.client";
 
 export const dynamic = "force-dynamic";
 
 const TABLE_HEADERS = [
-  "Name",
-  "Email",
-  "Instagram",
-  "Phone",
-  "Visa type",
-  "Status",
+  "ვაკანსიის #ID",
+  "სათაური",
+  "ლოკაცია",
+  "ხელფასი",
+  "დაწყების თარიღი",
+  "ჩვენება",
 ];
 
 const DEFAULT_PAGE = "1";
-const DEFAULT_PAGE_SIZE = "25";
+const DEFAULT_PAGE_SIZE = "10";
 const DEFAULT_PAGES = [10, 25, 50, 100];
 
 const getPaginationSearchParams = (searchParams: URLSearchParams) => {
@@ -52,13 +50,19 @@ const getPaginationSearchParams = (searchParams: URLSearchParams) => {
   };
 };
 
-const buildApplicationSearchWhereClause = (search?: string) => {
+const buildVacancySearchWhereClause = (search?: string) => {
   if (search === undefined || search.trim() === "") {
     return {};
   }
   return {
-    OR: [],
-  } as ApplicationWhereInput;
+    OR: [
+      {
+        vacancyId: {
+          equals: Number(search.replace("LZRY-", "")) || 0,
+        },
+      },
+    ],
+  } satisfies VacancyWhereInput;
 };
 
 export default async function DashboardPage({
@@ -84,12 +88,14 @@ export default async function DashboardPage({
 
   const { page, pageSize } = getPaginationSearchParams(currentSearchParams);
 
-  const where = buildApplicationSearchWhereClause(search);
+  const where = {
+    ...buildVacancySearchWhereClause(search),
+  } satisfies VacancyWhereInput;
 
   const skip = (page - 1) * pageSize;
-  const applicationResult = await Results.allAsync([
-    applicationQueries.getApplicationsCount(where),
-    applicationQueries.getApplications(where, {
+  const vacanciesResult = await Results.allAsync([
+    vacancyQueries.getVacanciesCount(where),
+    vacancyQueries.getVacancies(where, {
       skip,
       take: pageSize,
       orderBy: {
@@ -98,18 +104,18 @@ export default async function DashboardPage({
     }),
   ]);
 
-  if (applicationResult.isErr()) {
-    throw applicationResult.error;
+  if (vacanciesResult.isErr()) {
+    throw vacanciesResult.error;
   }
 
-  const [totalApplications, applications] = applicationResult.value;
+  const [totalVacancies, vacancies] = vacanciesResult.value;
 
   return (
-    <div className="w-full mx-auto space-y-6 pt-10 pb-10">
+    <div className="w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Applications</h1>
+        <h1 className="text-2xl font-bold">ვაკანსიები</h1>
         <div>
-          <SearchInput defaultValue={search} />
+          <SearchInput placeholder="Vacancy ID" defaultValue={search} />
         </div>
       </div>
       <div className="space-y-2">
@@ -137,11 +143,11 @@ export default async function DashboardPage({
                 </TableRow>
               }
             >
-              <DashboardTableContent
-                applications={applications}
+              <VacanciesTableContent
+                vacanacies={vacancies}
                 currentPage={page}
                 pageSize={pageSize}
-                totalApplications={totalApplications}
+                totalVacancies={totalVacancies}
               />
             </Suspense>
           </TableBody>
@@ -150,7 +156,7 @@ export default async function DashboardPage({
           <Pagination
             pageSize={pageSize}
             currentPage={page}
-            total={totalApplications}
+            total={totalVacancies}
           />
         </Suspense>
       </div>

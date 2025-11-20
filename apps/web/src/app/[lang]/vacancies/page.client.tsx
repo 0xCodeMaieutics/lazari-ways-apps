@@ -184,7 +184,7 @@ export const VacanciesListingClient = ({
 }: {
   vacancies: Vacancy[];
   translations: Translations;
-  vacanciesTotal: number;
+    vacanciesTotal: number;
   currentPage: number;
   pageSize: number;
 }) => {

@@ -53,7 +53,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 variant={"link"}
                 asChild
               >
-                <Link href={""}>
+                <Link href={"/vacancies"}>
                   ვაკანსიები
                   <Underline />
                 </Link>
@@ -63,7 +63,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 variant={"link"}
                 asChild
               >
-                <Link href={""}>
+                <Link href={"/applications"}>
                   კანდიდატები
                   <Underline />
                 </Link>
