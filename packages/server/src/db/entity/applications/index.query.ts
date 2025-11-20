@@ -1,6 +1,6 @@
 import { tryCatchAsync } from "@workspace/shared";
-import { prisma } from "../../client";
-import { Prisma } from "../../generated/prisma/client";
+import { prisma } from "../../client.js";
+import { Prisma } from "../../generated/prisma/client.js";
 
 export type ApplicationWhereInput = Prisma.ApplicationWhereInput;
 

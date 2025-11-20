@@ -1,2 +1,1 @@
-
-export { accountQueries, type GetAccountByUserId } from "./index.query";
+export { accountQueries, type GetAccountByUserId } from "./index.query.js";

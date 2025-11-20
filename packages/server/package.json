@@ -1,6 +1,7 @@
 {
   "name": "@workspace/server",
   "private": true,
+  "type": "module",
   "scripts": {
     "test": "vitest run",
     "build": "pnpm db:generate && node esbuild.config.js && tsc -p tsconfig.build.json",

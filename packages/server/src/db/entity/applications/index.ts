@@ -5,4 +5,4 @@ export {
   type GetApplications,
   type GetApplication,
   type ApplicationCreateInput
-} from "./index.query";
+} from "./index.query.js";

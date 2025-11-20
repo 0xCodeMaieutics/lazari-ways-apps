@@ -1,1 +1,1 @@
-export { type GetUser, userQueries } from "./index.query";
+export { type GetUser, userQueries } from "./index.query.js";

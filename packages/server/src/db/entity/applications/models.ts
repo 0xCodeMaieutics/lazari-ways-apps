@@ -1,7 +1,7 @@
 import {
   ApplicationStatus as ApplicationStatusEnum,
   ApplicationType as ApplicationTypeEnum,
-} from "../../generated/prisma/enums";
+} from "../../generated/prisma/enums.js";
 
 export const ApplicationStatus = ApplicationStatusEnum;
 export type ApplicationStatus = ApplicationStatusEnum;

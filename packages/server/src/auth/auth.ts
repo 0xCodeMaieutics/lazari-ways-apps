@@ -1,6 +1,6 @@
 import { betterAuth, Session as BASession, User as BAUser } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
-import { prisma } from "../db/client";
+import { prisma } from "../db/client.js";
 import { toNextJsHandler } from "better-auth/next-js";
 
 export type Session = BASession;

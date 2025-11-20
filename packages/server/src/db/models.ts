@@ -1,2 +1,2 @@
-export * from "./entity/applications/models";
-export * from "./entity/user/models";
+export * from "./entity/applications/models.js";
+export * from "./entity/user/models.js";

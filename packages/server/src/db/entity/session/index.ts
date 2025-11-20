@@ -1,4 +1,4 @@
 export {
   type GetSession as GetSessionByToken,
   sessionQueries,
-} from "./index.query";
+} from "./index.query.js";
