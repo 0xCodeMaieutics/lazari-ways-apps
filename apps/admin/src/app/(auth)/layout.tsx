@@ -5,8 +5,11 @@ import { UserRole } from "@workspace/server/db/models";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { PropsWithChildren } from "react";
+import { Header } from "./layout.client";
 
 const LOGIN_PATH = "/login";
+
+
 
 export default async function Layout({ children }: PropsWithChildren) {
   const c = await cookies();
@@ -42,8 +45,11 @@ export default async function Layout({ children }: PropsWithChildren) {
   if (user?.role !== UserRole.ADMIN) redirect(LOGIN_PATH);
 
   return (
-    <div className="w-full h-full mx-auto max-w-7xl px-4 md:px-0">
-      {children}
-    </div>
+    <>
+      <Header />
+      <div className="w-full h-full mx-auto max-w-7xl px-4 md:px-0">
+        {children}
+      </div>
+    </>
   );
 }
