@@ -42,7 +42,7 @@ export default async function Layout({ children }: PropsWithChildren) {
   if (user?.role !== UserRole.ADMIN) redirect(LOGIN_PATH);
 
   return (
-    <div className="w-full h-full mx-auto max-w-6xl px-4 md:px-0">
+    <div className="w-full h-full mx-auto max-w-7xl px-4 md:px-0">
       {children}
     </div>
   );

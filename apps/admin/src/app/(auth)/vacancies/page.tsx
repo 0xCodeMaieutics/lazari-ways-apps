@@ -111,7 +111,7 @@ export default async function DashboardPage({
   const [totalVacancies, vacancies] = vacanciesResult.value;
 
   return (
-    <div className="w-full mx-auto space-y-6 pt-40 pb-10">
+    <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">ვაკანსიები</h1>
         <div>

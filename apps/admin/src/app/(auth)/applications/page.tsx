@@ -30,7 +30,7 @@ const TABLE_HEADERS = [
 ];
 
 const DEFAULT_PAGE = "1";
-const DEFAULT_PAGE_SIZE = "25";
+const DEFAULT_PAGE_SIZE = "10";
 const DEFAULT_PAGES = [10, 25, 50, 100];
 
 const getPaginationSearchParams = (searchParams: URLSearchParams) => {
@@ -105,9 +105,9 @@ export default async function DashboardPage({
   const [totalApplications, applications] = applicationResult.value;
 
   return (
-    <div className="w-full mx-auto space-y-6 pt-10 pb-10">
+    <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Applications</h1>
+        <h1 className="text-2xl font-bold">აპლიკაციები</h1>
         <div>
           <SearchInput
             placeholder="Name, instagram, email, phone..."
@@ -135,7 +135,7 @@ export default async function DashboardPage({
                     className="text-center text-muted-foreground"
                   >
                     <LoaderCircle className="mr-2 inline-block size-4 animate-spin" />
-                    Loading...
+                    იტვირთება...
                   </TableCell>
                 </TableRow>
               }
