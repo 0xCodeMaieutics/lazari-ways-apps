@@ -149,9 +149,7 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
             <p className="text-xs text-muted-foreground font-medium">
               ენის ცოდნა
             </p>
-            <p className="font-bold text-sm truncate">
-              {vacancy.languageLevel}
-            </p>
+            <p className="font-bold text-sm">{vacancy.languageLevel}</p>
           </div>
         </div>
       </CardHeader>
