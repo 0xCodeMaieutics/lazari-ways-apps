@@ -7,4 +7,9 @@ export const WHATSAPP_NUMBER = "+4917632983291";
 export const WHATSAPP_TEXT =
   "გამარჯობა, თქვენი კონტაქტი ვიპოვე თქვენს ვებსაიტზე და მინდა დაგიკავშირდეთ.";
 
+export const createWhatsappUrl = (message: string) => {
+  const encodedMessage = encodeURIComponent(message);
+  return `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${encodedMessage}&type=phone_number&app_absent=0`;
+};
+
 export const WHATSAPP_URL = `https://api.whatsapp.com/send/?phone=${WHATSAPP_NUMBER}&text=${WHATSAPP_TEXT}&type=phone_number&app_absent=0`;

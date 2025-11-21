@@ -1,6 +1,5 @@
 "use client";
 
-import { Vacancy } from "@workspace/server/db";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -12,14 +11,10 @@ import { Field, FieldError } from "@workspace/ui/components/field";
 import { Switch } from "@workspace/ui/components/switch";
 import { Label } from "@workspace/ui/components/label";
 import { Card } from "@workspace/ui/components/card";
-
-import { updateVacancy } from "@/utils/server-actions/vacancy/update-vacancy";
-import z from "zod";
 import { Button } from "@workspace/ui/components/button";
+import z from "zod";
 import { useRouter } from "next/navigation";
-
-import { format } from "date-fns";
-import { ka } from "date-fns/locale";
+import { createVacancy } from "@/utils/server-actions/vacancy/create-vacancy";
 
 const vacancyFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -41,62 +36,51 @@ const vacancyFormSchema = z.object({
 
 type VacancyFormData = z.infer<typeof vacancyFormSchema>;
 
-export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
+export default function VacanciesNewPage() {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(vacancyFormSchema),
     defaultValues: {
-      title: vacancy.title,
-      location: vacancy.location,
-      beginDate: vacancy.beginDate,
-      duration: vacancy.duration,
-      salary: vacancy.salary,
-      jobDescription: vacancy.jobDescription,
-      schedule: vacancy.schedule,
-      accommodation: vacancy.accommodation,
-      meals: vacancy.meals,
-      availableTo: vacancy.availableTo ?? null,
-      languageLevel: vacancy.languageLevel ?? null,
-      additionalInfo: vacancy.additionalInfo ?? null,
-      hide: vacancy.hide ?? false,
-      photos: vacancy.photos ?? [],
-      videos: vacancy.videos ?? [],
+      title: "მუშაობა სათბურში და მინდორში",
+      location: "დრეზდენის მახლობლად",
+      beginDate: "მაისი",
+      duration: "3 თვე",
+      salary: "13,90 ევრო/საათში ბრუტო",
+      jobDescription: `-სათბურში და მინდორში ჟოლოების, მაყვლის, კენკრისა და სხვა ხილის შეგროვება;
+-მცენარეების დარგვა სათბურში
+-მოყვანილი ბალახის ამოღება;
+-შემოდგომაზე საწარმოში გატეხილი ვაშლისა და არონიას შეგროვება;
+-და სხვა დამხმარე სამუშაოები საწარმოში`,
+      schedule: `-48 საათი/კვირაში და მეტი
+-დღეში 8 - 10 საათი
+-45 წთ შესვენება
+-კვირაში 1 გამოსავალი.`,
+      accommodation: `მიწოდებულია საცხოვრებელი კონტეინერები ან სახლები – 13 ევრო/დღეში ერთ ადამიანზე, 4 - 8 ადამიანი ერთ ოთახში.
+არსებული კომფორტი: თბილი წყალი, გათბობა, ინტერნეტი.
+საძინებელი: მატრასიანი საწოლი, ბალიშები, გადასაფარებელი, თეთრეული, ტანსაცმლის კარადა.
+სამზარეულო: ქურა, მაცივარი, საჭმლის ხელსაწყოები, ჭურჭელი.
+სააბაზანო: საშხაპე კაბინა.`,
+      meals: "საკუთარი ხარჯით.",
+      availableTo: "ქალბატონები და მამაკაცები",
+      languageLevel: "Grundkenntnisse Deutsch-ში",
+      additionalInfo: `დამსაქმებელი უზრუნველყოფს სამუშაო ფეხსაცმელს, მაგრამ საჭიროა თან ჰქონდეთ ნებისმიერი ამინდისთვის შესაბამისი ტანსაცმელი და საკუთარი კომფორტული ფეხსაცმელი. ხელფასი გაიცემა გადარიცხვით ან ნაღდად მომდევნო თვის 20 რიცხვში. ხელფასის ოდენობა შეიძლება იცვალოს გამომუშავებულ საათებზე დაყრდნობით. საათში სასანთლოს, მაყვლისა და ჟოლოების მოსაწყვილებლად საჭიროა 4 - 5 ყუთი. საწარმოში არსებობს ნორმები, რომლებიც უნდა შესრულდეს. ყურადღება! დასაქმების ვადა შეიძლება გაიზარდოს ან შემცირდეს მოსავლისა და ამინდის პირობების მიხედვით. ცალკე იხდის მგზავრობის ხარჯი და სადაზღვევო პოლისი.**`,
+      hide: false,
+      photos: [],
+      videos: [],
     },
   });
 
-  const updateMutation = useMutation({
-    mutationFn: async (data: VacancyFormData) => {
-      const result = await updateVacancy({
-        id: vacancy.id,
-        data: {
-          ...data,
-          availableTo: data.availableTo || null,
-          languageLevel: data.languageLevel || null,
-          additionalInfo: data.additionalInfo || null,
-        },
-      });
-
-      if (!result.isSuccess) {
-        throw new Error("Failed to update vacancy");
-      }
-      return result;
-    },
-    onSuccess: (result, variables) => {
-      router.refresh();
-      form.reset(variables);
-      toast.success("Vacancy updated successfully!");
-    },
-    onError: (error) => {
-      toast.error("Failed to update vacancy. Please try again.");
-      console.error("Update error:", error);
+  const createMutation = useMutation({
+    mutationFn: (data: VacancyFormData) => createVacancy(data),
+    onSuccess: ({ isSuccess, id: createdVacancyid }) => {
+      if (isSuccess) return router.push(`/vacancies/${createdVacancyid}`);
+      toast.error("Failed to create vacancy. Please try again.");
     },
   });
 
   const onSubmit = (data: VacancyFormData) => {
-    updateMutation.mutate(data);
+    createMutation.mutate(data);
   };
-
-  const hasFormChanged = form.formState.isDirty;
 
   return (
     <div className="container mx-auto pt-44 px-4 max-w-7xl">
@@ -104,19 +88,16 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              ვაკანსიის დეტალები
+              ახალი ვაკანსიის შექმნა
             </h1>
             <p className="text-muted-foreground mt-1">
-              ვაკანსიის ID:{" "}
-              <span className="font-semibold">{vacancy.vacancyId}</span>
+              შეავსეთ ყველა სავალდებულო ველი ვაკანსიის შესაქმნელად
             </p>
           </div>
-          <Button
-            type="submit"
-            size="lg"
-            disabled={updateMutation.isPending || !hasFormChanged}
-          >
-            {updateMutation.isPending ? "Saving..." : "Save Changes"}
+          <Button type="submit" size="lg" disabled={createMutation.isPending}>
+            {createMutation.isPending
+              ? "მიმდინარეობს შექმნა..."
+              : "ვაკანსიის შექმნა"}
           </Button>
         </div>
 
@@ -135,7 +116,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="title"
-                    placeholder="e.g., Bäcker"
+                    placeholder="მაგ., მცხობელი"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -154,7 +135,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="location"
-                    placeholder="e.g., Nähe Berlin, Germany"
+                    placeholder="მაგ., ბერლინთან ახლოს"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -173,7 +154,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="beginDate"
-                    placeholder="e.g., January 2025"
+                    placeholder="მაგ., 2025 წლის იანვარი"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -192,7 +173,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="duration"
-                    placeholder="e.g., 6 months"
+                    placeholder="მაგ., 6 თვე"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -211,7 +192,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="salary"
-                    placeholder="e.g., 1200 EUR/month"
+                    placeholder="მაგ., 1200 EUR/თვე"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -230,7 +211,12 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Textarea
                     {...field}
                     id="schedule"
-                    placeholder="e.g., 40-50 hours/week"
+                    placeholder={`მაგ.,
+-48 საათი/კვირაში და მეტი
+-დღეში 8
+- 10 საათი
+-45 წთ შესვენება
+-კვირაში 1 გამოსავალი.`}
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -252,11 +238,16 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Label htmlFor="jobDescription">აღწერა *</Label>
+                <Label htmlFor="jobDescription">სამუშაოს არსი *</Label>
                 <Textarea
                   {...field}
                   id="jobDescription"
-                  placeholder="დეტალური სამუშაო აღწერა..."
+                  placeholder={`მაგ.,
+-სათბურში და მინდორში ჟოლოების, მაყვლის, კენკრისა და სხვა ხილის შეგროვება
+-მცენარეების დარგვა სათბურში
+-მოყვანილი ბალახის ამოღება
+-შემოდგომაზე საწარმოში გატეხილი ვაშლისა და არონიას შეგროვება
+-და სხვა დამხმარე სამუშაოები საწარმოში.`}
                   className="mt-2 min-h-[150px]"
                 />
                 {fieldState.invalid && (
@@ -282,7 +273,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Textarea
                     {...field}
                     id="accommodation"
-                    placeholder="e.g., Unterkunft wird gestellt"
+                    placeholder="მაგ., საცხოვრებელი ჩვენთან ჯესტელტად არის"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -301,7 +292,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Textarea
                     {...field}
                     id="meals"
-                    placeholder="e.g., Mahlzeiten werden gestellt"
+                    placeholder="მაგ., კვება უზრუნველყოფილია"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -329,7 +320,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                     {...field}
                     value={field.value ?? ""}
                     id="availableTo"
-                    placeholder="e.g., მხოლოდ ქალბატონებისთვის"
+                    placeholder="მაგ., მხოლოდ ქალბატონებისთვის"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -351,7 +342,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                     {...field}
                     value={field.value ?? ""}
                     id="languageLevel"
-                    placeholder="e.g., Grundkenntnisse in Deutsch"
+                    placeholder="მაგ., Grundkenntnisse Deutsch-ში"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -413,51 +404,27 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
           />
         </Card>
 
-        {/* Media Section (Read-only for now) */}
+        {/* Media Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">მედია</h2>
           <div className="space-y-4">
             <div>
               <Label className="text-base">ფოტოები</Label>
               <p className="text-sm text-muted-foreground mt-1">
-                {vacancy.photos.length > 0
-                  ? `${vacancy.photos.length} photo(s) uploaded`
-                  : "No photos uploaded"}
+                Photo upload functionality will be added later
               </p>
-              {vacancy.photos.length > 0 && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {vacancy.photos.join(", ")}
-                </div>
-              )}
             </div>
             <div>
               <Label className="text-base">ვიდეოები</Label>
               <p className="text-sm text-muted-foreground mt-1">
-                {vacancy.videos.length > 0
-                  ? `${vacancy.videos.length} video(s) uploaded`
-                  : "No videos uploaded"}
+                Video upload functionality will be added later
               </p>
-              {vacancy.videos.length > 0 && (
-                <div className="mt-2 text-xs text-muted-foreground">
-                  {vacancy.videos.join(", ")}
-                </div>
-              )}
             </div>
           </div>
         </Card>
-      </form>
 
-      {/* Metadata */}
-      <div className="mt-8 pt-6 border-t pb-10">
-        <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
-          <div>
-            <span className="font-medium">შექმნილია:</span>{" "}
-            {format(new Date(vacancy.createdAt), "dd MMMM yyyy", {
-              locale: ka,
-            })}
-          </div>
-        </div>
-      </div>
+        <div className="pb-10" />
+      </form>
     </div>
   );
-};
+}

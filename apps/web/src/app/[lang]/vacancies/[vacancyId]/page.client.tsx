@@ -41,9 +41,12 @@ import { useParams } from "next/navigation";
 import { CTASection } from "@/components/cta-section";
 import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
+import { createWhatsappUrl } from "../../constants";
+
+const VACANCY_ID_PREFIX = "LZRY-";
 
 export const VacancyClientPage = ({
   data,
@@ -59,15 +62,20 @@ export const VacancyClientPage = ({
     url: string;
   } | null>(data.photos?.[0] ? { type: "photo", url: data.photos[0] } : null);
 
+  const vacancyIdWithPrefix = useMemo(
+    () => `${VACANCY_ID_PREFIX}${data.vacancyId}`,
+    [data.vacancyId]
+  );
+
   const handleCopyVacancyId = async () => {
     (
       await tryCatchAsync(() =>
-        navigator.clipboard.writeText(data.vacancyId.toString())
+        navigator.clipboard.writeText(vacancyIdWithPrefix)
       )
     ).match({
       ok: () => {
         setCopied(true);
-        toast.success(`ვაკანსიის ID ${data.vacancyId} დააკოპირეთ`);
+        toast.success(`ვაკანსიის ID ${vacancyIdWithPrefix} დააკოპირეთ`);
         setTimeout(() => setCopied(false), 2000);
       },
       err: () => toast.error("მოხდა შეცდომა"),
@@ -130,7 +138,7 @@ export const VacancyClientPage = ({
                       ) : (
                         <Copy className="size-4" />
                       )}
-                      #{data.vacancyId}
+                      {vacancyIdWithPrefix}
                     </Badge>
                   </div>
 
@@ -247,7 +255,7 @@ export const VacancyClientPage = ({
                     <Sparkles className="size-5 text-primary" />
                     შეღავათები
                   </h3>
-                  <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="space-y-3">
                     {data.accommodation && (
                       <Card className="border-2 border-primary/20">
                         <CardContent className="p-4">
@@ -512,10 +520,19 @@ export const VacancyClientPage = ({
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button
                     size="lg"
-                    className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group"
+                    className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group cursor-pointer"
+                    asChild
                   >
-                    განაცხადის გაგზავნა
-                    <ArrowRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <a
+                      href={createWhatsappUrl(
+                        `გამარჯობა, მსურს დავამატო ჩემი განაცხადი ვაკანსიაზე: ${data.title} (ID: ${vacancyIdWithPrefix})`
+                      )}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      განაცხადის გაგზავნა
+                      <ArrowRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </a>
                   </Button>
                   <Button
                     size="lg"
@@ -537,7 +554,7 @@ export const VacancyClientPage = ({
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <CheckCircle2 className="size-5 text-primary" />
                 </div>
-                <div>
+                <div className="flex flex-col items-start">
                   <p className="text-sm font-semibold">100+ წარმატებული</p>
                   <p className="text-xs text-muted-foreground">განთავსება</p>
                 </div>
@@ -546,7 +563,7 @@ export const VacancyClientPage = ({
                 <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
                   <Sparkles className="size-5 text-primary" />
                 </div>
-                <div>
+                <div className="flex flex-col items-start">
                   <p className="text-sm font-semibold">სრული მხარდაჭერა</p>
                   <p className="text-xs text-muted-foreground">A-დან Z-მდე</p>
                 </div>

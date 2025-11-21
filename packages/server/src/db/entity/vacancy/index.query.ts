@@ -31,6 +31,10 @@ export type VacancyUpdateInput = Prisma.VacancyUpdateInput;
 export type VacancyOrderByWithRelationInput =
   Prisma.VacancyOrderByWithRelationInput;
 
+export type VacancyCreateInput = Omit<Prisma.VacancyCreateInput, "vacancyId">;
+
+const BEGIN_VACANCY_ID_COUNT = 370;
+
 export const vacancyQueries = {
   getVacancies: async (
     where?: VacancyWhereInput,
@@ -101,6 +105,31 @@ export const vacancyQueries = {
       prisma.vacancy.update({
         where: { id },
         data,
+      })
+    ),
+  createVacancy: async (data: VacancyCreateInput) =>
+    tryCatchAsync(() =>
+      prisma.$transaction(async () => {
+        const lastVacancy = await prisma.vacancy.findFirst({
+          orderBy: {
+            createdAt: "desc",
+          },
+          select: {
+            vacancyId: true,
+          },
+        });
+
+        const newVacancyId =
+          typeof lastVacancy?.vacancyId !== "undefined"
+            ? lastVacancy.vacancyId + 1
+            : BEGIN_VACANCY_ID_COUNT;
+
+        return prisma.vacancy.create({
+          data: {
+            ...data,
+            vacancyId: newVacancyId,
+          },
+        });
       })
     ),
   getVacancyById: (vacancyId: string) =>

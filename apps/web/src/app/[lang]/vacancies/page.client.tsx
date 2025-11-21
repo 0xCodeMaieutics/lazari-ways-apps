@@ -2,7 +2,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
@@ -13,24 +12,24 @@ import {
   Briefcase,
   MapPin,
   Clock,
-  Euro,
-  Copy,
-  CheckCircle2,
   ImageIcon,
   VideoIcon,
+  LanguagesIcon,
+  CheckCircle2,
+  Copy,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
-import { tryCatchAsync } from "@workspace/shared/error-handling/result";
-import { toast } from "sonner";
 import { translationsContext } from "@/lib/context/translations";
 import { Translations } from "@/i18n/translations";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { sleep } from "@/utils/sleep";
 import { Pagination } from "@/components/pagination";
+import { useState } from "react";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
+import { toast } from "sonner";
+import { sleep } from "@/utils/sleep";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -84,7 +83,7 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
         <Badge
           role="button"
           onClick={handleCopyVacancyId}
-          className="absolute top-4 right-4 h-9 flex items-center gap-2 px-4 bg-foreground text-background font-bold cursor-pointer hover:bg-foreground/90 transition-all shadow-lg"
+          className="absolute bottom-4 right-4 h-9 flex items-center gap-2 px-4 bg-foreground text-background font-bold cursor-pointer hover:bg-foreground/90 transition-all shadow-lg"
         >
           {copied ? (
             <CheckCircle2 className="size-4 animate-in zoom-in" />
@@ -121,22 +120,9 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
           <CardTitle className="text-2xl font-bold leading-tight transition-colors">
             {vacancy.title}
           </CardTitle>
-          <CardDescription className="text-sm leading-relaxed line-clamp-2">
-            {vacancy.jobDescription}
-          </CardDescription>
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-start gap-2 p-3 bg-primary/5 rounded-lg border border-primary/10">
-            <Euro className="size-5 text-primary shrink-0 mt-0.5" />
-            <div className="min-w-0">
-              <p className="text-xs text-muted-foreground font-medium">
-                ანაზღაურება
-              </p>
-              <p className="font-bold text-sm truncate">{vacancy.salary}</p>
-            </div>
-          </div>
-
           <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
             <Clock className="size-5 text-foreground shrink-0 mt-0.5" />
             <div className="min-w-0">
@@ -155,6 +141,17 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
               </p>
               <p className="font-bold text-sm truncate">{vacancy.beginDate}</p>
             </div>
+          </div>
+        </div>
+        <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+          <LanguagesIcon className="size-5 text-foreground shrink-0 mt-0.5" />
+          <div className="min-w-0">
+            <p className="text-xs text-muted-foreground font-medium">
+              ენის ცოდნა
+            </p>
+            <p className="font-bold text-sm truncate">
+              {vacancy.languageLevel}
+            </p>
           </div>
         </div>
       </CardHeader>
@@ -184,7 +181,7 @@ export const VacanciesListingClient = ({
 }: {
   vacancies: Vacancy[];
   translations: Translations;
-    vacanciesTotal: number;
+  vacanciesTotal: number;
   currentPage: number;
   pageSize: number;
 }) => {
