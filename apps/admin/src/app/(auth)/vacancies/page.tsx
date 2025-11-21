@@ -15,6 +15,8 @@ import { SearchInput } from "@/components/search-input";
 import { Results } from "@workspace/shared/error-handling/result";
 import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
 import { VacanciesTableContent } from "./page.client";
+import { Button } from "@workspace/ui/components/button";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -110,13 +112,22 @@ export default async function DashboardPage({
 
   const [totalVacancies, vacancies] = vacanciesResult.value;
 
+  const isVacanciesEmpty = vacancies.length === 0;
+
   return (
     <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">ვაკანსიები</h1>
-        <div>
-          <SearchInput placeholder="Vacancy ID" defaultValue={search} />
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold">ვაკანსიები</h1>
+          {isVacanciesEmpty === false && (
+            <div>
+              <SearchInput placeholder="Vacancy ID" defaultValue={search} />
+            </div>
+          )}
         </div>
+        <Button asChild className="cursor-pointer">
+          <Link href={"/vacancies/new"}>ახალის შექმნა</Link>
+        </Button>
       </div>
       <div className="space-y-2">
         <Table className="w-full z-0">
@@ -143,22 +154,35 @@ export default async function DashboardPage({
                 </TableRow>
               }
             >
-              <VacanciesTableContent
-                vacanacies={vacancies}
-                currentPage={page}
-                pageSize={pageSize}
-                totalVacancies={totalVacancies}
-              />
+              {vacancies.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={TABLE_HEADERS.length}
+                    className="text-center h-20 text-muted-foreground"
+                  >
+                    ვაკანსიების მონაცემები ჯერ არ არის.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <VacanciesTableContent
+                  vacanacies={vacancies}
+                  currentPage={page}
+                  pageSize={pageSize}
+                  totalVacancies={totalVacancies}
+                />
+              )}
             </Suspense>
           </TableBody>
         </Table>
-        <Suspense fallback={null}>
-          <Pagination
-            pageSize={pageSize}
-            currentPage={page}
-            total={totalVacancies}
-          />
-        </Suspense>
+        {isVacanciesEmpty === false && (
+          <Suspense fallback={null}>
+            <Pagination
+              pageSize={pageSize}
+              currentPage={page}
+              total={totalVacancies}
+            />
+          </Suspense>
+        )}
       </div>
     </div>
   );
