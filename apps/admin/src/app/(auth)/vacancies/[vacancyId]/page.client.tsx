@@ -224,7 +224,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <Label htmlFor="schedule">გრაფიკი *</Label>
-                  <Input
+                  <Textarea
                     {...field}
                     id="schedule"
                     placeholder="e.g., 40-50 hours/week"
@@ -294,7 +294,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="meals">Meals *</Label>
+                  <Label htmlFor="meals">კვება *</Label>
                   <Textarea
                     {...field}
                     id="meals"
@@ -313,7 +313,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
         {/* Requirements Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            Requirements & Additional Info
+            მოთხოვნები და დამატებითი ინფორმაცია
           </h2>
           <div className="space-y-6">
             <Controller
@@ -321,7 +321,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="availableTo">Available To (Optional)</Label>
+                  <Label htmlFor="availableTo">მიმართვა (არასავალდებულო)</Label>
                   <Input
                     {...field}
                     value={field.value ?? ""}
@@ -342,7 +342,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <Label htmlFor="languageLevel">
-                    Language Level (Optional)
+                    ენის დონე (არასავალდებულო)
                   </Label>
                   <Input
                     {...field}
@@ -364,7 +364,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <Label htmlFor="additionalInfo">
-                    Additional Information (Optional)
+                    დამატებითი ინფორმაცია (არასავალდებულო)
                   </Label>
                   <Textarea
                     {...field}
@@ -385,7 +385,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
         {/* Visibility Settings */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            Visibility Settings
+            ხილვადობის პარამეტრები
           </h2>
           <Controller
             name="hide"
@@ -394,10 +394,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <Label htmlFor="hide" className="text-base">
-                    Hide Vacancy
+                    ვაკანსიის დამალვა
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    When enabled, this vacancy will be hidden from public view
+                    როდესაც ჩართულია, ეს ვაკანსია საჯარო ხედვიდან დაიმალება
                   </p>
                 </div>
                 <Switch
@@ -412,10 +412,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
 
         {/* Media Section (Read-only for now) */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">Media</h2>
+          <h2 className="text-xl font-semibold mb-6 text-foreground">მედია</h2>
           <div className="space-y-4">
             <div>
-              <Label className="text-base">Photos</Label>
+              <Label className="text-base">ფოტოები</Label>
               <p className="text-sm text-muted-foreground mt-1">
                 {vacancy.photos.length > 0
                   ? `${vacancy.photos.length} photo(s) uploaded`
@@ -428,7 +428,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               )}
             </div>
             <div>
-              <Label className="text-base">Videos</Label>
+              <Label className="text-base">ვიდეოები</Label>
               <p className="text-sm text-muted-foreground mt-1">
                 {vacancy.videos.length > 0
                   ? `${vacancy.videos.length} video(s) uploaded`
@@ -445,11 +445,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
       </form>
 
       {/* Metadata */}
-      <div className="mt-8 pt-6 border-t">
+      <div className="mt-8 pt-6 border-t pb-10">
         <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
           <div>
-            <span className="font-medium">Created:</span>{" "}
-            {new Date(vacancy.createdAt).toLocaleDateString("en-US", {
+            <span className="font-medium">შექმნილია:</span>{" "}
+            {new Date(vacancy.createdAt).toLocaleDateString("ka-GE", {
               year: "numeric",
               month: "long",
               day: "numeric",
