@@ -4,11 +4,12 @@ import { generateRandomString } from "@workspace/shared/lib/random";
 import { faker } from "@faker-js/faker";
 import { encrypt } from "../../src/utils/encrypt.js";
 import { prisma } from "../../src/db/client.js";
+import z from "zod";
 
-const email = "admin-test@lazaryways.eu";
-const password = "#AdminIsCool2025@!";
-
-export const createAdmin = (tx: Prisma.TransactionClient | PrismaClient) =>
+export const createAdmin = (
+  { email, password }: { email: string; password: string },
+  tx: Prisma.TransactionClient | PrismaClient
+) =>
   tx.user.create({
     data: {
       id: generateRandomString(32),
@@ -33,7 +34,7 @@ export const createAdmin = (tx: Prisma.TransactionClient | PrismaClient) =>
           id: generateRandomString(32),
           accountId: generateRandomString(32),
           providerId: "credential",
-          password: encrypt(password, process.env.ENCRYPTION_KEY!),
+          password,
         },
       },
     },
@@ -68,6 +69,17 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     /**
      * RUN: pnpm dotenv -e .env -- pnpm db:seed:admin --email=admin@lazariways.com --password=#AdminIsCool2025@!
      */
+
+    const envZod = z.object({
+      DATABASE_URL: z.string().url(),
+      ENCRYPTION_KEY: z
+        .string()
+        .length(
+          64,
+          "ENCRYPTION_KEY must be 32 bytes in hex format (64 characters)"
+        ),
+    });
+    const env = envZod.parse(process.env);
     const emailArg = process.argv.find((arg) => arg.startsWith("--email="));
     const passwordArg = process.argv.find((arg) =>
       arg.startsWith("--password=")
@@ -76,20 +88,26 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     const email = emailArg?.split("=")[1];
     const password = passwordArg?.split("=")[1];
 
+    console.log(JSON.stringify({ email, password }, null, 2));
+
     if (!email || !password) {
       throw new Error("Please provide --email and --password arguments");
     }
 
-    const dbURL = process.env.DATABASE_URL || "";
-
     console.log(
-      `⚠️  You are about to create an admin user in the database: ${dbURL}`
+      `⚠️  You are about to create an admin user in the database: ${env.DATABASE_URL}`
     );
 
     await confirmWithYes();
 
     console.log("Creating admin user...");
-    const admin = await createAdmin(prisma);
+    const admin = await createAdmin(
+      {
+        email,
+        password: encrypt(password, env.ENCRYPTION_KEY),
+      },
+      prisma
+    );
     console.log("Admin user created:");
     console.log(`Email: ${email}`);
     console.log(`Password: ${password}`);

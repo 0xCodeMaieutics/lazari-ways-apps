@@ -14,8 +14,8 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 
-const DEV_EMAIL = "admin-test@lazaryways.eu";
-const DEV_PASSWORD = "#AdminIsCool2025@!";
+const DEV_EMAIL = "admin@lazariways.eu";
+const DEV_PASSWORD = "#AdminIsCool2025!";
 
 export function LoginForm() {
   const signInMutation = useMutation<

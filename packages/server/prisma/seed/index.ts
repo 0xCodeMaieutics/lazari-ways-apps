@@ -13,6 +13,7 @@ import {
 } from "../../src/s3/s3-client.js";
 import path from "path";
 import { prisma } from "../../src/db/client.js";
+import { encrypt } from "../../src/utils/encrypt.js";
 
 void (async function () {
   console.log("✅ Existing data cleared!");
@@ -26,9 +27,36 @@ void (async function () {
     },
   });
 
+  const envResult = zodParse(
+    process.env,
+    z.object({
+      ENCRYPTION_KEY: z.string(),
+      DATABASE_URL: z.string().url(),
+    })
+  );
+  if (envResult.isErr()) {
+    console.error(
+      "❌ Missing or invalid environment variables:",
+      envResult.error
+    );
+    process.exit(1);
+  }
+
+  console.log(`⚙️  Seeding database: ${envResult.value.DATABASE_URL}`);
+
+  const env = envResult.value;
+
   await prisma.$transaction(async (tx) => {
     console.log("👤 Creating admin and applicant user...");
-    await createAdmin(tx);
+    const ADMIN_EMAIL = "admin@lazariways.eu";
+    const ADMIN_PASSWORD = encrypt("#AdminIsCool2025!", env.ENCRYPTION_KEY);
+    await createAdmin(
+      {
+        email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
+      },
+      tx
+    );
     console.log("👤 Creating users data...");
 
     const userCount = 100;
