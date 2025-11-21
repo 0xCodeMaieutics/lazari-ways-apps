@@ -7,6 +7,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { getQueryClient } from "@/lib/get-query-client";
 import Link from "next/link";
 import { Button } from "@workspace/ui/components/button";
+import { usePathname } from "next/navigation";
+import clsx from "clsx";
 
 const LogoAndText = () => {
   return (
@@ -28,6 +30,7 @@ const Underline = () => (
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
+  const pathname = usePathname();
 
   const logoRef = React.useRef<HTMLDivElement>(null);
 
@@ -49,7 +52,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
             </div>
             <nav className="flex-1 flex justify-center gap-3">
               <Button
-                className="flex items-center gap-2 relative font-semibold group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max"
+                className={clsx(
+                  "flex items-center gap-2 relative font-medium group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
+                  {
+                    "font-semibold": pathname === "/vacancies",
+                  }
+                )}
                 variant={"link"}
                 asChild
               >
@@ -59,7 +67,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
                 </Link>
               </Button>
               <Button
-                className="flex items-center gap-2 relative font-semibold group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max"
+                className={clsx(
+                  "flex items-center gap-2 relative font-medium group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
+                  {
+                    "font-semibold": pathname === "/applications",
+                  }
+                )}
                 variant={"link"}
                 asChild
               >
