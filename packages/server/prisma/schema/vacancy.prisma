@@ -3,6 +3,7 @@ model Vacancy {
   vacancyId      Int      @unique // Special ID for the vacancy
   title          String // Bäcker
   location       String // Nähe Berlin, Germany
+  photoKey          String?
   beginDate      String
   duration       String // 6 months
   salary         String // 1200 EUR/month

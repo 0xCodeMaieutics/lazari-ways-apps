@@ -5,14 +5,12 @@
     "moduleResolution": "nodenext",
 
     "allowImportingTsExtensions": true,
-    "noCheck": true,
     "noEmit": true,
 
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@workspace/shared/*": ["./*"]
+      "@workspace/shared/*": ["./node_modules/@workspace/shared/src/*"],
+      "@workspace/file-upload/*": ["./src/*"]
     }
-  },
-  "include": ["."],
-  "exclude": ["node_modules", "dist"]
+  }
 }

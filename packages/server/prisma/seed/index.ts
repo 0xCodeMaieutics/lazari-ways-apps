@@ -9,8 +9,8 @@ import { auth } from "../../src/auth/auth.js";
 import { Prisma } from "db/client.js";
 import {
   getSignedUrlForDownload,
-  uploadFileToStorage,
-} from "../../src/s3/s3-client.js";
+  uploadFilePathToStorage,
+} from "@workspace/file-upload/s3-client";
 import path from "path";
 import { prisma } from "../../src/db/client.js";
 import { encrypt } from "../../src/utils/encrypt.js";
@@ -98,7 +98,7 @@ void (async function () {
     }
 
     const fileKey = "vacancies/hotels.webp";
-    const uploadResult = await uploadFileToStorage({
+    const uploadResult = await uploadFilePathToStorage({
       bucket: s3Env.value.S3_BUCKET_NAME,
       fileKey: fileKey,
       filePath: path.resolve(import.meta.dirname, "hotels.webp"),
@@ -134,6 +134,7 @@ void (async function () {
 
         return {
           id: generateRandomString(32),
+          photoKey: fileKey,
           vacancyId,
           title: "მცხობელი",
           jobDescription: `ვაკანსია მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,

@@ -15,11 +15,13 @@ import { Button } from "@workspace/ui/components/button";
 import z from "zod";
 import { useRouter } from "next/navigation";
 import { createVacancy } from "@/utils/server-actions/vacancy/create-vacancy";
-import { env } from "@/env";
+import { FileUpload } from "@/components/file-upload";
+import { X } from "lucide-react";
 
 const vacancyFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   location: z.string().min(1, "Location is required"),
+  photo: z.instanceof(File),
   beginDate: z.string().min(1, "Begin date is required"),
   duration: z.string().min(1, "Duration is required"),
   salary: z.string().min(1, "Salary is required"),
@@ -48,6 +50,7 @@ export default function VacanciesNewPage() {
           : "",
       location:
         process.env.NODE_ENV === "development" ? "დრეზდენის მახლობლად" : "",
+      photo: undefined,
       beginDate: process.env.NODE_ENV === "development" ? "მაისი" : "",
       duration: process.env.NODE_ENV === "development" ? "3 თვე" : "",
       salary:
@@ -95,7 +98,8 @@ export default function VacanciesNewPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: VacancyFormData) => createVacancy(data),
+    mutationFn: ({ photo, ...data }: VacancyFormData) =>
+      createVacancy({ data, photo }),
     onSuccess: ({ isSuccess, id: createdVacancyid }) => {
       if (isSuccess) return router.push(`/vacancies/${createdVacancyid}`);
       toast.error("Failed to create vacancy. Please try again.");
@@ -428,21 +432,61 @@ export default function VacanciesNewPage() {
           />
         </Card>
 
-        {/* Media Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">მედია</h2>
           <div className="space-y-4">
-            <div>
-              <Label className="text-base">ფოტოები</Label>
-              <p className="text-sm text-muted-foreground mt-1">
-                Photo upload functionality will be added later
-              </p>
+            <div className="space-y-2">
+              <Label className="text-base">ფოტო *</Label>
+
+              {form.watch("photo") ? (
+                <div className="h-12 flex items-center justify-between border border-dashed px-2 rounded-xl text-sm mt-1">
+                  <span className="text-green-600">
+                    ფაილი წარმატებით აიტვირთა.
+                    {form.getValues("photo")?.name}
+                  </span>
+                  <Button
+                    onClick={() => {
+                      form.reset({
+                        photo: undefined,
+                      });
+                    }}
+                    variant={"ghost"}
+                  >
+                    <X />
+                  </Button>
+                </div>
+              ) : (
+                <FileUpload
+                  placeholder="ფაილი აირჩიეთ"
+                  accept=".png,.jpg,.jpeg"
+                  onChange={(file) => {
+                    if (file === null) return;
+                    form.setValue("photo", file as File);
+                    console.log({ file });
+                  }}
+                />
+              )}
+              {form.formState.errors.photo && (
+                <p className="text-sm text-red-600 mt-1">
+                  {form.formState.errors.photo.message}
+                </p>
+              )}
             </div>
-            <div>
-              <Label className="text-base">ვიდეოები</Label>
-              <p className="text-sm text-muted-foreground mt-1">
-                Video upload functionality will be added later
-              </p>
+            <div className="space-y-2">
+              <Label className="text-base">ფოტოები (არასავალდებულო)</Label>
+              <FileUpload
+                placeholder="ფაილი აირჩიეთ"
+                accept=".png,.jpg,.jpeg"
+                multiple
+              />
+            </div>
+            <div className="space-y-4">
+              <Label className="text-base">ვიდეოები (არასავალდებულო)</Label>
+              <FileUpload
+                placeholder="ფაილი აირჩიეთ"
+                accept=".video/*"
+                multiple
+              />
             </div>
           </div>
         </Card>

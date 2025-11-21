@@ -1,4 +1,4 @@
-import crypto from "node:crypto";
+import * as crypto from "node:crypto";
 import { createReadStream } from "node:fs";
 import { performance } from "node:perf_hooks";
 import {
@@ -8,29 +8,52 @@ import {
 } from "@aws-sdk/client-s3";
 import { Upload } from "@aws-sdk/lib-storage";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import z from "zod";
-import { tryCatchAsync, Err } from "@workspace/shared/error-handling/result";
+import {
+  tryCatchAsync,
+  Err,
+  err,
+} from "@workspace/shared/error-handling/result";
 
-const env = z
-  .object({
-    S3_REGION: z.string(),
-    S3_ENDPOINT: z.url().default("http://localhost:9000"),
-    S3_ACCESS_KEY: z.string(),
-    S3_SECRET_KEY: z.string(),
-    S3_BUCKET_VACANCIES: z.string(),
-  })
-  .parse(process.env);
-
-export const getS3Client = () =>
-  new S3Client({
-    region: env.S3_REGION,
-    endpoint: env.S3_ENDPOINT,
+export const getS3Client = () => {
+  // TODO: check if env var are set
+  return new S3Client({
+    region: process.env.S3_REGION!,
+    endpoint: process.env.S3_ENDPOINT!,
     credentials: {
-      accessKeyId: env.S3_ACCESS_KEY,
-      secretAccessKey: env.S3_SECRET_KEY,
+      accessKeyId: process.env.S3_ACCESS_KEY!,
+      secretAccessKey: process.env.S3_SECRET_KEY!,
     },
     forcePathStyle: true,
   });
+};
+
+export async function uploadFileToStorage({
+  file,
+  bucket,
+  fileKey,
+  lockUntil = null,
+  ACL = "public-read",
+}: {
+  file: File;
+  bucket: string;
+  fileKey: string;
+  lockUntil?: Date | null;
+  ACL?: "private" | "public-read" | "public-read-write";
+}) {
+  const fileBufferResult = await tryCatchAsync(async () =>
+    Buffer.from(await file.arrayBuffer())
+  );
+  if (fileBufferResult.isErr()) {
+    return err(fileBufferResult.error);
+  }
+  const fileBuffer = fileBufferResult.value;
+  return await uploadToStorage({
+    file: fileBuffer,
+    bucket,
+    fileKey,
+    lockUntil,
+  });
+}
 
 export async function uploadToStorage({
   file,
@@ -125,7 +148,7 @@ export async function uploadToStorage({
   );
 }
 
-export async function uploadFileToStorage({
+export async function uploadFilePathToStorage({
   filePath,
   bucket,
   fileKey,
