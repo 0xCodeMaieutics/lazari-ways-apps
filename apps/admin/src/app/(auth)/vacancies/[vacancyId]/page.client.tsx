@@ -5,9 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { useState } from "react";
 
-import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { Field, FieldError } from "@workspace/ui/components/field";
@@ -17,6 +15,8 @@ import { Card } from "@workspace/ui/components/card";
 
 import { updateVacancy } from "@/utils/server-actions/vacancy/update-vacancy";
 import z from "zod";
+import { Button } from "@workspace/ui/components/button";
+import { useRouter } from "next/navigation";
 
 const vacancyFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -39,8 +39,7 @@ const vacancyFormSchema = z.object({
 type VacancyFormData = z.infer<typeof vacancyFormSchema>;
 
 export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
-  const [isEditing, setIsEditing] = useState(false);
-
+  const router = useRouter();
   const form = useForm({
     resolver: zodResolver(vacancyFormSchema),
     defaultValues: {
@@ -79,9 +78,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
       }
       return result;
     },
-    onSuccess: () => {
+    onSuccess: (result, variables) => {
+      router.refresh();
+      form.reset(variables);
       toast.success("Vacancy updated successfully!");
-      setIsEditing(false);
     },
     onError: (error) => {
       toast.error("Failed to update vacancy. Please try again.");
@@ -93,35 +93,34 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
     updateMutation.mutate(data);
   };
 
-  const handleCancel = () => {
-    form.reset();
-    setIsEditing(false);
-  };
+  const hasFormChanged = form.formState.isDirty;
 
   return (
-    <div className="container mx-auto pt-44 px-4 max-w-5xl">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">
-            ვაკანსიის დეტალები
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            ვაკანსიის ID:{" "}
-            <span className="font-semibold">{vacancy.vacancyId}</span>
-          </p>
-        </div>
-        {!isEditing && (
-          <Button onClick={() => setIsEditing(true)} size="lg">
-            ვაკანსიის რედაქტირება
-          </Button>
-        )}
-      </div>
-
+    <div className="container mx-auto pt-44 px-4 max-w-7xl">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">
+              ვაკანსიის დეტალები
+            </h1>
+            <p className="text-muted-foreground mt-1">
+              ვაკანსიის ID:{" "}
+              <span className="font-semibold">{vacancy.vacancyId}</span>
+            </p>
+          </div>
+          <Button
+            type="submit"
+            size="lg"
+            disabled={updateMutation.isPending || !hasFormChanged}
+          >
+            {updateMutation.isPending ? "Saving..." : "Save Changes"}
+          </Button>
+        </div>
+
         {/* Basic Information Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            Basic Information
+            ძირითადი ინფორმაცია
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Controller
@@ -133,7 +132,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Input
                     {...field}
                     id="title"
-                    disabled={!isEditing}
                     placeholder="e.g., Bäcker"
                     className="mt-2"
                   />
@@ -149,11 +147,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="location">Location *</Label>
+                  <Label htmlFor="location">ლოკაცია *</Label>
                   <Input
                     {...field}
                     id="location"
-                    disabled={!isEditing}
                     placeholder="e.g., Nähe Berlin, Germany"
                     className="mt-2"
                   />
@@ -169,11 +166,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="beginDate">Begin Date *</Label>
+                  <Label htmlFor="beginDate">დაწყების თარიღი *</Label>
                   <Input
                     {...field}
                     id="beginDate"
-                    disabled={!isEditing}
                     placeholder="e.g., January 2025"
                     className="mt-2"
                   />
@@ -189,11 +185,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="duration">Duration *</Label>
+                  <Label htmlFor="duration">ხანგრძლივობა *</Label>
                   <Input
                     {...field}
                     id="duration"
-                    disabled={!isEditing}
                     placeholder="e.g., 6 months"
                     className="mt-2"
                   />
@@ -209,11 +204,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="salary">Salary *</Label>
+                  <Label htmlFor="salary">ხელფასი *</Label>
                   <Input
                     {...field}
                     id="salary"
-                    disabled={!isEditing}
                     placeholder="e.g., 1200 EUR/month"
                     className="mt-2"
                   />
@@ -229,11 +223,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="schedule">Schedule *</Label>
+                  <Label htmlFor="schedule">გრაფიკი *</Label>
                   <Input
                     {...field}
                     id="schedule"
-                    disabled={!isEditing}
                     placeholder="e.g., 40-50 hours/week"
                     className="mt-2"
                   />
@@ -249,19 +242,18 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
         {/* Job Description Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            Job Description
+            სამუშაო აღწერა
           </h2>
           <Controller
             name="jobDescription"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Label htmlFor="jobDescription">Description *</Label>
+                <Label htmlFor="jobDescription">აღწერა *</Label>
                 <Textarea
                   {...field}
                   id="jobDescription"
-                  disabled={!isEditing}
-                  placeholder="Detailed job description..."
+                  placeholder="დეტალური სამუშაო აღწერა..."
                   className="mt-2 min-h-[150px]"
                 />
                 {fieldState.invalid && (
@@ -275,7 +267,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
         {/* Benefits & Conditions Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            Benefits & Conditions
+            სარგებელი და პირობები
           </h2>
           <div className="space-y-6">
             <Controller
@@ -283,11 +275,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="accommodation">Accommodation *</Label>
+                  <Label htmlFor="accommodation">საცხოვრებელი *</Label>
                   <Textarea
                     {...field}
                     id="accommodation"
-                    disabled={!isEditing}
                     placeholder="e.g., Unterkunft wird gestellt"
                     className="mt-2"
                   />
@@ -307,7 +298,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   <Textarea
                     {...field}
                     id="meals"
-                    disabled={!isEditing}
                     placeholder="e.g., Mahlzeiten werden gestellt"
                     className="mt-2"
                   />
@@ -336,7 +326,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                     {...field}
                     value={field.value ?? ""}
                     id="availableTo"
-                    disabled={!isEditing}
                     placeholder="e.g., მხოლოდ ქალბატონებისთვის"
                     className="mt-2"
                   />
@@ -359,7 +348,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                     {...field}
                     value={field.value ?? ""}
                     id="languageLevel"
-                    disabled={!isEditing}
                     placeholder="e.g., Grundkenntnisse in Deutsch"
                     className="mt-2"
                   />
@@ -382,7 +370,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                     {...field}
                     value={field.value ?? ""}
                     id="additionalInfo"
-                    disabled={!isEditing}
                     placeholder="Any other relevant information..."
                     className="mt-2 min-h-[100px]"
                   />
@@ -417,7 +404,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
                   id="hide"
                   checked={field.value ?? false}
                   onCheckedChange={field.onChange}
-                  disabled={!isEditing}
                 />
               </div>
             )}
@@ -456,24 +442,6 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
             </div>
           </div>
         </Card>
-
-        {/* Action Buttons */}
-        {isEditing && (
-          <div className="flex items-center gap-4 justify-end">
-            <Button
-              type="button"
-              variant="outline"
-              size="lg"
-              onClick={handleCancel}
-              disabled={updateMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" size="lg" disabled={updateMutation.isPending}>
-              {updateMutation.isPending ? "Saving..." : "Save Changes"}
-            </Button>
-          </div>
-        )}
       </form>
 
       {/* Metadata */}
