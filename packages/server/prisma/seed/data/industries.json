@@ -1,0 +1,82 @@
+{
+  "industries": [
+    {
+      "name": "Bäckerei / Einzelhandel / Metzgerei",
+      "professions": [
+        "Bäcker",
+        "Kassierer",
+        "Verkäufer",
+        "Warenverräumer",
+        "Metzger"
+      ]
+    },
+    {
+      "name": "Freizeitparks und Kletterparks",
+      "professions": [
+        "Betreuer",
+        "Bedienung der Fahrgeschäfte",
+        "Elektriker",
+        "Kassierer",
+        "Koch",
+        "Servicekraft"
+      ]
+    },
+    {
+      "name": "Garten- und Landschaftsbau",
+      "professions": ["Landschaftsgärtner"]
+    },
+    {
+      "name": "Hotel und Gastronomie / Systemgastronomie",
+      "professions": [
+        "Koch",
+        "Kinderbetreuung",
+        "Kosmetiker",
+        "Masseur",
+        "Rezeptionist",
+        "Servicekraft",
+        "Gästebetreuer",
+        "Lieferfahrer",
+        "Restaurantmitarbeiter"
+      ]
+    },
+    {
+      "name": "Kindergarten",
+      "professions": [
+        "Erzieher",
+        "Pädagogische Fachkraft",
+        "Zusatzkraft",
+        "Kinderpfleger"
+      ]
+    },
+    {
+      "name": "Pflege und Medizin",
+      "professions": ["Arzt", "Krankenpflege", "Altenpfleger", "Pflegehelfer"]
+    },
+    {
+      "name": "Produktion und Lagerlogistik",
+      "professions": [
+        "Produktionsmitarbeiter",
+        "Produktionshelfer",
+        "Maschinenbediener",
+        "Anlagenbediener",
+        "Elektriker",
+        "Schweißer",
+        "Lagerarbeiter",
+        "Logistikmitarbeiter",
+        "Sortierer für Briefe und Pakete"
+      ]
+    },
+    {
+      "name": "Rast- und Tankstellen",
+      "professions": ["Servicekraft", "Verkäufer"]
+    },
+    {
+      "name": "Tierpflege",
+      "professions": ["Tierpfleger"]
+    },
+    {
+      "name": "Transport und Logistik",
+      "professions": ["Lokführer", "Busfahrer", "LKW-Fahrer"]
+    }
+  ]
+}

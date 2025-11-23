@@ -153,6 +153,16 @@ export function ApplicationsList({
 }: {
   applications: GetApplications[];
 }) {
+  const hasKKB8Application = applications.some(
+    (app) => app.type === ApplicationType.KKB8
+  );
+  const hasKKB3Application = applications.some(
+    (app) => app.type === ApplicationType.KKB3
+  );
+  const hasStudentApplication = applications.some(
+    (app) => app.type === ApplicationType.STUDENT
+  );
+
   return (
     <Card>
       <CardHeader>
@@ -160,28 +170,38 @@ export function ApplicationsList({
       </CardHeader>
       <CardContent className="space-y-6">
         {/* New Application Section */}
-        <div>
-          <h3 className="text-sm font-medium text-muted-foreground mb-3">
-            დაიწყეთ ახალი აპლიკაცია
-          </h3>
-          <div className="grid gap-3 md:grid-cols-3">
-            <ApplicationTypeButton
-              href="/applications/student-visa"
-              label="სტუდენტური ვიზა"
-              description="სტუდენტურ ვიზაზე განაცხადის შეტანა"
-            />
-            <ApplicationTypeButton
-              href="/applications/kkb?visa_duration_in_months=3"
-              label="KKB 3 თვე"
-              description="Kurzzeitige kontingentierte Beschäftigung"
-            />
-            <ApplicationTypeButton
-              href="/applications/kkb?visa_duration_in_months=8"
-              label="KKB 8 თვე"
-              description="Kurzzeitige kontingentierte Beschäftigung"
-            />
+        {hasKKB8Application &&
+        hasKKB3Application &&
+        hasStudentApplication ? null : (
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">
+              დაიწყეთ ახალი აპლიკაცია
+            </h3>
+            <div className="grid gap-3 md:grid-cols-3">
+              {!hasKKB8Application && (
+                <ApplicationTypeButton
+                  href="/applications?type=KKB8"
+                  label="KKB 8 თვე"
+                  description="Kurzzeitige kontingentierte Beschäftigung"
+                />
+              )}
+              {!hasKKB3Application && (
+                <ApplicationTypeButton
+                  href="/applications?type=KKB3"
+                  label="KKB 3 თვე"
+                  description="Kurzzeitige kontingentierte Beschäftigung"
+                />
+              )}
+              {!hasStudentApplication && (
+                <ApplicationTypeButton
+                  href="/applications?type=STUDENT"
+                  label="სტუდენტური ვიზა"
+                  description="სტუდენტურ ვიზაზე განაცხადის შეტანა"
+                />
+              )}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Existing Applications */}
         <div>

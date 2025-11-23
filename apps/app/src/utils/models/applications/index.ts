@@ -13,22 +13,8 @@ const isFilePDF = (errorMsg: string) =>
   });
 
 const germanLevels = z.enum(["A1", "A2", "B1", "B2", "C1"]);
-const gender = z.enum(["male", "female", "diverse"]);
 
 export const applicationFormSchema = z.object({
-  // Personal Information
-  firstName: z.string().min(1, "Vorname ist erforderlich"),
-  lastName: z.string().min(1, "Nachname ist erforderlich"),
-  gender,
-  nationality: z.string().min(1, "Staatsangehörigkeit ist erforderlich"),
-  birthDate: z.string().min(1, "Geburtsdatum ist erforderlich"),
-  birthPlace: z.string().min(1, "Geburtsort ist erforderlich"),
-  birthCountry: z.string().min(1, "Geburtsland ist erforderlich"),
-  street: z.string().min(1, "Straße, Hausnummer ist erforderlich"),
-  postalCode: z.string().min(1, "Postleitzahl, Ort ist erforderlich"),
-  city: z.string().min(1, "Stadt ist erforderlich"),
-  country: z.string().min(1, "Land ist erforderlich"),
-
   // Agentur Information
   agencyName: z.string().min(1, "Name der Agentur ist erforderlich"),
   agencyAddress: z.string().min(1, "Anschrift der Agentur ist erforderlich"),

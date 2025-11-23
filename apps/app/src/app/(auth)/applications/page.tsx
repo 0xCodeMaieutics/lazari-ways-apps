@@ -4,31 +4,22 @@ import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-const KKBPage = async ({
+export default async function ApplicationsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ visa_duration_in_months?: string | string[] }>;
-}) => {
-  const { visa_duration_in_months } = await searchParams;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
 
   return (
-    <div className="w-full mx-auto space-y-6 pt-32 pb-10">
+    <div className="w-full mx-auto max-w-7xl space-y-6 pt-10 pb-10 px-10">
       <Button variant={"ghost"} className="flex max-w-max" asChild>
         <Link href={"/"}>
           <ArrowLeft className="mr-2" />
           Back
         </Link>
       </Button>
-      <ApplicationForm
-        type={
-          {
-            "3": ApplicationType.KKB3,
-            "8": ApplicationType.KKB8,
-          }[visa_duration_in_months as string] || ApplicationType.KKB8
-        }
-      />
+      <ApplicationForm type={params.type as ApplicationType} />
     </div>
   );
-};
-
-export default KKBPage;
+}

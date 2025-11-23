@@ -114,6 +114,8 @@ const FileUpload = ({
     );
   };
 
+  console.log({ value });
+
   return (
     <div className={cn("space-y-2", className)}>
       <input
@@ -128,28 +130,30 @@ const FileUpload = ({
         {...props}
       />
 
-      <div
-        className={cn(
-          "border-2 border-dashed border-input rounded-md p-4 text-center cursor-pointer transition-colors hover:border-primary/50",
-          error && "border-destructive"
-        )}
-        onClick={openFileDialog}
-      >
-        <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
-        <p className="text-sm text-muted-foreground mb-2">{placeholder}</p>
-        <Button type="button" variant="outline" size="sm">
-          Durchsuchen
-        </Button>
-        {accept && (
-          <p className="text-xs text-muted-foreground mt-1">
-            Erlaubte Dateiformate:{" "}
-            {accept
-              .split(",")
-              .map((type) => type.trim().replace(".", ""))
-              .join(", ")}
-          </p>
-        )}
-      </div>
+      {(value === undefined || value === null) && (
+        <div
+          className={cn(
+            "border-2 border-dashed border-input rounded-md p-4 text-center cursor-pointer transition-colors hover:border-primary/50",
+            error && "border-destructive"
+          )}
+          onClick={openFileDialog}
+        >
+          <Upload className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />
+          <p className="text-sm text-muted-foreground mb-2">{placeholder}</p>
+          <Button type="button" variant="outline" size="sm">
+            Durchsuchen
+          </Button>
+          {accept && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Erlaubte Dateiformate:{" "}
+              {accept
+                .split(",")
+                .map((type) => type.trim().replace(".", ""))
+                .join(", ")}
+            </p>
+          )}
+        </div>
+      )}
 
       {renderFileList()}
 

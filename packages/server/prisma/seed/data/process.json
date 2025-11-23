@@ -1,0 +1,49 @@
+{
+  "process": [
+    {
+      "step": 1,
+      "title": "Bedarfsermittlung",
+      "description": "Sie haben Personalbedarf an Ferienbeschäftigten, Praktikanten, Auszubildenden oder Fachkräften."
+    },
+    {
+      "step": 2,
+      "title": "Kontaktaufnahme",
+      "description": "Bitte nehmen Sie Kontakt zu uns auf."
+    },
+    {
+      "step": 3,
+      "title": "Beratungsgespräch",
+      "description": "Bei einem persönlichen oder Online-Termin besprechen wir ausführlich Ihre Anforderungen und Wünsche. Wir beraten Sie zu den möglichen Programmen und Modellen, die zu Ihren Wünschen und Anforderungen passen."
+    },
+    {
+      "step": 4,
+      "title": "Vertragsabschluss",
+      "description": "Wir senden Ihnen unseren Personalvermittlungsvertrag zur Unterschrift zu."
+    },
+    {
+      "step": 5,
+      "title": "Talent-Suche",
+      "description": "Wir machen uns auf die Suche nach Talenten, die zu Ihren Anforderungen und Wünschen passen und senden Ihnen Profilvorschläge zu. Auf Wunsch können Online-Vorstellungsgespräche mit den ausgewählten Bewerbern vereinbart werden, selbstverständlich auf Deutsch, da unsere Bewerber über Deutschkenntnisse verfügen."
+    },
+    {
+      "step": 6,
+      "title": "Formalitäten und Vorbereitungen",
+      "description": "Falls Ihnen der vorgeschlagene Bewerber zusagt und Sie uns das \"Go\" geben, kümmern wir uns um die Beantragung notwendiger Arbeitsgenehmigungen und erledigen alle erforderlichen Formalitäten. Zudem stellen wir sicher, dass unsere Bewerber bei Bedarf ein Gesundheitszeugnis, eine Krankenkassenanmeldung, eine Steueridentifikationsnummer und ein SEPA-Girokonto mitbringen, sodass sie sofort und flexibel einsatzbereit sind. Damit entlasten wir Ihr Unternehmen von administrativen Aufgaben und ermöglichen Ihnen, sich voll und ganz auf Ihr Kerngeschäft zu konzentrieren."
+    },
+    {
+      "step": 7,
+      "title": "Anreiseplanung",
+      "description": "Sobald der Bewerber sein Visum erhalten hat, informieren wir Sie und sprechen das Anreisedatum ab."
+    },
+    {
+      "step": 8,
+      "title": "Ankunft des Bewerbers",
+      "description": "Der Bewerber kommt am Flughafen an und wird je nach Absprache von unserem Fahrdienst direkt zu Ihnen zur Arbeitsvertragsunterschrift oder zur Unterkunft gefahren. Auch die Unterstützung nach der Einreise ist für uns selbstverständlich. Sie erhalten alle erforderlichen Dokumente des Bewerbers von uns."
+    },
+    {
+      "step": 9,
+      "title": "Rechnungsstellung",
+      "description": "Nach erfolgreicher Ankunft und Vertragsunterschrift des Bewerbers erhalten Sie unsere Honorarrechnung. Bei Fachkräften und Auszubildenden haben Sie einen fixen Pauschalpreis für unsere komplette Dienstleistung, wodurch Sie genau kalkulieren können. Bei Ferienbeschäftigten und Praktikanten erfolgt die Abrechnung nach Stunden, sodass Sie nur für effektiv geleistete Stunden zahlen. Sie erhalten von uns Preismodelle, die flexibler und risikofreier nicht sein können."
+    }
+  ]
+}

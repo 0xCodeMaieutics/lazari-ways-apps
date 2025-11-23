@@ -22,6 +22,8 @@
     "@tanstack/react-query": "^5.90.5",
     "@workspace/server": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "@workspace/shared": "workspace:*",
+    "@workspace/file-upload": "workspace:*",
     "boring-avatars": "^2.0.4",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

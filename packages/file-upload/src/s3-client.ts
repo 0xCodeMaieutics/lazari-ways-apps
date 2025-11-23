@@ -12,16 +12,37 @@ import {
   tryCatchAsync,
   Err,
   err,
+  Results,
 } from "@workspace/shared/error-handling/result";
+import z from "zod";
+import { zodParse } from "@workspace/shared/error-handling/index";
 
 export const getS3Client = () => {
-  // TODO: check if env var are set
+  const result = zodParse(
+    {
+      S3_REGION: process.env.S3_REGION,
+      S3_ENDPOINT: process.env.S3_ENDPOINT,
+      S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+      S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+    },
+    z.object({
+      S3_REGION: z.string().min(1),
+      S3_ENDPOINT: z.string().min(1),
+      S3_ACCESS_KEY: z.string().min(1),
+      S3_SECRET_KEY: z.string().min(1),
+    })
+  );
+  if (result.isErr()) {
+    throw new Error(
+      `S3 Client configuration error: ${JSON.stringify(result.error)}`
+    );
+  }
   return new S3Client({
-    region: process.env.S3_REGION!,
-    endpoint: process.env.S3_ENDPOINT!,
+    region: result.value.S3_REGION,
+    endpoint: result.value.S3_ENDPOINT,
     credentials: {
-      accessKeyId: process.env.S3_ACCESS_KEY!,
-      secretAccessKey: process.env.S3_SECRET_KEY!,
+      accessKeyId: result.value.S3_ACCESS_KEY,
+      secretAccessKey: result.value.S3_SECRET_KEY,
     },
     forcePathStyle: true,
   });
@@ -432,3 +453,38 @@ export async function getSignedUrlForDownload({
     })
   );
 }
+
+export const putObjects = ({
+  keys,
+  bodies,
+  bucketName,
+  contentTypes = [],
+}: {
+  keys: string[];
+  bodies: (Buffer | Uint8Array | Blob | string)[];
+  contentTypes: string[];
+  bucketName: string;
+}) => {
+  if (keys.length !== bodies.length) {
+    throw new Error("Keys and bodies must have the same length");
+  }
+  if (contentTypes.length > 0 && contentTypes.length !== keys.length) {
+    throw new Error(
+      "ContentTypes must be empty or have the same length as keys"
+    );
+  }
+  const resultAsyncs = keys.map((k, i) =>
+    tryCatchAsync(() =>
+      new Upload({
+        client: getS3Client(),
+        params: {
+          Bucket: bucketName,
+          Key: k,
+          Body: bodies[i],
+          ContentType: contentTypes[i] || "application/octet-stream",
+        },
+      }).done()
+    )
+  );
+  return Results.allAsync(resultAsyncs);
+};

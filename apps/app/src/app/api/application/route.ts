@@ -1,6 +1,6 @@
 import { env } from "@/env";
 import { applicationQueries, generateRandomString } from "@workspace/server/db";
-import { putObjects } from "@/lib/s3/s3.server";
+import { putObjects } from "@workspace/file-upload/s3-client";
 import { getImageExtension, ImageFileType } from "@/utils/file";
 import { applicationFormSchema } from "@/utils/models/applications";
 import { ApplicationType } from "@workspace/server/db/models";
@@ -11,13 +11,30 @@ export const POST = async (request: Request) => {
   const formData = await request.formData();
 
   const type = formData.get("type") as ApplicationType;
+  const userId = formData.get("userId") as string;
+
+  if (!userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  if (!type) {
+    return new Response("Bad Request", {
+      status: 400,
+    });
+  }
+
+  const foundApplicationResult =
+    await applicationQueries.getApplicationByType(type);
+
+  if (foundApplicationResult.isErr()) {
+    return new Response("Internal Server Error", { status: 500 });
+  }
+  const foundApplication = foundApplicationResult.value;
+  if (foundApplication) {
+    return new Response("Application already exists", { status: 409 });
+  }
 
   const result = applicationFormSchema.safeParse({
-    firstName: formData.get("firstName"),
-    lastName: formData.get("lastName"),
-    gender: formData.get("gender"),
-    nationality: formData.get("nationality"),
-
     birthDate: formData.get("birthDate"),
     birthPlace: formData.get("birthPlace"),
     birthCountry: formData.get("birthCountry"),
@@ -81,14 +98,18 @@ export const POST = async (request: Request) => {
       body: File;
       key: string;
     }>;
-    await putObjects({
+    const putObjectsResult = await putObjects({
       bodies: bodies.map((b) => b.body),
       keys: bodies.map((b) =>
         constructPath(b.key, b.body.type as ImageFileType)
       ),
       contentTypes: bodies.map((b) => b.body.type),
-      bucketName: env.AWS_BUCKET_NAME,
+      bucketName: env.S3_BUCKET_NAME,
     });
+
+    if (putObjectsResult.isErr()) {
+      throw new Error("Failed to upload files");
+    }
 
     const uploadedKeys = bodies.map((b) => b.key);
 
@@ -96,6 +117,11 @@ export const POST = async (request: Request) => {
       {
         id: applicationId,
         type,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
         // Agency
         agencyName: result.data.agencyName,
         agencyAddress: result.data.agencyAddress,

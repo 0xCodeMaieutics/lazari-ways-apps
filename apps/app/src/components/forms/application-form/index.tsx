@@ -26,24 +26,31 @@ import {
   applicationFormSchema,
 } from "@/utils/models/applications";
 import { ApplicationType } from "@workspace/server/db/models";
+import { authClient } from "@workspace/server/auth/client";
+import { tryCatchAsync } from "@workspace/shared/error-handling/result";
+import { err } from "@workspace/shared/error-handling/result";
+import { Result, ok } from "@workspace/shared/error-handling/result";
+import { BaseError } from "@workspace/shared/error-handling/result";
 
 export function ApplicationForm({ type }: { type: ApplicationType }) {
   const router = useRouter();
+  const { data: session } = authClient.useSession.get();
+  console.log({ session });
 
   const form = useForm<z.infer<typeof applicationFormSchema>>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
-      firstName: "Anna",
-      lastName: "Schmidt",
-      gender: "female",
-      nationality: "Deutsch",
-      birthDate: "1999-03-15",
-      birthPlace: "München",
-      birthCountry: "Deutschland",
-      street: "Musterstraße 45",
-      postalCode: "80331",
-      city: "München",
-      country: "Deutschland",
+      // firstName: "Anna",
+      // lastName: "Schmidt",
+      // gender: "female",
+      // nationality: "Deutsch",
+      // birthDate: "1999-03-15",
+      // birthPlace: "München",
+      // birthCountry: "Deutschland",
+      // street: "Musterstraße 45",
+      // postalCode: "80331",
+      // city: "München",
+      // country: "Deutschland",
 
       foto: undefined,
       passport: undefined,
@@ -145,31 +152,75 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
   }, [form.formState.errors, form.formState.isSubmitted, scrollToFirstError]);
 
   const { mutateAsync: submitApplication, isPending: isSubmitting } =
-    useMutation<unknown, Error, ApplicationFormData, unknown>({
+    useMutation<
+      Result<
+        {
+          success: boolean;
+          message: string;
+        },
+        BaseError
+      >,
+      unknown,
+      ApplicationFormData
+    >({
       mutationFn: async (data) => {
+        if (session?.user.id === undefined)
+          return err({
+            type: "Unauthorized",
+            message: "User is not authenticated",
+          });
+
         const formData = new FormData();
+
         Object.entries(data).forEach(([key, value]) => {
-          if (value === undefined) return;
+          if (value === undefined || value === null) return;
+
           if (value instanceof Date) {
             formData.append(key, value.toISOString());
-          }
-          if (value instanceof File) {
+          } else if (value instanceof File) {
             formData.append(key, value, value.name);
           } else {
             formData.append(key, value as string);
           }
         });
+
         formData.append("type", type);
-        return fetch("/api/application", {
-          method: "POST",
-          body: formData,
+        formData.append("userId", session.user.id);
+        const applicationResponseResult = await tryCatchAsync(() =>
+          fetch("/api/application", {
+            method: "POST",
+            body: formData,
+          })
+        );
+        if (applicationResponseResult.isErr()) {
+          return err({
+            type: "InernalServerError",
+            message: "Failed to submit application",
+          });
+        }
+        const applicationResponse = applicationResponseResult.value;
+        if (!applicationResponse.ok) {
+          return err({
+            type: "InternalServerError",
+            message: "Server not responding 'not ok'",
+          });
+        }
+        return ok({
+          success: true,
+          message: "Application submitted successfully",
         });
       },
-      onSuccess: async () => {
-        router.push("/applications/success");
-      },
-      onError: () => {
-        toast.error("Fehler bei der Einreichung der Bewerbung");
+      onSuccess: (result) => {
+        result.match({
+          ok: () => {
+            router.push("/?submitted=true");
+          },
+          err: (error) => {
+            toast.error(
+              `Fehler bei der Einreichung der Bewerbung: ${error.message}`
+            );
+          },
+        });
       },
     });
 
@@ -196,251 +247,6 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
         noValidate
       >
         <div className="space-y-8">
-          <div>
-            {/* Personal Information */}
-            <h2 className="text-lg font-semibold mb-4">Persönliche Daten</h2>
-            <FieldGroup>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
-                  name="firstName"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="firstName">Vorname *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="firstName"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Vorname"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="lastName"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="lastName">Nachname *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="lastName"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Nachname"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-              <Controller
-                name="gender"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Geschlecht</FieldLabel>
-                    <div className="flex gap-4">
-                      <Radio
-                        {...field}
-                        value="male"
-                        checked={field.value === "male"}
-                        onChange={() => field.onChange("male")}
-                        label="männlich"
-                        id="gender-male"
-                      />
-                      <Radio
-                        {...field}
-                        value="female"
-                        checked={field.value === "female"}
-                        onChange={() => field.onChange("female")}
-                        label="weiblich"
-                        id="gender-female"
-                      />
-                      <Radio
-                        {...field}
-                        value="diverse"
-                        checked={field.value === "diverse"}
-                        onChange={() => field.onChange("diverse")}
-                        label="divers"
-                        id="gender-diverse"
-                      />
-                    </div>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Controller
-                  name="birthDate"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="birthDate">
-                        Geburtsdatum *
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="birthDate"
-                        type="date"
-                        aria-invalid={fieldState.invalid}
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="birthPlace"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="birthPlace">Geburtsort *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="birthPlace"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Geburtsort"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="birthCountry"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="birthCountry">
-                        Geburtsland *
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="birthCountry"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Geburtsland"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <Controller
-                name="street"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="street">
-                      Straße, Hausnummer *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="street"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Straße und Hausnummer"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
-                  name="postalCode"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="postalCode">
-                        Postleitzahl *
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="postalCode"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="PLZ"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="city"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="city">Stadt *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="city"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Stadt"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="country"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="country">Land *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="country"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Land"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <Controller
-                name="nationality"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="nationality">
-                      Staatsangehörigkeit *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="nationality"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Staatsangehörigkeit"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-          </div>
-
           <div>
             <FieldGroup>
               <h2 className="text-lg font-semibold">Agentur Information</h2>

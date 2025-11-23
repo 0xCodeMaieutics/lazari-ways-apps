@@ -1,6 +1,7 @@
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { prisma } from "../../client.js";
 import { Prisma } from "../../generated/prisma/client.js";
+import { ApplicationType } from "./models.js";
 
 export type ApplicationWhereInput = Prisma.ApplicationWhereInput;
 
@@ -16,6 +17,8 @@ export type GetApplication = Prisma.ApplicationGetPayload<{
     applicationStudent: true;
   };
 }>;
+
+export type GetApplicationByType = Prisma.ApplicationGetPayload<{}>;
 
 export type GetApplications = Prisma.ApplicationGetPayload<{
   include: {
@@ -44,6 +47,13 @@ export const applicationQueries = {
             applicationStudent: true,
           },
         }) satisfies Promise<GetApplication | null>
+    ),
+  getApplicationByType: (type: ApplicationType) =>
+    tryCatchAsync(
+      () =>
+        prisma.application.findFirst({
+          where: { type },
+        }) satisfies Promise<GetApplicationByType | null>
     ),
   getApplications: (
     where?: ApplicationWhereInput,

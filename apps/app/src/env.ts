@@ -17,15 +17,11 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
 
-    ENCRYPTION_KEY: z
-      .string()
-      .min(32)
-      .describe("Hexadecimal string of 32 bytes"),
-
-    AWS_REGION: z.string(),
-    AWS_ACCESS_KEY_ID: z.string(),
-    AWS_SECRET_ACCESS_KEY: z.string(),
-    AWS_BUCKET_NAME: z.string(),
+    S3_REGION: z.string(),
+    S3_ENDPOINT: z.string().url(),
+    S3_ACCESS_KEY: z.string(),
+    S3_SECRET_KEY: z.string(),
+    S3_BUCKET_NAME: z.string(),
 
     BETTER_AUTH_SECRET: z.string(),
   },
@@ -50,12 +46,11 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
 
-    ENCRYPTION_KEY: process.env.ENCRYPTION_KEY,
-
-    AWS_REGION: process.env.AWS_REGION,
-    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
-    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
-    AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
+    S3_REGION: process.env.S3_REGION,
+    S3_ENDPOINT: process.env.S3_ENDPOINT,
+    S3_ACCESS_KEY: process.env.S3_ACCESS_KEY,
+    S3_SECRET_KEY: process.env.S3_SECRET_KEY,
+    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
 
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
   },
