@@ -13,7 +13,7 @@
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:deploy": "dotenv -e .env.prod -- prisma migrate deploy",
     "db:seed": "prisma db seed",
-    "db:studio": "prisma studio",
+    "db:studio": "prisma studio --port 5555 --browser none",
     "db:push": "prisma db push --force-reset",
     "db:push-seed": "prisma db push --force-reset && pnpm db:seed",
     "db:seed:admin": "pnpm tsx prisma/seed/admin.ts"

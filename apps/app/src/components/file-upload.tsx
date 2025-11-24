@@ -114,8 +114,6 @@ const FileUpload = ({
     );
   };
 
-  console.log({ value });
-
   return (
     <div className={cn("space-y-2", className)}>
       <input

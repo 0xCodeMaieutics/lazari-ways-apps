@@ -13,6 +13,7 @@ import { loginFormSchema } from "./schema";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authClient } from "@workspace/server/auth/client";
+import Image from "next/image";
 
 const DEV_EMAIL = "applicant@lazaryways.eu";
 const DEV_PASSWORD = "#ApplicantIsCool2025!";
@@ -80,9 +81,6 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
 
   return (
     <div className="w-full max-w-md mx-auto px-4">
-      <h1 className="text-2xl text-center font-bold mb-6">
-        {isSignUp ? "Sign Up" : "Login"}
-      </h1>
       <form
         onSubmit={form.handleSubmit((data) =>
           isSignUp ? signUpMutation.mutate(data) : signInMutation.mutate(data)
@@ -90,6 +88,15 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
         noValidate
       >
         <div className="space-y-4">
+          <div className="flex flex-col items-center justify-center gap-1">
+            <div className="relative h-12 w-[190px]">
+              <Image
+                src={"/images/logos/logo-text.svg"}
+                alt="Lazary Ways image Logo"
+                fill
+              />
+            </div>
+          </div>
           <Controller
             name="email"
             control={form.control}
@@ -101,6 +108,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
                   id="email"
                   aria-invalid={fieldState.invalid}
                   placeholder="Email"
+                  className="h-12"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -120,6 +128,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
                   id="password"
                   aria-invalid={fieldState.invalid}
                   placeholder="Password"
+                  className="h-12"
                 />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
@@ -132,7 +141,8 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
         <div className="mt-6">
           <Button
             type="submit"
-            className="w-full"
+            size={"lg"}
+            className="w-full h-12 text-lg"
             disabled={
               isSignUp ? signUpMutation.isPending : signInMutation.isPending
             }
