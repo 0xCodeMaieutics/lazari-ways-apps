@@ -36,7 +36,7 @@ export function ProfileForm({
   onSaveSuccess,
   onCancel,
 }: {
-  userInformation: GetUserProfile["userInformation"];
+  userInformation: GetUserProfile["employee"];
   onSaveSuccess?: () => void;
   onCancel?: () => void;
 }) {

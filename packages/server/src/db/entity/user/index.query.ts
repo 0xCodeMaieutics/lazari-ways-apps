@@ -5,7 +5,7 @@ import { Prisma } from "../../generated/prisma/client.js";
 export type GetUser = Prisma.UserGetPayload<{}>;
 export type GetUserProfile = Prisma.UserGetPayload<{
   include: {
-    userInformation: true;
+    employee: true;
   };
 }>;
 
@@ -28,7 +28,7 @@ export const userQueries = {
             id,
           },
           include: {
-            userInformation: true,
+            employee: true,
           },
         }) satisfies Promise<GetUserProfile | null>
     ),

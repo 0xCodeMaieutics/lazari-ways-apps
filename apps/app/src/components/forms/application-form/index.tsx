@@ -31,35 +31,25 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { err } from "@workspace/shared/error-handling/result";
 import { Result, ok } from "@workspace/shared/error-handling/result";
 import { BaseError } from "@workspace/shared/error-handling/result";
+import { createApplication } from "@/utils/server-actions/application/create-application";
 
-export function ApplicationForm({ type }: { type: ApplicationType }) {
+export function ApplicationForm({
+  type,
+  employeeId,
+}: {
+  type: ApplicationType;
+  employeeId: string;
+}) {
   const router = useRouter();
   const { data: session } = authClient.useSession.get();
-  console.log({ session });
 
   const form = useForm<z.infer<typeof applicationFormSchema>>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
-      // firstName: "Anna",
-      // lastName: "Schmidt",
-      // gender: "female",
-      // nationality: "Deutsch",
-      // birthDate: "1999-03-15",
-      // birthPlace: "München",
-      // birthCountry: "Deutschland",
-      // street: "Musterstraße 45",
-      // postalCode: "80331",
-      // city: "München",
-      // country: "Deutschland",
-
-      foto: undefined,
       passport: undefined,
 
-      agencyName: "Müller Personalvermittlung GmbH",
-      agencyAddress: "Hauptstraße 123, 10115 Berlin, Deutschland",
-
-      semesterBreakFrom: undefined,
-      semesterBreakTo: undefined,
+      semesterBreakFrom: "2024-07-01",
+      semesterBreakTo: "2024-09-30",
       university: "Ludwig-Maximilians-Universität München",
       studySubject: "Betriebswirtschaftslehre",
       germanLevel: "B2",
@@ -73,15 +63,11 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
       allergies: "Nussallergie",
       clothingSize: "M",
       shoeSize: "38",
-      previousStayInGermany: "Ja",
+      hasBeenInGermanyBefore: false,
       previousStayPlace: "Hamburg",
-      previousStayPeriodFrom: undefined,
+      previousStayPeriodFrom: "July 2022",
       previousStayPeriodTo: "August 2023",
-      taxId: "12345678901",
-      phone: "+49 151 12345678",
 
-      email: "anna.schmidt@email.de",
-      instagram: "@anna_schmidt_99",
       emergencyContactName: "Maria Schmidt",
       emergencyPhone: "+49 89 98765432",
     },
@@ -170,39 +156,25 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
             message: "User is not authenticated",
           });
 
-        const formData = new FormData();
-
-        Object.entries(data).forEach(([key, value]) => {
-          if (value === undefined || value === null) return;
-
-          if (value instanceof Date) {
-            formData.append(key, value.toISOString());
-          } else if (value instanceof File) {
-            formData.append(key, value, value.name);
-          } else {
-            formData.append(key, value as string);
-          }
-        });
-
-        formData.append("type", type);
-        formData.append("userId", session.user.id);
         const applicationResponseResult = await tryCatchAsync(() =>
-          fetch("/api/application", {
-            method: "POST",
-            body: formData,
+          createApplication({
+            data,
+            type,
+            employeeId,
           })
         );
         if (applicationResponseResult.isErr()) {
           return err({
-            type: "InernalServerError",
-            message: "Failed to submit application",
+            type: "FAILED_CREATE_APPLICATION",
+            message: "Failed to create application.",
           });
         }
         const applicationResponse = applicationResponseResult.value;
-        if (!applicationResponse.ok) {
+
+        if (applicationResponse.success === false) {
           return err({
-            type: "InternalServerError",
-            message: "Server not responding 'not ok'",
+            type: "FAILED_CREATE_APPLICATION",
+            message: applicationResponse.message,
           });
         }
         return ok({
@@ -231,6 +203,8 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
     }, 100); // Small delay to ensure DOM is updated with error states
   }
 
+  const isDirty = form.formState.isDirty;
+
   return (
     <div className="w-full">
       <h1 className="text-2xl font-bold mb-2">KKB Bewerbungsformular</h1>
@@ -247,74 +221,171 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
         noValidate
       >
         <div className="space-y-8">
-          <div>
-            <FieldGroup>
-              <h2 className="text-lg font-semibold">Agentur Information</h2>
-
-              <Controller
-                name="agencyName"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="agencyName">
-                      Name der Agentur *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="agencyName"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Name der Agentur"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="agencyAddress"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="agencyAddress">
-                      Anschrift der Agentur *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="agencyAddress"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Vollständige Adresse der Agentur"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-          </div>
-
           {/* Study Information */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">
-              Studium & Qualifikationen
-            </h2>
-            <FieldGroup>
-              <div className="flex gap-3">
+          {type === ApplicationType.STUDENT && (
+            <div>
+              <h2 className="text-lg font-semibold mb-4">
+                Studium & Qualifikationen
+              </h2>
+              <FieldGroup>
+                <div className="flex gap-3">
+                  <Controller
+                    name="semesterBreakFrom"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="semesterBreakFrom">
+                          Semesterferien von
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="semesterBreakFrom"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="z.B. 01.07.2024"
+                          type="date"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="semesterBreakTo"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="semesterBreakTo">
+                          Semesterferien (von – bis)
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="semesterBreakTo"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="z.B. 31.09.2024"
+                          type="date"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Controller
+                    name="university"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="university">
+                          Universität
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="university"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Name der Universität"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                  <Controller
+                    name="studySubject"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="studySubject">
+                          Studienfach
+                        </FieldLabel>
+                        <Input
+                          {...field}
+                          id="studySubject"
+                          aria-invalid={fieldState.invalid}
+                          placeholder="Studienfach"
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
+                    )}
+                  />
+                </div>
+
                 <Controller
-                  name="semesterBreakFrom"
+                  name="germanLevel"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="semesterBreakFrom">
-                        Semesterferien von
+                      <FieldLabel>Deutschniveau</FieldLabel>
+                      <div className="flex gap-4">
+                        {["A1", "A2", "B1", "B2", "C1"].map((level) => (
+                          <div key={level} className="flex items-center gap-2">
+                            <Checkbox
+                              key={level}
+                              checked={field.value === level}
+                              onChange={() =>
+                                field.onChange(
+                                  field.value === level ? undefined : level
+                                )
+                              }
+                              id={`german-${field.value}`}
+                            />
+                            <label
+                              htmlFor={`german-${field.value}`}
+                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                            >
+                              {level}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="otherLanguages"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="otherLanguages">
+                        Weitere Sprachkenntnisse / Sprachniveau
+                      </FieldLabel>
+                      <Textarea
+                        {...field}
+                        id="otherLanguages"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="z.B. Englisch B2, Französisch A1"
+                        rows={3}
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+
+                <Controller
+                  name="driverLicense"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="driverLicense">
+                        Führerschein
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="semesterBreakFrom"
+                        id="driverLicense"
                         aria-invalid={fieldState.invalid}
-                        placeholder="z.B. 01.07.2024"
-                        type="date"
+                        placeholder="Führerscheinklasse (z.B. B, A1)"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -322,211 +393,71 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
                     </Field>
                   )}
                 />
+
                 <Controller
-                  name="semesterBreakTo"
+                  name="canRideBike"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="semesterBreakTo">
-                        Semesterferien (von – bis)
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="semesterBreakTo"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="z.B. 31.09.2024"
-                        type="date"
-                      />
+                      <FieldLabel>Kannst Du Fahrrad fahren?</FieldLabel>
+                      <div className="flex gap-4">
+                        <Radio
+                          {...field}
+                          value="Ja"
+                          checked={field.value === true}
+                          onChange={() => field.onChange(true)}
+                          label="Ja"
+                          id="bike-yes"
+                        />
+                        <Radio
+                          {...field}
+                          value="Nein"
+                          checked={field.value === false}
+                          onChange={() => field.onChange(false)}
+                          label="Nein"
+                          id="bike-no"
+                        />
+                      </div>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </Field>
                   )}
                 />
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Controller
-                  name="university"
+                  name="shiftWork"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="university">Universität</FieldLabel>
-                      <Input
-                        {...field}
-                        id="university"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Name der Universität"
-                      />
+                      <FieldLabel>Schichtbereitschaft</FieldLabel>
+                      <div className="flex gap-4">
+                        <Radio
+                          {...field}
+                          value="Ja"
+                          checked={field.value === true}
+                          onChange={() => field.onChange(true)}
+                          label="Ja"
+                          id="shift-yes"
+                        />
+                        <Radio
+                          {...field}
+                          value="Nein"
+                          checked={field.value === false}
+                          onChange={() => field.onChange(false)}
+                          label="Nein"
+                          id="shift-no"
+                        />
+                      </div>
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
                       )}
                     </Field>
                   )}
                 />
-                <Controller
-                  name="studySubject"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="studySubject">
-                        Studienfach
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="studySubject"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Studienfach"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <Controller
-                name="germanLevel"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Deutschniveau</FieldLabel>
-                    <div className="flex gap-4">
-                      {["A1", "A2", "B1", "B2", "C1"].map((level) => (
-                        <div key={level} className="flex items-center gap-2">
-                          <Checkbox
-                            key={level}
-                            checked={field.value === level}
-                            onChange={() =>
-                              field.onChange(
-                                field.value === level ? undefined : level
-                              )
-                            }
-                            id={`german-${field.value}`}
-                          />
-                          <label
-                            htmlFor={`german-${field.value}`}
-                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
-                            {level}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="otherLanguages"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="otherLanguages">
-                      Weitere Sprachkenntnisse / Sprachniveau
-                    </FieldLabel>
-                    <Textarea
-                      {...field}
-                      id="otherLanguages"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="z.B. Englisch B2, Französisch A1"
-                      rows={3}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="driverLicense"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="driverLicense">
-                      Führerschein
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="driverLicense"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Führerscheinklasse (z.B. B, A1)"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="canRideBike"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Kannst Du Fahrrad fahren?</FieldLabel>
-                    <div className="flex gap-4">
-                      <Radio
-                        {...field}
-                        value="Ja"
-                        checked={field.value === true}
-                        onChange={() => field.onChange(true)}
-                        label="Ja"
-                        id="bike-yes"
-                      />
-                      <Radio
-                        {...field}
-                        value="Nein"
-                        checked={field.value === false}
-                        onChange={() => field.onChange(false)}
-                        label="Nein"
-                        id="bike-no"
-                      />
-                    </div>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="shiftWork"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Schichtbereitschaft</FieldLabel>
-                    <div className="flex gap-4">
-                      <Radio
-                        {...field}
-                        value="Ja"
-                        checked={field.value === true}
-                        onChange={() => field.onChange(true)}
-                        label="Ja"
-                        id="shift-yes"
-                      />
-                      <Radio
-                        {...field}
-                        value="Nein"
-                        checked={field.value === false}
-                        onChange={() => field.onChange(false)}
-                        label="Nein"
-                        id="shift-no"
-                      />
-                    </div>
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </FieldGroup>
-          </div>
+              </FieldGroup>
+            </div>
+          )}
 
           {/* Health & Personal Information */}
           <div>
@@ -626,7 +557,7 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
             </h2>
             <FieldGroup>
               <Controller
-                name="previousStayInGermany"
+                name="hasBeenInGermanyBefore"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
@@ -635,20 +566,21 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
                       <Radio
                         {...field}
                         value="Ja"
-                        checked={field.value === "Ja"}
-                        onChange={() => field.onChange("Ja")}
+                        checked={field.value === true}
+                        onChange={() => field.onChange(true)}
                         label="Ja"
-                        id="stay-yes"
+                        id="bike-yes"
                       />
                       <Radio
                         {...field}
                         value="Nein"
-                        checked={field.value === "Nein"}
-                        onChange={() => field.onChange("Nein")}
+                        checked={field.value === false}
+                        onChange={() => field.onChange(false)}
                         label="Nein"
-                        id="stay-no"
+                        id="bike-no"
                       />
                     </div>
+
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -656,7 +588,7 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
                 )}
               />
 
-              {form.watch("previousStayInGermany") === "Ja" && (
+              {form.watch("hasBeenInGermanyBefore") && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <Controller
                     name="previousStayPlace"
@@ -701,95 +633,6 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
                   />
                 </div>
               )}
-            </FieldGroup>
-          </div>
-
-          {/* Contact Information */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Kontaktdaten</h2>
-            <FieldGroup>
-              <Controller
-                name="taxId"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="taxId">
-                      Steuer-ID (falls vorhanden)
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="taxId"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Steuerliche Identifikationsnummer"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Controller
-                  name="phone"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="phone">Telefonnummer *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="phone"
-                        type="tel"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="+49 XXX XXXXXXX"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-                <Controller
-                  name="email"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="email">E-Mail *</FieldLabel>
-                      <Input
-                        {...field}
-                        id="email"
-                        type="email"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="ihre.email@beispiel.de"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </div>
-
-              <Controller
-                name="instagram"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="instagram">
-                      Instagram-Profil
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="instagram"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="@ihr_instagram_name"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
             </FieldGroup>
           </div>
 
@@ -843,30 +686,8 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
 
           {/* File Upload */}
           <div>
-            <h2 className="text-lg font-semibold mb-4">
-              Foto & Reisepass Upload
-            </h2>
+            <h2 className="text-lg font-semibold mb-4">Reisepass Upload</h2>
             <FieldGroup>
-              <Controller
-                name="foto"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="foto">Foto *</FieldLabel>
-                    <FileUpload
-                      id="foto"
-                      accept=".png,.jpg,.jpeg"
-                      value={field.value}
-                      onChange={(file) => field.onChange(file)}
-                      placeholder="Foto hochladen"
-                      required
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
               <Controller
                 name="passport"
                 control={form.control}
@@ -909,28 +730,32 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
                   </Field>
                 )}
               />
-              <Controller
-                name="studyCertificate"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="studyCertificate">
-                      Sprach Nachweis (optional)
-                    </FieldLabel>
-                    <FileUpload
-                      id="studyCertificate"
-                      accept=".pdf"
-                      value={field.value || null}
-                      onChange={(file) => field.onChange(file)}
-                      placeholder="Studien Nachweis hochladen"
-                      required
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+              {type === ApplicationType.STUDENT && (
+                <div>
+                  <Controller
+                    name="certificateOfEnrollment"
+                    control={form.control}
+                    render={({ field, fieldState }) => (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor="certificateOfEnrollment">
+                          Studien Nachweis (optional)
+                        </FieldLabel>
+                        <FileUpload
+                          id="certificateOfEnrollment"
+                          accept=".pdf"
+                          value={field.value || null}
+                          onChange={(file) => field.onChange(file)}
+                          placeholder="Studien Nachweis hochladen"
+                          required
+                        />
+                        {fieldState.invalid && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </Field>
                     )}
-                  </Field>
-                )}
-              />
+                  />
+                </div>
+              )}
             </FieldGroup>
           </div>
         </div>
@@ -951,7 +776,7 @@ export function ApplicationForm({ type }: { type: ApplicationType }) {
           >
             Formular zurücksetzen
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !isDirty}>
             {isSubmitting ? "Wird eingereicht..." : "Bewerbung einreichen"}
           </Button>
         </div>

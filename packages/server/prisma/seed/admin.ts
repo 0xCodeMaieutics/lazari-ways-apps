@@ -24,7 +24,7 @@ export const createAdmin = (
           token: generateRandomString(64),
         },
       },
-      userSettings: {
+      settings: {
         create: {
           id: generateRandomString(32),
         },

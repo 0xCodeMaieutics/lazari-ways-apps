@@ -21,11 +21,19 @@ model Application {
   id   String          @id
   type ApplicationType
 
-  // Agency Information
-  agencyName    String
-  agencyAddress String
+  status ApplicationStatus? @default(USER_SUBMITTED)
 
-  // Study Information
+  // Only applies if type is STUDENT
+  university        String?
+  studySubject      String?
+  semesterBreakFrom DateTime? 
+  semesterBreakTo   DateTime? 
+  studyCertificateKey    String?
+  certificateOfEnrollmentKey String?
+
+  passportKey            String
+  languageCertificateKey String?
+
   germanLevel        String?
   otherLanguages     String?
   driverLicense      String?
@@ -36,48 +44,17 @@ model Application {
   clothingSize       String?
   shoeSize           String?
 
-  // Previous Experience
-  hasBeenInCountryBefore Boolean
-  previousStayCountry    String?
-  previousStayPlace      String?
+  hasBeenInGermanyBefore Boolean?
+  previousStayPlace   String?
   previousStayPeriodFrom DateTime?
   previousStayPeriodTo   DateTime?
+  
+  emergencyContactName  String?
+  emergencyContactPhone String?
 
-  // Contact Information
-  phone     String
-  email     String
-  taxId     String?
-  instagram String?
-
-  // Files
-  fotoKey                String
-  passportKey            String
-  languageCertificateKey String?
-  studyCertificateKey    String?
-
-  // Emergency Contact
-  emergencyContactName  String
-  emergencyContactPhone String
-
-  status ApplicationStatus? @default(USER_SUBMITTED)
-
-  userId String?
-  user   User?   @relation(fields: [userId], references: [id])
+  employeeId String?
+  employee   Employee?   @relation(fields: [employeeId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-
-  applicationStudent ApplicationStudent?
-}
-
-model ApplicationStudent {
-  id          String      @id
-  application Application @relation(fields: [id], references: [id])
-
-  university        String?
-  studySubject      String?
-  semesterBreakFrom DateTime?
-  semesterBreakTo   DateTime?
-
-  certificateOfEnrollmentKey String? // Only for STUDENT visa
 }

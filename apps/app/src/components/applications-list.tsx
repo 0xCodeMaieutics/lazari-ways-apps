@@ -166,7 +166,7 @@ export function ApplicationsList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">აპლიკაციები</CardTitle>
+        <CardTitle className="text-lg md:text-xl">Bewerbugen</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* New Application Section */}
@@ -175,28 +175,28 @@ export function ApplicationsList({
         hasStudentApplication ? null : (
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3">
-              დაიწყეთ ახალი აპლიკაცია
+              Beginnen Sie mit der Erstellung einer neuen Bewerbung
             </h3>
             <div className="grid gap-3 md:grid-cols-3">
               {!hasKKB8Application && (
                 <ApplicationTypeButton
-                  href="/applications?type=KKB8"
-                  label="KKB 8 თვე"
+                  href={`/applications?type=${ApplicationType.KKB8}`}
+                  label="KKB 8 Monaten"
                   description="Kurzzeitige kontingentierte Beschäftigung"
                 />
               )}
               {!hasKKB3Application && (
                 <ApplicationTypeButton
-                  href="/applications?type=KKB3"
-                  label="KKB 3 თვე"
+                  href={`/applications?type=${ApplicationType.KKB3}`}
+                  label="KKB 3 Monaten"
                   description="Kurzzeitige kontingentierte Beschäftigung"
                 />
               )}
               {!hasStudentApplication && (
                 <ApplicationTypeButton
-                  href="/applications?type=STUDENT"
-                  label="სტუდენტური ვიზა"
-                  description="სტუდენტურ ვიზაზე განაცხადის შეტანა"
+                  href={`/applications?type=${ApplicationType.STUDENT}`}
+                  label="Studentenvisum"
+                  description="Antrag auf ein Studentenvisum stellen"
                 />
               )}
             </div>
@@ -206,7 +206,7 @@ export function ApplicationsList({
         {/* Existing Applications */}
         <div>
           <h3 className="text-sm font-medium text-muted-foreground mb-3">
-            თქვენი აპლიკაციები
+            Ihre Bewerbungen
           </h3>
           {applications && applications.length > 0 ? (
             <div className="space-y-3">
@@ -220,9 +220,9 @@ export function ApplicationsList({
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <FileText className="h-12 w-12 mx-auto mb-2 opacity-50" />
-              <p>ჯერ არ არის განაცხადები</p>
+              <p>Keine Bewerbungen vorhanden</p>
               <p className="text-sm">
-                დაიწყეთ ზემოთ მოცემული ახალი აპლიკაციის შექმნით
+                Beginnen Sie mit der Erstellung einer neuen Bewerbung oben
               </p>
             </div>
           )}

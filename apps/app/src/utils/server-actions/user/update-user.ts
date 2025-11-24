@@ -17,10 +17,6 @@ export const updateUser = async ({
   userId: string;
   data: ProfileFormData;
 }) => {
-  console.log({
-    foto: data.foto,
-  });
-
   // Only upload new photo if provided
   let fileKey: string | undefined;
   if (data.foto) {
@@ -53,16 +49,23 @@ export const updateUser = async ({
     nationality: data.nationality,
     postalCode: data.postalCode,
     street: data.street,
-  } satisfies NonNullable<
-    NonNullable<UpdateUserInput["userInformation"]>["upsert"]
-  >["update"];
+    phone: "",
+    facebook: "",
+    instagram: "",
+    taxId: "",
+    fotoKey: fileKey ?? null,
+  } satisfies Omit<
+    NonNullable<NonNullable<UpdateUserInput["employee"]>["upsert"]>["create"],
+    "id"
+  >;
 
   const updateUserResult = await userQueries.updateUser(userId, {
     ...(fileKey && { image: fileKey }), // Only update image if new one was uploaded
-    userInformation: {
+    employee: {
       upsert: {
         create: {
           id,
+
           ...updateUserData,
         },
         update: updateUserData,

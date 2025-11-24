@@ -3,7 +3,6 @@ import { OnboardingPageClient } from "./page.client";
 import { auth } from "@workspace/server/auth";
 import { redirect } from "next/navigation";
 import { applicationQueries, userQueries } from "@workspace/server/db";
-import { Results } from "@workspace/shared/error-handling/result";
 
 export default async function OnboardingPage() {
   const session = await auth.api.getSession({
@@ -11,23 +10,26 @@ export default async function OnboardingPage() {
   });
   if (!session?.session || !session.user) redirect("/login");
 
-  const queryResult = await Results.allAsync([
-    applicationQueries.getApplications({
-      userId: session.user.id,
-    }),
-    userQueries.getUserProfileById(session.user.id),
-  ]);
+  const userResult = await userQueries.getUserProfileById(session.user.id);
 
-  if (queryResult.isErr()) throw queryResult.error;
+  if (userResult.isErr()) {
+    console.error(userResult.error);
+    redirect("/login");
+  }
 
-  const [applications, user] = queryResult.value;
-
+  const user = userResult.value;
   if (user === null) redirect("/login");
+
+  const applicationsResult = await applicationQueries.getApplications({
+    employeeId: user?.employee?.id,
+  });
+
+  if (applicationsResult.isErr()) throw applicationsResult.error;
 
   return (
     <OnboardingPageClient
       data={session}
-      applications={applications}
+      applications={applicationsResult.value}
       user={user}
     />
   );

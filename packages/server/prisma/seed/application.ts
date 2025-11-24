@@ -3,11 +3,11 @@ import { Prisma, $Enums } from "db/client";
 
 export const createApplications = ({
   applicationIds,
-  userIds,
+  employerIds,
   tx,
 }: {
   applicationIds: string[];
-  userIds: string[];
+  employerIds: string[];
   tx: Prisma.TransactionClient;
 }) =>
   Promise.all(
@@ -16,21 +16,13 @@ export const createApplications = ({
         data: {
           id: appId,
           type: $Enums.ApplicationType.STUDENT,
-          email: faker.internet.email(),
           status: faker.helpers.arrayElement(
             Object.values($Enums.ApplicationStatus)
           ),
-          agencyAddress: faker.location.streetAddress({ useFullAddress: true }),
-          phone: faker.phone.number(),
-          instagram: faker.internet.username(),
-          agencyName: faker.company.name(),
           emergencyContactPhone: faker.phone.number(),
           emergencyContactName: faker.person.fullName(),
-          fotoKey: "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/foto.png",
           passportKey:
             "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/passport.png",
-          hasBeenInCountryBefore: faker.datatype.boolean(),
-
           allergies:
             faker.helpers.maybe(() => faker.lorem.sentence(), {
               probability: 0.3,
@@ -85,15 +77,6 @@ export const createApplications = ({
             () => faker.number.int({ min: 35, max: 48 }).toString(),
             { probability: 0.8 }
           ),
-          taxId: faker.helpers.maybe(() => faker.string.alphanumeric(10), {
-            probability: 0.3,
-          }),
-          previousStayCountry: faker.helpers.maybe(
-            () => faker.location.country(),
-            {
-              probability: 0.3,
-            }
-          ),
           previousStayPlace: faker.helpers.maybe(() => faker.location.city(), {
             probability: 0.3,
           }),
@@ -112,41 +95,30 @@ export const createApplications = ({
               "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/study_certificate.png",
             { probability: 0.6 }
           ),
-          user: {
-            connect: {
-              id: userIds[index],
-            },
+          employee: {
+            connect: { id: employerIds[index] },
           },
-          applicationStudent: {
-            create: {
-              semesterBreakFrom: faker.helpers.maybe(
-                () => faker.date.future({ years: 1 }),
-                { probability: 0.6 }
-              ),
-              semesterBreakTo: faker.helpers.maybe(
-                () => faker.date.future({ years: 1 }),
-                { probability: 0.6 }
-              ),
-              university: faker.helpers.maybe(
-                () => faker.company.name() + " University",
-                { probability: 0.7 }
-              ),
-              studySubject: faker.helpers.maybe(
-                () =>
-                  faker.helpers.arrayElement([
-                    "Computer Science",
-                    "Business Administration",
-                    "Engineering",
-                    "Medicine",
-                    "Psychology",
-                    "Law",
-                    "Economics",
-                    "International Relations",
-                  ]),
-                { probability: 0.7 }
-              ),
-            },
-          },
+          hasBeenInGermanyBefore: faker.datatype.boolean(),
+          semesterBreakFrom: faker.helpers.maybe(
+            () => faker.date.future({ years: 1 }),
+            { probability: 0.4 }
+          ),
+          semesterBreakTo: faker.helpers.maybe(
+            () => faker.date.future({ years: 1 }),
+            { probability: 0.4 }
+          ),
+          studySubject: faker.helpers.maybe(() => faker.lorem.words(3), {
+            probability: 0.5,
+          }),
+          university: faker.helpers.maybe(
+            () => faker.company.name() + " University",
+            { probability: 0.5 }
+          ),
+          certificateOfEnrollmentKey: faker.helpers.maybe(
+            () =>
+              "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/certificate_of_enrollment.png",
+            { probability: 0.5 }
+          ),
         } satisfies Prisma.ApplicationCreateInput,
       })
     )

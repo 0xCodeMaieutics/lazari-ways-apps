@@ -9,12 +9,7 @@ export type ApplicationUpdateInput = Prisma.ApplicationUpdateInput;
 
 export type GetApplication = Prisma.ApplicationGetPayload<{
   include: {
-    user: {
-      include: {
-        userInformation: true;
-      };
-    };
-    applicationStudent: true;
+    employee: true;
   };
 }>;
 
@@ -22,9 +17,9 @@ export type GetApplicationByType = Prisma.ApplicationGetPayload<{}>;
 
 export type GetApplications = Prisma.ApplicationGetPayload<{
   include: {
-    user: {
+    employee: {
       include: {
-        userInformation: true;
+        user: true;
       };
     };
   };
@@ -39,12 +34,7 @@ export const applicationQueries = {
         prisma.application.findUnique({
           where: { id: applicationId },
           include: {
-            user: {
-              include: {
-                userInformation: true,
-              },
-            },
-            applicationStudent: true,
+            employee: true,
           },
         }) satisfies Promise<GetApplication | null>
     ),
@@ -68,9 +58,9 @@ export const applicationQueries = {
       () =>
         prisma.application.findMany({
           include: {
-            user: {
+            employee: {
               include: {
-                userInformation: true,
+                user: true,
               },
             },
           },

@@ -19,9 +19,8 @@ model User {
 
   sessions        Session[]
   accounts        Account[]
-  applications    Application[]
-  userSettings    UserSettings?
-  userInformation UserInformation?
+  settings        Settings?
+  employee        Employee?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
@@ -29,7 +28,7 @@ model User {
   @@unique([email])
 }
 
-model UserSettings {
+model Settings {
   id String @id
 
   theme String? @default("light")
@@ -48,19 +47,31 @@ enum Gender {
   DIVERSE
 }
 
-model UserInformation {
+model Employee {
   id           String    @id
-  firstName    String?
-  lastName     String?
-  gender       Gender?
-  nationality  String?
-  birthDate    DateTime?
-  birthPlace   String?
-  birthCountry String?
-  street       String?
-  postalCode   String?
-  country      String?
-  city         String?
+  firstName    String
+  lastName     String
+  phone        String
+  gender       Gender
+  nationality  String
+  birthDate    DateTime
+  birthPlace   String
+  birthCountry String
+  street       String
+  postalCode   String
+  country      String
+  city         String
+
+  // Taxes Information
+  taxId     String?
+
+  // Socials
+  facebook    String?
+  instagram   String?
+
+  applications    Application[]
+
+  fotoKey  String?
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id])

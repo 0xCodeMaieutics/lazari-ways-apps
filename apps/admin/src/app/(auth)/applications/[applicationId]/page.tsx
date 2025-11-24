@@ -29,6 +29,10 @@ const ApplicationDetailPage = async ({
     return String(value);
   };
 
+  const fullName = `${application?.employee?.firstName || ""} ${
+    application?.employee?.lastName || ""
+  }`.trim();
+
   return (
     <div className="py-10">
       <div className="flex justify-between">
@@ -45,9 +49,7 @@ const ApplicationDetailPage = async ({
       </div>
       <div className="space-y-6">
         <h1 className="text-2xl mt-4">
-          <span className="font-semibold">
-            {application?.user?.name}&apos;s
-          </span>{" "}
+          <span className="font-semibold">{fullName}&apos;s</span>{" "}
           Application{" "}
         </h1>
         <div className="space-y-4">
@@ -58,7 +60,7 @@ const ApplicationDetailPage = async ({
             <div key={key} className="flex flex-col gap-2 sm:gap-4 sm:flex-row">
               <span className="text-muted-foreground">{`${key}:`}</span>
               <span className="font-semibold">
-                {formatValue(application?.user?.name)}
+                {formatValue(application?.employee?.firstName)}
               </span>
             </div>
           ))}

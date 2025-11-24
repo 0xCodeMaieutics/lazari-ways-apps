@@ -64,10 +64,14 @@ void (async function () {
     const userIds = Array.from({ length: userCount }).map(() =>
       generateRandomString(32)
     );
+    const employerIds = Array.from({ length: userCount }).map(() =>
+      generateRandomString(32)
+    );
 
     await createUsers({
       tx,
       userIds,
+      employerIds,
     });
 
     console.log("📝 Creating applications with faker data...");
@@ -77,7 +81,7 @@ void (async function () {
 
     await createApplications({
       applicationIds,
-      userIds,
+      employerIds,
       tx,
     });
 

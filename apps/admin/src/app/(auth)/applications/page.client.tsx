@@ -35,30 +35,41 @@ export const DashboardTableContent = ({
     totalApplications,
   ]);
 
-  return applications.map((application) => (
-    <TableRow
-      onClick={() => {
-        router.push(`/${application.id}`);
-      }}
-      key={application.id}
-      className="h-14 cursor-pointer"
-    >
-      <TableCell className="font-semibold">{application.user?.name}</TableCell>
-      <TableCell className="font-semibold">{application.user?.email}</TableCell>
-      <TableCell className="font-semibold">
-        {/* @ts-ignore TODO: added to database */}
-        {application.user?.userInformation?.instagram || "-"}
-      </TableCell>
-      <TableCell className="font-semibold">{application.phone}</TableCell>
-      <TableCell className="font-semibold">
-        {/* {applicationTypeToLabel[application.type] || "-"} */}
-      </TableCell>
-      <TableCell onClick={(e) => e.stopPropagation()}>
-        <StatusSelect
-          applicationId={application.id}
-          currentStatus={application.status || ApplicationStatus.USER_SUBMITTED}
-        />
-      </TableCell>
-    </TableRow>
-  ));
+  return applications.map((application) => {
+    const fullName = `${application.employee?.firstName || ""} ${
+      application.employee?.lastName || ""
+    }`.trim();
+
+    return (
+      <TableRow
+        onClick={() => {
+          router.push(`/${application.id}`);
+        }}
+        key={application.id}
+        className="h-14 cursor-pointer"
+      >
+        <TableCell className="font-semibold">{fullName}</TableCell>
+        <TableCell className="font-semibold">
+          {application.employee?.user.email || "-"}
+        </TableCell>
+        <TableCell className="font-semibold">
+          {application.employee?.instagram || "-"}
+        </TableCell>
+        <TableCell className="font-semibold">
+          {application.employee?.phone}
+        </TableCell>
+        <TableCell className="font-semibold">
+          {/* {applicationTypeToLabel[application.type] || "-"} */}
+        </TableCell>
+        <TableCell onClick={(e) => e.stopPropagation()}>
+          <StatusSelect
+            applicationId={application.id}
+            currentStatus={
+              application.status || ApplicationStatus.USER_SUBMITTED
+            }
+          />
+        </TableCell>
+      </TableRow>
+    );
+  });
 };
