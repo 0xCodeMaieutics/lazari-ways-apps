@@ -1,6 +1,6 @@
 import { ApplicationForm } from "@/components/forms/application-form";
 import { auth } from "@workspace/server/auth";
-import { userQueries } from "@workspace/server/db";
+import { applicationQueries, userQueries } from "@workspace/server/db";
 import { ApplicationType } from "@workspace/server/db/models";
 import { Button } from "@workspace/ui/components/button";
 import { ArrowLeft } from "lucide-react";
@@ -22,14 +22,26 @@ export default async function ApplicationsPage({
 
   const userResult = await userQueries.getUserProfileById(session.user.id);
 
+  const foundApplication = await applicationQueries.getApplicationByType(
+    params.type as ApplicationType
+  );
+
+  if (foundApplication.isErr()) {
+    console.error(foundApplication.error);
+    throw new Error("Failed to fetch application.");
+  }
+  if (foundApplication.value !== null) {
+    redirect("/");
+  }
+
   if (userResult.isErr()) {
     console.error(userResult.error);
-    redirect("/login");
+    throw new Error("Failed to fetch application.");
   }
 
   const user = userResult.value;
   if (user === null) redirect("/login");
-  
+
   if (user.employee?.id === undefined) redirect("/login");
   return (
     <div className="w-full mx-auto max-w-7xl space-y-6 pt-10 pb-10 px-10">
