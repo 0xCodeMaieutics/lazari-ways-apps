@@ -8,8 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { Mail, Pencil, ArrowLeft } from "lucide-react";
-import { Session, User } from "@workspace/server/auth";
+import { Pencil, ArrowLeft } from "lucide-react";
 import { ApplicationsList } from "@/components/applications-list";
 import { GetApplications, GetUserProfile } from "@workspace/server/db";
 import { ProfileForm } from "@/components/forms/profile-form";
@@ -17,17 +16,13 @@ import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
 
 export function OnboardingPageClient({
-  data,
   applications,
   user,
 }: {
-  data: { session: Session; user: User };
   applications: GetApplications[];
   user: GetUserProfile;
 }) {
   const [isEditing, setIsEditing] = useState(false);
-
-  const { user: sessionUser } = data;
 
   const fullName = `${user.employee?.firstName ?? ""} ${
     user.employee?.lastName ?? ""

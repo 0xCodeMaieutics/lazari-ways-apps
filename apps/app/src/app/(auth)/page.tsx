@@ -27,10 +27,6 @@ export default async function OnboardingPage() {
   if (applicationsResult.isErr()) throw applicationsResult.error;
 
   return (
-    <OnboardingPageClient
-      data={session}
-      applications={applicationsResult.value}
-      user={user}
-    />
+    <OnboardingPageClient applications={applicationsResult.value} user={user} />
   );
 }

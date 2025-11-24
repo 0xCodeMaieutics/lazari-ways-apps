@@ -17,10 +17,11 @@ export const updateUser = async ({
   userId: string;
   data: ProfileFormData;
 }) => {
+  const employeeId = generateRandomString(32);
   // Only upload new photo if provided
   let fileKey: string | undefined;
   if (data.foto) {
-    fileKey = `profiles/${userId}/photo/${Date.now()}-${data.foto.name}`;
+    fileKey = `employees/${employeeId}/profiles/${userId}/photo/${Date.now()}-${data.foto.name}`;
     const uploadResult = await uploadFileToStorage({
       file: data.foto,
       bucket: env.S3_BUCKET_NAME,
@@ -34,8 +35,6 @@ export const updateUser = async ({
       };
     }
   }
-
-  const id = generateRandomString(32);
 
   const updateUserData = {
     firstName: data.firstName,
@@ -64,8 +63,7 @@ export const updateUser = async ({
     employee: {
       upsert: {
         create: {
-          id,
-
+          id: employeeId,
           ...updateUserData,
         },
         update: updateUserData,

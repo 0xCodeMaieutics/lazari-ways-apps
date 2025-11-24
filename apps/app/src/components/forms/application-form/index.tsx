@@ -43,7 +43,7 @@ export function ApplicationForm({
   const router = useRouter();
   const { data: session } = authClient.useSession.get();
 
-  const form = useForm<z.infer<typeof applicationFormSchema>>({
+  const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
       passport: undefined,
@@ -185,7 +185,7 @@ export function ApplicationForm({
       onSuccess: (result) => {
         result.match({
           ok: () => {
-            router.push("/?submitted=true");
+            router.push("/?submitted=true&type=" + type);
           },
           err: (error) => {
             toast.error(
@@ -204,7 +204,6 @@ export function ApplicationForm({
   }
 
   const isDirty = form.formState.isDirty;
-
   return (
     <div className="w-full">
       <h1 className="text-2xl font-bold mb-2">KKB Bewerbungsformular</h1>
@@ -766,7 +765,7 @@ export function ApplicationForm({
             variant="outline"
             disabled={isSubmitting}
             onClick={() => {
-              form.reset();
+              form.reset(form.getValues());
               const fileInputs =
                 document.querySelectorAll('input[type="file"]');
               fileInputs.forEach((input) => {

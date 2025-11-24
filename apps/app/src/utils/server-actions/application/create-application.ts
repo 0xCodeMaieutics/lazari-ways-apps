@@ -25,6 +25,10 @@ export const createApplication = async ({
   const keys: string[] = [];
   const contentTypes: string[] = [];
 
+  const now = Date.now();
+
+  const applicationId = generateRandomString(32);
+
   const buildDocumentKey = ({
     filename,
     type,
@@ -38,7 +42,7 @@ export const createApplication = async ({
       | "study-certificate"
       | "certificate-of-enrollment";
   }) =>
-    `applications/${employeeId}/${type}/documents/${docType}/${Date.now()}-${filename}`;
+    `employees/${employeeId}/applications/${applicationId}/${type}/documents/${docType}/${now}-${filename}`;
 
   if (data.passport) {
     const key = buildDocumentKey({
@@ -113,7 +117,7 @@ export const createApplication = async ({
     : "";
 
   const createdApplicationResult = await applicationQueries.createApplication({
-    id: generateRandomString(32),
+    id: applicationId,
     type,
     employee: {
       connect: {
