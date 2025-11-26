@@ -1,14 +1,21 @@
 "use server";
 
-import { applicationQueries, generateRandomString } from "@workspace/server/db";
+import {
+  applicationQueries,
+  CreateS3ObjectInput,
+  generateRandomString,
+  s3ObjectQueries,
+} from "@workspace/server/db";
 
-import { putObjects } from "@workspace/file-upload/s3-client";
-import { env } from "@/env";
 import { ApplicationFormData } from "@/utils/models/applications";
 import {
+  ApplicationDocument,
   ApplicationStatus,
   ApplicationType,
+  S3Object,
+  S3ObjectAcl,
 } from "@workspace/server/db/models";
+import { keyBuilders } from "@workspace/file-upload/key-builder";
 
 export const createApplication = async ({
   employeeId,
@@ -20,101 +27,69 @@ export const createApplication = async ({
   data: ApplicationFormData;
   type: ApplicationType;
 }) => {
-  // Prepare file uploads
-  const files: File[] = [];
-  const keys: string[] = [];
-  const contentTypes: string[] = [];
-
   const now = Date.now();
 
   const applicationId = generateRandomString(32);
 
-  const buildDocumentKey = ({
-    filename,
-    type,
-    docType,
-  }: {
-    type: ApplicationType;
-    filename: string;
-    docType:
-      | "passport"
-      | "language-certificate"
-      | "study-certificate"
-      | "certificate-of-enrollment";
-  }) =>
-    `employees/${employeeId}/applications/${applicationId}/${type}/documents/${docType}/${now}-${filename}`;
+  type Document = {
+    file: File;
+    contentType: string;
+    docType: ApplicationDocument;
+  };
 
-  if (data.passport) {
-    const key = buildDocumentKey({
-      filename: data.passport.name,
+  const documents = [
+    {
+      file: data.passport,
+      contentType: data.passport?.type,
+      docType: ApplicationDocument.PASSPORT,
+    },
+    {
+      file: data.languageCertificate,
+      contentType: data.languageCertificate?.type,
+      docType: ApplicationDocument.LANGUAGE_CERTIFICATE,
+    },
+    {
+      file: data.studyCertificate,
+      contentType: data.studyCertificate?.type,
+      docType: ApplicationDocument.STUDY_CERTIFICATE,
+    },
+    {
+      file: data.certificateOfEnrollment,
+      contentType: data.certificateOfEnrollment?.type,
+      docType: ApplicationDocument.CERTIFICATE_OF_ENROLLMENT,
+    },
+  ].filter(
+    (doc): doc is Document =>
+      doc.file !== undefined && doc.contentType !== undefined
+  );
+
+  const documentPaths = documents.map((doc) => {
+    return keyBuilders.employees.application.document.buildKey({
+      id: applicationId,
+      employeeId,
       type,
-      docType: "passport",
+      filename: doc.file.name,
+      docType: doc.docType,
+      now,
     });
-    files.push(data.passport);
-    keys.push(key);
-    contentTypes.push(data.passport.type);
+  });
+
+  const s3ObjectInputs = documents.map((doc, index) => ({
+    id: generateRandomString(32),
+    key: documentPaths[index]!,
+    type: S3Object.DOCUMENT,
+    acl: S3ObjectAcl.PRIVATE,
+  })) satisfies CreateS3ObjectInput[];
+
+  const s3ObjectCreateResult =
+    await s3ObjectQueries.createS3Objects(s3ObjectInputs);
+  if (s3ObjectCreateResult.isErr()) {
+    console.error(s3ObjectCreateResult.error);
+    return {
+      success: false,
+      message: "Failed to create S3 object records.",
+    };
   }
-
-  if (data.languageCertificate) {
-    const key = buildDocumentKey({
-      filename: data.languageCertificate.name,
-      type,
-      docType: "language-certificate",
-    });
-    files.push(data.languageCertificate);
-    keys.push(key);
-    contentTypes.push(data.languageCertificate.type);
-  }
-
-  if (data.certificateOfEnrollment) {
-    const key = buildDocumentKey({
-      filename: data.certificateOfEnrollment.name,
-      type,
-      docType: "certificate-of-enrollment",
-    });
-    files.push(data.certificateOfEnrollment);
-    keys.push(key);
-    contentTypes.push(data.certificateOfEnrollment.type);
-  }
-
-  if (data.studyCertificate) {
-    const key = buildDocumentKey({
-      filename: data.studyCertificate.name,
-      type,
-      docType: "study-certificate",
-    });
-    files.push(data.studyCertificate);
-    keys.push(key);
-    contentTypes.push(data.studyCertificate.type);
-  }
-
-  // Upload all files if any exist
-  if (files.length > 0) {
-    const uploadResult = await putObjects({
-      bodies: files,
-      bucketName: env.S3_BUCKET_NAME,
-      contentTypes: contentTypes,
-      keys: keys,
-    });
-
-    if (uploadResult.isErr()) {
-      console.error(uploadResult.error);
-      return {
-        success: false,
-        message: "Failed to upload application files.",
-      };
-    }
-  }
-
-  // Extract keys for database storage
-  let keyIndex = 0;
-  const passportKey = data.passport ? (keys[keyIndex++] ?? "") : "";
-  const languageCertificateKey = data.languageCertificate
-    ? (keys[keyIndex++] ?? "")
-    : "";
-  const studyCertificateKey = data.studyCertificate
-    ? (keys[keyIndex++] ?? "")
-    : "";
 
   const createdApplicationResult = await applicationQueries.createApplication({
     id: applicationId,
@@ -130,11 +105,16 @@ export const createApplication = async ({
     semesterBreakTo: data.semesterBreakTo
       ? new Date(data.semesterBreakTo)
       : undefined,
-    passportKey: passportKey,
-    certificateOfEnrollmentKey: "",
-    languageCertificateKey: languageCertificateKey,
+    documents: {
+      createMany: {
+        data: documents.map((input, index) => ({
+          id: generateRandomString(32),
+          type: input.docType,
+          s3ObjectId: s3ObjectInputs[index]!.id,
+        })),
+      },
+    },
     status: ApplicationStatus.USER_SUBMITTED,
-    studyCertificateKey: studyCertificateKey,
     studySubject: data.studySubject,
     university: data.university,
     allergies: data.allergies,

@@ -4,5 +4,10 @@ export {
   type ApplicationUpdateInput,
   type GetApplications,
   type GetApplication,
-  type ApplicationCreateInput
+  type ApplicationCreateInput,
 } from "./index.query.js";
+export {
+  ApplicationStatus,
+  ApplicationType,
+  ApplicationDocument,
+} from "./models.js";

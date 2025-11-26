@@ -1,0 +1,26 @@
+enum S3ObjectType {
+  IMAGE
+  DOCUMENT
+}
+
+enum S3ObjectAcl {
+  PRIVATE
+  PUBLIC_READ
+  PUBLIC_READ_WRITE
+}
+
+model S3Object {
+  id String @id
+
+  key  String
+  type S3ObjectType
+  acl  S3ObjectAcl
+
+  employeeId String?
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+
+  applicationDocument ApplicationDocument?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}

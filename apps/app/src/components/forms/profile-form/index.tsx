@@ -16,7 +16,7 @@ import {
 } from "@workspace/ui/components/field";
 import { Input } from "@workspace/ui/components/input";
 import { ProfileFormData, profileFormSchema } from "./schema";
-import { ArrowLeft, Save, X } from "lucide-react";
+import { Save, X } from "lucide-react";
 import { GetUserProfile } from "@workspace/server/db";
 import { Gender } from "@workspace/server/db/models";
 import { updateUser } from "@/utils/server-actions/user/update-user";
@@ -30,6 +30,14 @@ import {
 import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/file-upload";
 import { format } from "date-fns";
+
+/**
+ * Form is missing the following fields
+ * TODO: phone
+ * TODO: instagram
+ * TODO: facebook
+ * TODO: taxIs (move this to application)
+ */
 
 export function ProfileForm({
   userInformation,

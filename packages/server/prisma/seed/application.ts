@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
+import { generateRandomString } from "better-auth/crypto";
 import { Prisma, $Enums } from "db/client";
 
-export const createApplications = ({
+export const createApplications = async ({
   applicationIds,
   employerIds,
   tx,
@@ -9,10 +10,57 @@ export const createApplications = ({
   applicationIds: string[];
   employerIds: string[];
   tx: Prisma.TransactionClient;
-}) =>
-  Promise.all(
-    applicationIds.map((appId, index) =>
-      tx.application.create({
+}) => {
+  const allS3Objects: Array<{
+    id: string;
+    key: string;
+    type: $Enums.S3ObjectType;
+    acl: $Enums.S3ObjectAcl;
+  }> = [];
+
+  const applicationDocumentsMap = new Map<
+    string,
+    Array<{
+      id: string;
+      key: string;
+      type: $Enums.ApplicationDocumentType;
+      s3ObjectId: string;
+      s3DocType: $Enums.S3ObjectType;
+    }>
+  >();
+
+  applicationIds.forEach((appId) => {
+    const applicationDocuments = Object.entries(
+      $Enums.ApplicationDocumentType
+    ).map(([_, value]) => ({
+      id: generateRandomString(32),
+      key: faker.string.uuid(),
+      type: value,
+      s3ObjectId: generateRandomString(32),
+      s3DocType: $Enums.S3ObjectType.DOCUMENT,
+    }));
+
+    applicationDocumentsMap.set(appId, applicationDocuments);
+
+    allS3Objects.push(
+      ...applicationDocuments.map((doc) => ({
+        id: doc.s3ObjectId,
+        key: doc.key,
+        type: doc.s3DocType,
+        acl: $Enums.S3ObjectAcl.PRIVATE,
+      }))
+    );
+  });
+
+  await tx.s3Object.createMany({
+    data: allS3Objects,
+  });
+
+  return Promise.all(
+    applicationIds.map((appId, index) => {
+      const applicationDocuments = applicationDocumentsMap.get(appId)!;
+
+      return tx.application.create({
         data: {
           id: appId,
           type: $Enums.ApplicationType.STUDENT,
@@ -21,8 +69,6 @@ export const createApplications = ({
           ),
           emergencyContactPhone: faker.phone.number(),
           emergencyContactName: faker.person.fullName(),
-          passportKey:
-            "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/passport.png",
           allergies:
             faker.helpers.maybe(() => faker.lorem.sentence(), {
               probability: 0.3,
@@ -88,13 +134,6 @@ export const createApplications = ({
             () => faker.date.past({ years: 3 }),
             { probability: 0.3 }
           ),
-          languageCertificateKey:
-            "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/language_certificate.png",
-          studyCertificateKey: faker.helpers.maybe(
-            () =>
-              "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/study_certificate.png",
-            { probability: 0.6 }
-          ),
           employee: {
             connect: { id: employerIds[index] },
           },
@@ -114,12 +153,17 @@ export const createApplications = ({
             () => faker.company.name() + " University",
             { probability: 0.5 }
           ),
-          certificateOfEnrollmentKey: faker.helpers.maybe(
-            () =>
-              "applications/YyVNlWI8H2CiH6X5-TKO9hGFV3Of1eJV/certificate_of_enrollment.png",
-            { probability: 0.5 }
-          ),
+          documents: {
+            createMany: {
+              data: applicationDocuments.map((doc) => ({
+                id: doc.id,
+                type: doc.type,
+                s3ObjectId: doc.s3ObjectId,
+              })),
+            },
+          },
         } satisfies Prisma.ApplicationCreateInput,
-      })
-    )
+      });
+    })
   );
+};

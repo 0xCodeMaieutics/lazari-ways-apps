@@ -26,13 +26,8 @@ model Application {
   // Only applies if type is STUDENT
   university        String?
   studySubject      String?
-  semesterBreakFrom DateTime? 
-  semesterBreakTo   DateTime? 
-  studyCertificateKey    String?
-  certificateOfEnrollmentKey String?
-
-  passportKey            String
-  languageCertificateKey String?
+  semesterBreakFrom DateTime?
+  semesterBreakTo   DateTime?
 
   germanLevel        String?
   otherLanguages     String?
@@ -45,16 +40,37 @@ model Application {
   shoeSize           String?
 
   hasBeenInGermanyBefore Boolean?
-  previousStayPlace   String?
+  previousStayPlace      String?
   previousStayPeriodFrom DateTime?
   previousStayPeriodTo   DateTime?
-  
+
   emergencyContactName  String?
   emergencyContactPhone String?
 
   employeeId String?
-  employee   Employee?   @relation(fields: [employeeId], references: [id])
+  employee   Employee? @relation(fields: [employeeId], references: [id])
+
+  documents ApplicationDocument[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+}
+
+enum ApplicationDocumentType {
+  PASSPORT
+  STUDY_CERTIFICATE
+  CERTIFICATE_OF_ENROLLMENT
+  LANGUAGE_CERTIFICATE
+}
+
+model ApplicationDocument {
+  id String @id
+
+  type ApplicationDocumentType
+
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+
+  s3ObjectId String?   @unique // if unique one-to-one relation; if no unique then one-to-many
+  s3Object   S3Object? @relation(fields: [s3ObjectId], references: [id])
 }

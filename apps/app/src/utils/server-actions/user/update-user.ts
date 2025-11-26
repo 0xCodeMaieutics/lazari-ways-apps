@@ -8,7 +8,9 @@ import {
 } from "@workspace/server/db";
 
 import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
+import { keyBuilders } from "@workspace/file-upload/key-builder";
 import { env } from "@/env";
+import { S3Object, S3ObjectAcl } from "@workspace/server/db/models";
 
 export const updateUser = async ({
   userId,
@@ -18,10 +20,16 @@ export const updateUser = async ({
   data: ProfileFormData;
 }) => {
   const employeeId = generateRandomString(32);
+  const now = Date.now();
   // Only upload new photo if provided
   let fileKey: string | undefined;
   if (data.foto) {
-    fileKey = `employees/${employeeId}/profiles/${userId}/photo/${Date.now()}-${data.foto.name}`;
+    fileKey = keyBuilders.employees.photo.buildKey({
+      employeeId,
+      filename: data.foto.name,
+      now,
+    });
+
     const uploadResult = await uploadFileToStorage({
       file: data.foto,
       bucket: env.S3_BUCKET_NAME,
@@ -48,11 +56,21 @@ export const updateUser = async ({
     nationality: data.nationality,
     postalCode: data.postalCode,
     street: data.street,
+    // TODO: missing these
     phone: "",
     facebook: "",
     instagram: "",
     taxId: "",
-    fotoKey: fileKey ?? null,
+    ...(fileKey && {
+      fotos: {
+        create: {
+          id: generateRandomString(32),
+          acl: S3ObjectAcl.PRIVATE,
+          key: fileKey,
+          type: S3Object.IMAGE,
+        },
+      },
+    }),
   } satisfies Omit<
     NonNullable<NonNullable<UpdateUserInput["employee"]>["upsert"]>["create"],
     "id"
