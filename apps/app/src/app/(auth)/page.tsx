@@ -15,27 +15,46 @@ export default async function OnboardingPage({
     headers: await headers(),
   });
 
-  if (!session?.session || !session.user)
-    redirect(
+  if (!session?.session || !session.user) {
+    console.error("SESSION_NOT_FOUND");
+    return redirect(
       "/login?" +
-        new URLSearchParams(params as Record<string, string>).toString()
+        new URLSearchParams({
+          vacancyId: params.vacancyId as string,
+        }).toString()
     );
+  }
 
   const userResult = await userQueries.getUserProfileById(session.user.id);
 
   if (userResult.isErr()) {
-    console.error(userResult.error);
-    redirect("/login");
+    console.error("USER_ERROR:", userResult.error);
+    throw new Error("INTERNAL_SERVER_ERROR", {
+      cause: userResult.error.cause,
+    });
   }
 
   const user = userResult.value;
-  if (user === null) redirect("/login");
+  if (user === null) {
+    console.error("USER_NOT_FOUND");
+    return redirect(
+      "/login?" +
+        new URLSearchParams({
+          vacancyId: params.vacancyId as string,
+        }).toString()
+    );
+  }
 
   const applicationsResult = await applicationQueries.getApplications({
     employeeId: user?.employee?.id,
   });
 
-  if (applicationsResult.isErr()) throw applicationsResult.error;
+  if (applicationsResult.isErr()) {
+    console.error("APPLICATIONS ERROR:", applicationsResult.error);
+    throw new Error("INTERNAL_SERVER_ERROR", {
+      cause: applicationsResult.error.cause,
+    });
+  }
 
   return (
     <OnboardingPageClient applications={applicationsResult.value} user={user} />
