@@ -31,8 +31,8 @@ export const Header = () => {
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <div className="relative" ref={logoRef}>
           <LogoAndText />
-          <span className="absolute -bottom-0.5 -right-6 font-semibold text-muted-foreground text-xs">
-            ადმინისტრატორებისთვის
+          <span className="absolute -bottom-0.5 left-13.5 font-semibold text-muted-foreground text-xs">
+            Für Administratoren
           </span>
         </div>
         <nav className="flex-1 flex justify-center gap-3">
@@ -47,7 +47,7 @@ export const Header = () => {
             asChild
           >
             <Link href={"/vacancies"}>
-              ვაკანსიები
+              Stellenanzeigen
               <Underline />
             </Link>
           </Button>
@@ -61,8 +61,8 @@ export const Header = () => {
             variant={"link"}
             asChild
           >
-            <Link href={"/applications"}>
-              კანდიდატები
+            <Link href="/applications">
+              Kandidaten
               <Underline />
             </Link>
           </Button>

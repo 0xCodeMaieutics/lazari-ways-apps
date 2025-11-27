@@ -79,10 +79,10 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              ვაკანსიის დეტალები
+              Stellenanzeigendetails
             </h1>
             <p className="text-muted-foreground mt-1">
-              ვაკანსიის ID:{" "}
+              Stellenanzeigen-ID:{" "}
               <span className="font-semibold">{vacancy.vacancyId}</span>
             </p>
           </div>
@@ -91,14 +91,16 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
             size="lg"
             disabled={updateMutation.isPending || !hasFormChanged}
           >
-            {updateMutation.isPending ? "Saving..." : "Save Changes"}
+            {updateMutation.isPending
+              ? "Wird gespeichert..."
+              : "Änderungen speichern"}
           </Button>
         </div>
 
         {/* Basic Information Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            ძირითადი ინფორმაცია
+            Grundlegende Informationen
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Controller
@@ -106,11 +108,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="title">Job Title *</Label>
+                  <Label htmlFor="title">Stellenbezeichnung *</Label>
                   <Input
                     {...field}
                     id="title"
-                    placeholder="e.g., Bäcker"
+                    placeholder="z.B. Bäcker"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -125,11 +127,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="location">ლოკაცია *</Label>
+                  <Label htmlFor="location">Standort *</Label>
                   <Input
                     {...field}
                     id="location"
-                    placeholder="e.g., Nähe Berlin, Germany"
+                    placeholder="z.B. in der Nähe von Berlin, Deutschland"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -144,11 +146,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="beginDate">დაწყების თარიღი *</Label>
+                  <Label htmlFor="beginDate">Startdatum *</Label>
                   <Input
                     {...field}
                     id="beginDate"
-                    placeholder="e.g., January 2025"
+                    placeholder="z.B. Januar 2025"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -163,11 +165,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="duration">ხანგრძლივობა *</Label>
+                  <Label htmlFor="duration">Dauer *</Label>
                   <Input
                     {...field}
                     id="duration"
-                    placeholder="e.g., 6 months"
+                    placeholder="z.B. 6 Monate"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -182,11 +184,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="salary">ხელფასი *</Label>
+                  <Label htmlFor="salary">Gehalt *</Label>
                   <Input
                     {...field}
                     id="salary"
-                    placeholder="e.g., 1200 EUR/month"
+                    placeholder="z.B. 1200 EUR/Monat"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -201,11 +203,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="schedule">გრაფიკი *</Label>
+                  <Label htmlFor="schedule">Arbeitszeit *</Label>
                   <Textarea
                     {...field}
                     id="schedule"
-                    placeholder="e.g., 40-50 hours/week"
+                    placeholder="z.B. 40-50 Stunden/Woche"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -220,18 +222,18 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
         {/* Job Description Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            სამუშაო აღწერა
+            Stellenbeschreibung
           </h2>
           <Controller
             name="jobDescription"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Label htmlFor="jobDescription">აღწერა *</Label>
+                <Label htmlFor="jobDescription">Tätigkeitsbeschreibung *</Label>
                 <Textarea
                   {...field}
                   id="jobDescription"
-                  placeholder="დეტალური სამუშაო აღწერა..."
+                  placeholder="Detaillierte Stellenbeschreibung..."
                   className="mt-2 min-h-[150px]"
                 />
                 {fieldState.invalid && (
@@ -245,7 +247,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
         {/* Benefits & Conditions Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            სარგებელი და პირობები
+            Leistungen und Bedingungen
           </h2>
           <div className="space-y-6">
             <Controller
@@ -253,11 +255,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="accommodation">საცხოვრებელი *</Label>
+                  <Label htmlFor="accommodation">Unterkunft *</Label>
                   <Textarea
                     {...field}
                     id="accommodation"
-                    placeholder="e.g., Unterkunft wird gestellt"
+                    placeholder="z.B. Unterkunft wird gestellt"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -272,11 +274,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="meals">კვება *</Label>
+                  <Label htmlFor="meals">Verpflegung *</Label>
                   <Textarea
                     {...field}
                     id="meals"
-                    placeholder="e.g., Mahlzeiten werden gestellt"
+                    placeholder="z.B. Verpflegung wird bereitgestellt"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -291,7 +293,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
         {/* Requirements Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            მოთხოვნები და დამატებითი ინფორმაცია
+            Anforderungen und zusätzliche Informationen
           </h2>
           <div className="space-y-6">
             <Controller
@@ -299,12 +301,12 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="availableTo">მიმართვა (არასავალდებულო)</Label>
+                  <Label htmlFor="availableTo">Zielgruppe (optional)</Label>
                   <Input
                     {...field}
                     value={field.value ?? ""}
                     id="availableTo"
-                    placeholder="e.g., მხოლოდ ქალბატონებისთვის"
+                    placeholder="z.B. nur für Damen"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -319,14 +321,12 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="languageLevel">
-                    ენის დონე (არასავალდებულო)
-                  </Label>
+                  <Label htmlFor="languageLevel">Sprachniveau (optional)</Label>
                   <Input
                     {...field}
                     value={field.value ?? ""}
                     id="languageLevel"
-                    placeholder="e.g., Grundkenntnisse in Deutsch"
+                    placeholder="z.B. Grundkenntnisse Deutsch"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -342,13 +342,13 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <Label htmlFor="additionalInfo">
-                    დამატებითი ინფორმაცია (არასავალდებულო)
+                    Zusätzliche Informationen (optional)
                   </Label>
                   <Textarea
                     {...field}
                     value={field.value ?? ""}
                     id="additionalInfo"
-                    placeholder="Any other relevant information..."
+                    placeholder="Weitere relevante Informationen..."
                     className="mt-2 min-h-[100px]"
                   />
                   {fieldState.invalid && (
@@ -363,7 +363,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
         {/* Visibility Settings */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            ხილვადობის პარამეტრები
+            Sichtbarkeitseinstellungen
           </h2>
           <Controller
             name="hide"
@@ -372,10 +372,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <Label htmlFor="hide" className="text-base">
-                    ვაკანსიის დამალვა
+                    Stellenanzeige ausblenden
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    როდესაც ჩართულია, ეს ვაკანსია საჯარო ხედვიდან დაიმალება
+                    Wenn aktiviert, wird diese Stellenanzeige in der
+                    öffentlichen Ansicht ausgeblendet
                   </p>
                 </div>
                 <Switch
@@ -390,14 +391,14 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
 
         {/* Media Section (Read-only for now) */}
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">მედია</h2>
+          <h2 className="text-xl font-semibold mb-6 text-foreground">Medien</h2>
           <div className="space-y-4">
             <div>
-              <Label className="text-base">ფოტოები</Label>
+              <Label className="text-base">Fotos</Label>
               <p className="text-sm text-muted-foreground mt-1">
                 {vacancy.photos.length > 0
-                  ? `${vacancy.photos.length} photo(s) uploaded`
-                  : "No photos uploaded"}
+                  ? `${vacancy.photos.length} Foto(s) hochgeladen`
+                  : "Keine Fotos hochgeladen"}
               </p>
               {vacancy.photos.length > 0 && (
                 <div className="mt-2 text-xs text-muted-foreground">
@@ -406,11 +407,11 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
               )}
             </div>
             <div>
-              <Label className="text-base">ვიდეოები</Label>
+              <Label className="text-base">Videos</Label>
               <p className="text-sm text-muted-foreground mt-1">
                 {vacancy.videos.length > 0
-                  ? `${vacancy.videos.length} video(s) uploaded`
-                  : "No videos uploaded"}
+                  ? `${vacancy.videos.length} Video(s) hochgeladen`
+                  : "Keine Videos hochgeladen"}
               </p>
               {vacancy.videos.length > 0 && (
                 <div className="mt-2 text-xs text-muted-foreground">
@@ -426,7 +427,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
       <div className="mt-8 pt-6 border-t pb-10">
         <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
           <div>
-            <span className="font-medium">შექმნილია:</span>{" "}
+            <span className="font-medium">Erstellt am:</span>{" "}
             {format(new Date(vacancy.createdAt), "dd MMMM yyyy", {
               locale: ka,
             })}

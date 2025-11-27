@@ -22,10 +22,10 @@ export const dynamic = "force-dynamic";
 
 const TABLE_HEADERS = [
   "Name",
-  "Email",
+  "E-Mail",
   "Instagram",
-  "Phone",
-  "Visa type",
+  "Telefon",
+  "Visumstyp",
   "Status",
 ];
 
@@ -107,10 +107,10 @@ export default async function DashboardPage({
   return (
     <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">აპლიკაციები</h1>
+        <h1 className="text-2xl font-bold">Bewerbungen</h1>
         <div>
           <SearchInput
-            placeholder="Name, instagram, email, phone..."
+            placeholder="Name, Instagram, E-Mail, Telefon..."
             defaultValue={search}
           />
         </div>
@@ -135,7 +135,7 @@ export default async function DashboardPage({
                     className="text-center text-muted-foreground"
                   >
                     <LoaderCircle className="mr-2 inline-block size-4 animate-spin" />
-                    იტვირთება...
+                    Lädt...
                   </TableCell>
                 </TableRow>
               }

@@ -21,12 +21,12 @@ import Link from "next/link";
 export const dynamic = "force-dynamic";
 
 const TABLE_HEADERS = [
-  "ვაკანსიის #ID",
-  "სათაური",
-  "ლოკაცია",
-  "ხელფასი",
-  "დაწყების თარიღი",
-  "დამალვა",
+  "Stellenanzeigen #ID",
+  "Titel",
+  "Standort",
+  "Gehalt",
+  "Startdatum",
+  "Ausblenden",
 ];
 
 const DEFAULT_PAGE = "1";
@@ -118,15 +118,18 @@ export default async function DashboardPage({
     <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold">ვაკანსიები</h1>
+          <h1 className="text-2xl font-bold">Stellenanzeigen</h1>
           {isVacanciesEmpty === false && (
             <div>
-              <SearchInput placeholder="Vacancy ID" defaultValue={search} />
+              <SearchInput
+                placeholder="Stellenanzeigen ID"
+                defaultValue={search}
+              />
             </div>
           )}
         </div>
         <Button asChild className="cursor-pointer">
-          <Link href={"/vacancies/new"}>ახალის შექმნა</Link>
+          <Link href={"/vacancies/new"}>Neu erstellen</Link>
         </Button>
       </div>
       <div className="space-y-2">
@@ -149,7 +152,7 @@ export default async function DashboardPage({
                     className="text-center text-muted-foreground"
                   >
                     <LoaderCircle className="mr-2 inline-block size-4 animate-spin" />
-                    Loading...
+                    Lädt...
                   </TableCell>
                 </TableRow>
               }
@@ -160,7 +163,7 @@ export default async function DashboardPage({
                     colSpan={TABLE_HEADERS.length}
                     className="text-center h-20 text-muted-foreground"
                   >
-                    ვაკანსიების მონაცემები ჯერ არ არის.
+                    Keine Stellenanzeigen vorhanden.
                   </TableCell>
                 </TableRow>
               ) : (

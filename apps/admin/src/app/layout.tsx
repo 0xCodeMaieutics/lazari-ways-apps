@@ -3,9 +3,9 @@ import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
 
 export const metadata = {
-  title: "ადმინისტრატორის დაფა - Lazari Ways",
+  title: "Administrator-Dashboard - Lazari Ways",
   description:
-    "ადმინისტრაციული პანელი განაცხადებისა და ვაკანსიების მართვისთვის",
+    "Verwaltungspanel zur Verwaltung von Bewerbungen und Stellenanzeigen",
 };
 
 export default function RootLayout({

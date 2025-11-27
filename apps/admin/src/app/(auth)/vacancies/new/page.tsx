@@ -26,50 +26,46 @@ export default function VacanciesNewPage() {
     defaultValues: {
       title:
         process.env.NODE_ENV === "development"
-          ? "მუშაობა სათბურში და მინდორში"
+          ? "Arbeit im Gewächshaus und auf dem Feld"
           : "",
       location:
-        process.env.NODE_ENV === "development" ? "დრეზდენის მახლობლად" : "",
+        process.env.NODE_ENV === "development" ? "In der Nähe von Dresden" : "",
       photo: undefined,
-      beginDate: process.env.NODE_ENV === "development" ? "მაისი" : "",
-      duration: process.env.NODE_ENV === "development" ? "3 თვე" : "",
+      beginDate: process.env.NODE_ENV === "development" ? "Mai" : "",
+      duration: process.env.NODE_ENV === "development" ? "3 Monate" : "",
       salary:
-        process.env.NODE_ENV === "development" ? "13,90 €/საათში ბრუტო" : "",
+        process.env.NODE_ENV === "development" ? "13,90 €/Stunde brutto" : "",
       jobDescription:
         process.env.NODE_ENV === "development"
-          ? `- სათბურში და მინდორში ჟოლოების, მაყვლის, კენკრისა და სხვა ხილის შეგროვება;
-- მცენარეების დარგვა სათბურში
-- მოყვანილი ბალახის ამოღება;
-- შემოდგომაზე საწარმოში გატეხილი ვაშლისა და არონიას შეგროვება;
-- და სხვა დამხმარე სამუშაოები საწარმოში`
+          ? `- Ernte von Erdbeeren, Himbeeren, Johannisbeeren und anderen Früchten im Gewächshaus und auf dem Feld;
+- Pflanzen von Pflanzen im Gewächshaus
+- Unkraut entfernen;
+- Im Herbst Sammeln von gepflückten Äpfeln und Aronia im Betrieb;
+- und andere Hilfsarbeiten im Betrieb`
           : "",
       schedule:
         process.env.NODE_ENV === "development"
-          ? `- 48 საათი/კვირაში და მეტი
-- დღეში 8 - 10 საათი
-- 45 წთ შესვენება
-- კვირაში 1 გამოსავალი.`
+          ? `- 48 Stunden/Woche und mehr
+- 8 - 10 Stunden täglich
+- 45 Min. Pause
+- 1 freier Tag pro Woche.`
           : "",
       accommodation:
         process.env.NODE_ENV === "development"
-          ? `მიწოდებულია საცხოვრებელი კონტეინერები ან სახლები – 13 ევრო/დღეში ერთ ადამიანზე, 4 - 8 ადამიანი ერთ ოთახში.
-არსებული კომფორტი: თბილი წყალი, გათბობა, ინტერნეტი.
-საძინებელი: მატრასიანი საწოლი, ბალიშები, გადასაფარებელი, თეთრეული, ტანსაცმლის კარადა.
-სამზარეულო: ქურა, მაცივარი, საჭმლის ხელსაწყოები, ჭურჭელი.
-სააბაზანო: საშხაპე კაბინა.`
+          ? `Unterkunft in Containern oder Häusern – 13 Euro/Tag pro Person, 4 - 8 Personen pro Zimmer.
+Vorhandener Komfort: Warmwasser, Heizung, Internet.
+Schlafzimmer: Bett mit Matratze, Kissen, Decke, Bettwäsche, Kleiderschrank.
+Küche: Herd, Kühlschrank, Kochgeschirr, Geschirr.
+Badezimmer: Duschkabine.`
           : "",
-      meals: process.env.NODE_ENV === "development" ? "საკუთარი ხარჯით." : "",
+      meals: process.env.NODE_ENV === "development" ? "Auf eigene Kosten." : "",
       availableTo:
-        process.env.NODE_ENV === "development"
-          ? "ქალბატონები და მამაკაცები"
-          : "",
+        process.env.NODE_ENV === "development" ? "Damen und Herren" : "",
       languageLevel:
-        process.env.NODE_ENV === "development"
-          ? "Grundkenntnisse Deutsch-ში"
-          : "",
+        process.env.NODE_ENV === "development" ? "Grundkenntnisse Deutsch" : "",
       additionalInfo:
         process.env.NODE_ENV === "development"
-          ? `დამსაქმებელი უზრუნველყოფს სამუშაო ფეხსაცმელს, მაგრამ საჭიროა თან ჰქონდეთ ნებისმიერი ამინდისთვის შესაბამისი ტანსაცმელი და საკუთარი კომფორტული ფეხსაცმელი. ხელფასი გაიცემა გადარიცხვით ან ნაღდად მომდევნო თვის 20 რიცხვში. ხელფასის ოდენობა შეიძლება იცვალოს გამომუშავებულ საათებზე დაყრდნობით. საათში სასანთლოს, მაყვლისა და ჟოლოების მოსაწყვილებლად საჭიროა 4 - 5 ყუთი. საწარმოში არსებობს ნორმები, რომლებიც უნდა შესრულდეს. ყურადღება! დასაქმების ვადა შეიძლება გაიზარდოს ან შემცირდეს მოსავლისა და ამინდის პირობების მიხედვით. ცალკე იხდის მგზავრობის ხარჯი და სადაზღვევო პოლისი.**`
+          ? `Der Arbeitgeber stellt Arbeitsschuhe zur Verfügung, aber Sie sollten wettergerechte Kleidung und bequemes eigenes Schuhwerk mitbringen. Das Gehalt wird per Überweisung oder bar am 20. des Folgemonats ausgezahlt. Die Gehaltshöhe kann je nach geleisteten Arbeitsstunden variieren. Pro Stunde müssen 4 - 5 Kisten Erdbeeren, Himbeeren und Johannisbeeren gepflückt werden. Es gibt im Betrieb Normen, die erfüllt werden müssen. Achtung! Die Beschäftigungsdauer kann je nach Ernte und Wetterbedingungen verlängert oder verkürzt werden. Reisekosten und Versicherungspolice werden separat bezahlt.**`
           : "",
       hide: false,
       photos: [],
@@ -81,7 +77,9 @@ export default function VacanciesNewPage() {
     mutationFn: createVacancy,
     onSuccess: ({ isSuccess, id: createdVacancyid }) => {
       if (isSuccess) return router.push(`/vacancies/${createdVacancyid}`);
-      toast.error("Failed to create vacancy. Please try again.");
+      toast.error(
+        "Fehler beim Erstellen der Stellenanzeige. Bitte versuchen Sie es erneut."
+      );
     },
   });
 
@@ -95,23 +93,19 @@ export default function VacanciesNewPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-foreground">
-              ახალი ვაკანსიის შექმნა
+              Neue Stellenanzeige erstellen
             </h1>
             <p className="text-muted-foreground mt-1">
-              შეავსეთ ყველა სავალდებულო ველი ვაკანსიის შესაქმნელად
+              Füllen Sie alle erforderlichen Felder aus, um eine Stellenanzeige
+              zu erstellen
             </p>
           </div>
-          <Button type="submit" size="lg" disabled={createMutation.isPending}>
-            {createMutation.isPending
-              ? "მიმდინარეობს შექმნა..."
-              : "ვაკანსიის შექმნა"}
-          </Button>
         </div>
 
         {/* Basic Information Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            ძირითადი ინფორმაცია
+            Grundlegende Informationen
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Controller
@@ -119,11 +113,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="title">Job Title *</Label>
+                  <Label htmlFor="title">Stellenbezeichnung *</Label>
                   <Input
                     {...field}
                     id="title"
-                    placeholder="მაგ., მცხობელი"
+                    placeholder="z.B. Koch"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -138,11 +132,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="location">ლოკაცია *</Label>
+                  <Label htmlFor="location">Standort *</Label>
                   <Input
                     {...field}
                     id="location"
-                    placeholder="მაგ., ბერლინთან ახლოს"
+                    placeholder="z.B. in der Nähe von Berlin"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -157,11 +151,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="beginDate">დაწყების თარიღი *</Label>
+                  <Label htmlFor="beginDate">Startdatum *</Label>
                   <Input
                     {...field}
                     id="beginDate"
-                    placeholder="მაგ., 2025 წლის იანვარი"
+                    placeholder="z.B. Januar 2025"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -176,11 +170,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="duration">ხანგრძლივობა *</Label>
+                  <Label htmlFor="duration">Dauer *</Label>
                   <Input
                     {...field}
                     id="duration"
-                    placeholder="მაგ., 6 თვე"
+                    placeholder="z.B. 6 Monate"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -195,11 +189,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="salary">ხელფასი *</Label>
+                  <Label htmlFor="salary">Gehalt *</Label>
                   <Input
                     {...field}
                     id="salary"
-                    placeholder="მაგ., 1200 EUR/თვე"
+                    placeholder="z.B. 1200 EUR/Monat"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -214,16 +208,15 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="schedule">გრაფიკი *</Label>
+                  <Label htmlFor="schedule">Arbeitszeit *</Label>
                   <Textarea
                     {...field}
                     id="schedule"
-                    placeholder={`მაგ.,
--48 საათი/კვირაში და მეტი
--დღეში 8
-- 10 საათი
--45 წთ შესვენება
--კვირაში 1 გამოსავალი.`}
+                    placeholder={`z.B.
+-48 Stunden/Woche und mehr
+-8-10 Stunden täglich
+-45 Min. Pause
+-1 freier Tag pro Woche.`}
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -238,23 +231,23 @@ export default function VacanciesNewPage() {
         {/* Job Description Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            სამუშაო აღწერა
+            Stellenbeschreibung
           </h2>
           <Controller
             name="jobDescription"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <Label htmlFor="jobDescription">სამუშაოს არსი *</Label>
+                <Label htmlFor="jobDescription">Tätigkeitsbeschreibung *</Label>
                 <Textarea
                   {...field}
                   id="jobDescription"
-                  placeholder={`მაგ.,
--სათბურში და მინდორში ჟოლოების, მაყვლის, კენკრისა და სხვა ხილის შეგროვება
--მცენარეების დარგვა სათბურში
--მოყვანილი ბალახის ამოღება
--შემოდგომაზე საწარმოში გატეხილი ვაშლისა და არონიას შეგროვება
--და სხვა დამხმარე სამუშაოები საწარმოში.`}
+                  placeholder={`z.B.
+-Ernte von Erdbeeren, Himbeeren, Johannisbeeren und anderen Früchten im Gewächshaus und auf dem Feld
+-Pflanzen von Pflanzen im Gewächshaus
+-Unkraut entfernen
+-Im Herbst Sammeln von Äpfeln und Aronia im Betrieb
+-und andere Hilfsarbeiten im Betrieb.`}
                   className="mt-2 min-h-[150px]"
                 />
                 {fieldState.invalid && (
@@ -268,7 +261,7 @@ export default function VacanciesNewPage() {
         {/* Benefits & Conditions Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            სარგებელი და პირობები
+            Leistungen und Bedingungen
           </h2>
           <div className="space-y-6">
             <Controller
@@ -276,11 +269,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="accommodation">საცხოვრებელი *</Label>
+                  <Label htmlFor="accommodation">Unterkunft *</Label>
                   <Textarea
                     {...field}
                     id="accommodation"
-                    placeholder="მაგ., საცხოვრებელი ჩვენთან ჯესტელტად არის"
+                    placeholder="z.B. Unterkunft wird gestellt"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -295,11 +288,11 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="meals">კვება *</Label>
+                  <Label htmlFor="meals">Verpflegung *</Label>
                   <Textarea
                     {...field}
                     id="meals"
-                    placeholder="მაგ., კვება უზრუნველყოფილია"
+                    placeholder="z.B. Verpflegung wird bereitgestellt"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -314,7 +307,7 @@ export default function VacanciesNewPage() {
         {/* Requirements Section */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            მოთხოვნები და დამატებითი ინფორმაცია
+            Anforderungen und zusätzliche Informationen
           </h2>
           <div className="space-y-6">
             <Controller
@@ -322,12 +315,12 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="availableTo">მიმართვა (არასავალდებულო)</Label>
+                  <Label htmlFor="availableTo">Zielgruppe (optional)</Label>
                   <Input
                     {...field}
                     value={field.value ?? ""}
                     id="availableTo"
-                    placeholder="მაგ., მხოლოდ ქალბატონებისთვის"
+                    placeholder="z.B. nur für Damen"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -342,14 +335,12 @@ export default function VacanciesNewPage() {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <Label htmlFor="languageLevel">
-                    ენის დონე (არასავალდებულო)
-                  </Label>
+                  <Label htmlFor="languageLevel">Sprachniveau (optional)</Label>
                   <Input
                     {...field}
                     value={field.value ?? ""}
                     id="languageLevel"
-                    placeholder="მაგ., Grundkenntnisse Deutsch-ში"
+                    placeholder="z.B. Grundkenntnisse Deutsch"
                     className="mt-2"
                   />
                   {fieldState.invalid && (
@@ -365,13 +356,13 @@ export default function VacanciesNewPage() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <Label htmlFor="additionalInfo">
-                    დამატებითი ინფორმაცია (არასავალდებულო)
+                    Zusätzliche Informationen (optional)
                   </Label>
                   <Textarea
                     {...field}
                     value={field.value ?? ""}
                     id="additionalInfo"
-                    placeholder="Any other relevant information..."
+                    placeholder="Weitere relevante Informationen..."
                     className="mt-2 min-h-[100px]"
                   />
                   {fieldState.invalid && (
@@ -386,7 +377,7 @@ export default function VacanciesNewPage() {
         {/* Visibility Settings */}
         <Card className="p-6">
           <h2 className="text-xl font-semibold mb-6 text-foreground">
-            ხილვადობის პარამეტრები
+            Sichtbarkeitseinstellungen
           </h2>
           <Controller
             name="hide"
@@ -395,10 +386,11 @@ export default function VacanciesNewPage() {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <Label htmlFor="hide" className="text-base">
-                    ვაკანსიის დამალვა
+                    Stellenanzeige ausblenden
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    როდესაც ჩართულია, ეს ვაკანსია საჯარო ხედვიდან დაიმალება
+                    Wenn aktiviert, wird diese Stellenanzeige in der
+                    öffentlichen Ansicht ausgeblendet
                   </p>
                 </div>
                 <Switch
@@ -412,15 +404,15 @@ export default function VacanciesNewPage() {
         </Card>
 
         <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6 text-foreground">მედია</h2>
+          <h2 className="text-xl font-semibold mb-6 text-foreground">Medien</h2>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label className="text-base">ფოტო *</Label>
+              <Label className="text-base">Foto *</Label>
 
               {form.watch("photo") ? (
                 <div className="h-12 flex items-center justify-between border border-dashed px-2 rounded-xl text-sm mt-1">
                   <span className="text-green-600">
-                    ფაილი წარმატებით აიტვირთა.
+                    Datei erfolgreich hochgeladen.
                     {form.getValues("photo")?.name}
                   </span>
                   <Button
@@ -436,7 +428,7 @@ export default function VacanciesNewPage() {
                 </div>
               ) : (
                 <FileUpload
-                  placeholder="ფაილი აირჩიეთ"
+                  placeholder="Datei auswählen"
                   accept=".png,.jpg,.jpeg"
                   onChange={(file) => {
                     if (file === null) return;
@@ -452,22 +444,32 @@ export default function VacanciesNewPage() {
               )}
             </div>
             <div className="space-y-2">
-              <Label className="text-base">ფოტოები (არასავალდებულო)</Label>
+              <Label className="text-base">Fotos (optional)</Label>
               <FileUpload
-                placeholder="ფაილი აირჩიეთ"
+                placeholder="Datei auswählen"
                 accept=".png,.jpg,.jpeg"
                 multiple
               />
             </div>
             <div className="space-y-4">
-              <Label className="text-base">ვიდეოები (არასავალდებულო)</Label>
+              <Label className="text-base">Videos (optional)</Label>
               <FileUpload
-                placeholder="ფაილი აირჩიეთ"
+                placeholder="Datei auswählen"
                 accept=".video/*"
                 multiple
               />
             </div>
           </div>
+          <Button
+            className="ml-auto"
+            type="submit"
+            size="lg"
+            disabled={createMutation.isPending}
+          >
+            {createMutation.isPending
+              ? "Wird erstellt..."
+              : "Stellenanzeige erstellen"}
+          </Button>
         </Card>
 
         <div className="pb-10" />
