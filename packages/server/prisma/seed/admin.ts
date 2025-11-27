@@ -67,7 +67,7 @@ const confirmWithYes = () => {
 if (import.meta.url === `file://${process.argv[1]}`) {
   void (async function () {
     /**
-     * RUN: pnpm dotenv -e .env -- pnpm db:seed:admin --email=admin@lazariways.com --password=#AdminIsCool2025@!
+     * RUN: pnpm dotenv -e .env -- pnpm db:seed:admin --email=admin@lazariways.eu --password=#AdminIsCool2025@!
      */
 
     const envZod = z.object({
