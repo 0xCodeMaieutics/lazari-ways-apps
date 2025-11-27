@@ -20,13 +20,12 @@ import { Input } from "@workspace/ui/components/input";
 import { FileUpload } from "@/components/file-upload";
 import { Textarea } from "@workspace/ui/components/textarea";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ApplicationFormData,
   applicationFormSchema,
 } from "@/utils/models/applications";
 import { ApplicationType } from "@workspace/server/db/models";
-import { authClient } from "@workspace/server/auth/client";
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { err } from "@workspace/shared/error-handling/result";
 import { Result, ok } from "@workspace/shared/error-handling/result";
@@ -41,7 +40,7 @@ export function ApplicationForm({
   employeeId: string;
 }) {
   const router = useRouter();
-  const { data: session } = authClient.useSession.get();
+  const searchParams = useSearchParams();
 
   const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
@@ -150,9 +149,17 @@ export function ApplicationForm({
       ApplicationFormData
     >({
       mutationFn: async (data) => {
-        if (session?.user.id === undefined)
+        const vacancyId = searchParams.get("vacancyId");
+
+        if (vacancyId === null) {
           return err({
-            type: "Unauthorized",
+            type: "INVALID_VACANCY_ID",
+            message: "Vacancy ID is missing in the URL parameters.",
+          });
+        }
+        if (employeeId === undefined)
+          return err({
+            type: "UNAUTHENTICATED_USER",
             message: "User is not authenticated",
           });
 
@@ -161,6 +168,7 @@ export function ApplicationForm({
             data,
             type,
             employeeId,
+            vacancyId,
           })
         );
         if (applicationResponseResult.isErr()) {
@@ -185,7 +193,15 @@ export function ApplicationForm({
       onSuccess: (result) => {
         result.match({
           ok: () => {
-            router.push("/?submitted=true&type=" + type);
+            router.push(
+              "/?" +
+                new URLSearchParams({
+                  vacancyId: searchParams.get("vacancyId") ?? "",
+                  success: "true",
+                  success_message: "Bewerbung erfolgreich eingereicht",
+                  type,
+                }).toString()
+            );
           },
           err: (error) => {
             toast.error(

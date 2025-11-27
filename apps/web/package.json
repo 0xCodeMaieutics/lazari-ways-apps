@@ -19,6 +19,7 @@
     "@workspace/server": "workspace:*",
     "@workspace/shared": "workspace:*",
     "@workspace/ui": "workspace:*",
+    "@workspace/file-upload": "workspace:*",
     "accept-language": "^3.0.20",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

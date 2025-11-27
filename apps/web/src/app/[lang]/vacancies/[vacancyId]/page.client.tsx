@@ -16,7 +16,6 @@ import {
   Home,
   UtensilsCrossed,
   Info,
-  ImageIcon,
   VideoIcon,
   Copy,
   Star,
@@ -39,12 +38,12 @@ import {
 } from "@workspace/ui/components/card";
 import { useParams } from "next/navigation";
 import { CTASection } from "@/components/cta-section";
-import { Vacancy } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { useMemo, useState } from "react";
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { createWhatsappUrl } from "../../constants";
+import { GetVacancy } from "@workspace/server/db";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -52,7 +51,7 @@ export const VacancyClientPage = ({
   data,
   translations,
 }: {
-  data: Vacancy;
+  data: GetVacancy;
   translations: Translations;
 }) => {
   const { lang } = useParams();
@@ -60,7 +59,9 @@ export const VacancyClientPage = ({
   const [selectedMedia, setSelectedMedia] = useState<{
     type: "photo" | "video";
     url: string;
-  } | null>(data.photos?.[0] ? { type: "photo", url: data.photos[0] } : null);
+  } | null>(
+    data.photos?.[0] ? { type: "photo", url: data.photos[0].key } : null
+  );
 
   const vacancyIdWithPrefix = useMemo(
     () => `${VACANCY_ID_PREFIX}${data.vacancyId}`,
@@ -372,59 +373,6 @@ export const VacancyClientPage = ({
                 )}
 
                 {/* Media Thumbnails */}
-                {((data.photos?.length ?? 0) > 0 ||
-                  (data.videos?.length ?? 0) > 0) && (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-sm font-semibold">
-                      <ImageIcon className="size-4" />
-                      <span>
-                        გალერეა (
-                        {(data.photos?.length ?? 0) +
-                          (data.videos?.length ?? 0)}
-                        )
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-4 gap-3">
-                      {data.photos?.map((photo, idx) => (
-                        <button
-                          key={`photo-${idx}`}
-                          onClick={() =>
-                            setSelectedMedia({ type: "photo", url: photo })
-                          }
-                          className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 ${
-                            selectedMedia?.url === photo
-                              ? "border-primary ring-2 ring-primary/50"
-                              : "border-border"
-                          }`}
-                        >
-                          <Image
-                            src={photo}
-                            alt={`${data.title} ${idx + 1}`}
-                            fill
-                            className="object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors" />
-                        </button>
-                      ))}
-                      {data.videos?.map((video, idx) => (
-                        <button
-                          key={`video-${idx}`}
-                          onClick={() =>
-                            setSelectedMedia({ type: "video", url: video })
-                          }
-                          className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 bg-black flex items-center justify-center ${
-                            selectedMedia?.url === video
-                              ? "border-primary ring-2 ring-primary/50"
-                              : "border-border"
-                          }`}
-                        >
-                          <VideoIcon className="size-8 text-white" />
-                          <div className="absolute inset-0 bg-black/40 hover:bg-black/20 transition-colors" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 {/* Placeholder if no media */}
                 {!selectedMedia &&
@@ -439,6 +387,59 @@ export const VacancyClientPage = ({
                   )}
               </div>
             </div>
+          </div>
+        </section>
+
+        <section className="px-6 py-16 md:py-24 bg-secondary/30">
+          <div className="max-w-7xl mx-auto">
+            {((data.photos?.length ?? 0) > 0 ||
+              (data.videos?.length ?? 0) > 0) && (
+              <div className="space-y-10">
+                <h2 className="text-3xl md:text-4xl font-bold">
+                  გალერეა (
+                  {(data.photos?.length ?? 0) + (data.videos?.length ?? 0)})
+                </h2>
+                <div className="grid grid-cols-4 gap-3">
+                  {data.photos?.map((photo, idx) => (
+                    <button
+                      key={`photo-${idx}`}
+                      onClick={() =>
+                        setSelectedMedia({ type: "photo", url: photo.key })
+                      }
+                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 ${
+                        selectedMedia?.url === photo.key
+                          ? "border-primary ring-2 ring-primary/50"
+                          : "border-border"
+                      }`}
+                    >
+                      <Image
+                        src={photo.key}
+                        alt={`${data.title} ${idx + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors" />
+                    </button>
+                  ))}
+                  {data.videos?.map((video, idx) => (
+                    <button
+                      key={`video-${idx}`}
+                      onClick={() =>
+                        setSelectedMedia({ type: "video", url: video.key })
+                      }
+                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 bg-black flex items-center justify-center ${
+                        selectedMedia?.url === video.key
+                          ? "border-primary ring-2 ring-primary/50"
+                          : "border-border"
+                      }`}
+                    >
+                      <VideoIcon className="size-8 text-white" />
+                      <div className="absolute inset-0 bg-black/40 hover:bg-black/20 transition-colors" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </section>
 

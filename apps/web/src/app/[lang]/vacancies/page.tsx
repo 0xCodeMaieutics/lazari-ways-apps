@@ -5,6 +5,7 @@ import { Locale } from "@/i18n";
 import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
 import { Results } from "@workspace/shared/error-handling/result";
 import { DeviceType } from "@/middleware";
+import {  } from '@workspace/file-upload/s3-client'
 
 const DEFAULT_PAGE = "1";
 const getPaginationSearchParams = (searchParams: URLSearchParams) => {

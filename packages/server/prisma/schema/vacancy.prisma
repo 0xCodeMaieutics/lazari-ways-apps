@@ -1,34 +1,40 @@
 model Vacancy {
-  id             String   @id @default(cuid())
-  vacancyId      Int      @unique // Special ID for the vacancy
-  title          String // Bäcker
-  location       String // Nähe Berlin, Germany
-  photoKey       String?
-  beginDate      String
-  duration       String // 6 months
-  salary         String // 1200 EUR/month
-  jobDescription String // Description of the job
-  schedule       String // 40-50 საათი/კვირა; 9-10 საათი/დღე; 1 დღე/დასვენება
-  accommodation  String // Unterkunft wird gestellt
-  meals          String // Mahlzeiten werden gestellt
-  availableTo    String? // მხოლოდ ქალბატონებისთვის
-  languageLevel  String? // Grundkenntnisse in Deutsch
-  additionalInfo String? //  Additional information
-  hide           Boolean? @default(false)
-  photos         String[]
-  videos         String[]
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                         String            @id
+  vacancyId                  Int               @unique // Special ID for the vacancy
+  acceptableApplicationTypes ApplicationType[] @default([]) // e.g., ["STUDENT", "WORKER"]
+  title                      String // Bäcker
+  location                   String // Nähe Berlin, Germany
+  photo                      S3Object?         @relation(name: "VacancyPhoto")
+  beginDate                  String
+  duration                   String // 6 months
+  salary                     String // 1200 EUR/month
+  jobDescription             String // Description of the job
+  schedule                   String // 40-50 საათი/კვირა; 9-10 საათი/დღე; 1 დღე/დასვენება
+  accommodation              String // Unterkunft wird gestellt
+  meals                      String // Mahlzeiten werden gestellt
+  availableTo                String? // მხოლოდ ქალბატონებისთვის
+  languageLevel              String? // Grundkenntnisse in Deutsch
+  additionalInfo             String? //  Additional information
+  hide                       Boolean?          @default(false)
+  photos                     S3Object[]        @relation(name: "VacancyPhotos")
+  videos                     S3Object[]        @relation(name: "VacancyVideos")
+  createdAt                  DateTime          @default(now())
+  updatedAt                  DateTime          @updatedAt
 
-  reviews Review[]
+  reviews      VacancyReview[]
+  applications Application[]
 }
 
-model Review {
-  id        String   @id @default(cuid())
+model VacancyReview {
+  id        String   @id
   name      String
   review    String
   instagram String?
-  vacancyId String
-  vacancy   Vacancy  @relation(fields: [vacancyId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
+
+  imageId String?   @unique
+  image   S3Object? @relation(fields: [imageId], references: [id])
+
+  vacancyId String?
+  vacancy   Vacancy? @relation(fields: [vacancyId], references: [id])
 }

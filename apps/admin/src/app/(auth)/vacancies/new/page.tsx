@@ -17,32 +17,12 @@ import { useRouter } from "next/navigation";
 import { createVacancy } from "@/utils/server-actions/vacancy/create-vacancy";
 import { FileUpload } from "@/components/file-upload";
 import { X } from "lucide-react";
-
-const vacancyFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  location: z.string().min(1, "Location is required"),
-  photo: z.instanceof(File),
-  beginDate: z.string().min(1, "Begin date is required"),
-  duration: z.string().min(1, "Duration is required"),
-  salary: z.string().min(1, "Salary is required"),
-  jobDescription: z.string().min(1, "Job description is required"),
-  schedule: z.string().min(1, "Schedule is required"),
-  accommodation: z.string().min(1, "Accommodation information is required"),
-  meals: z.string().min(1, "Meals information is required"),
-  availableTo: z.string().nullable().optional(),
-  languageLevel: z.string().nullable().optional(),
-  additionalInfo: z.string().nullable().optional(),
-  hide: z.boolean().nullable().optional(),
-  photos: z.array(z.string()).optional(),
-  videos: z.array(z.string()).optional(),
-});
-
-type VacancyFormData = z.infer<typeof vacancyFormSchema>;
+import { NewVacancyFormData, newVacancyFormSchema } from "./schema";
 
 export default function VacanciesNewPage() {
   const router = useRouter();
   const form = useForm({
-    resolver: zodResolver(vacancyFormSchema),
+    resolver: zodResolver(newVacancyFormSchema),
     defaultValues: {
       title:
         process.env.NODE_ENV === "development"
@@ -98,15 +78,14 @@ export default function VacanciesNewPage() {
   });
 
   const createMutation = useMutation({
-    mutationFn: ({ photo, ...data }: VacancyFormData) =>
-      createVacancy({ data, photo }),
+    mutationFn: createVacancy,
     onSuccess: ({ isSuccess, id: createdVacancyid }) => {
       if (isSuccess) return router.push(`/vacancies/${createdVacancyid}`);
       toast.error("Failed to create vacancy. Please try again.");
     },
   });
 
-  const onSubmit = (data: VacancyFormData) => {
+  const onSubmit = (data: NewVacancyFormData) => {
     createMutation.mutate(data);
   };
 

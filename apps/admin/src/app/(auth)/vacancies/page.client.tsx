@@ -1,11 +1,11 @@
 "use client";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
-import { Vacancy } from "@workspace/server/db";
+import { GetVacancies } from "@workspace/server/db";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Switch } from "@workspace/ui/components/switch";
-import { updateVacancy } from "@/utils/server-actions/vacancy/update-vacancy";
 import { toast } from "sonner";
+import { updateVacancyHide } from "@/utils/server-actions/vacancy/update-vacancy-hide";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -15,7 +15,7 @@ export const VacanciesTableContent = ({
   currentPage,
   pageSize,
 }: {
-  vacanacies: Vacancy[];
+  vacanacies: GetVacancies[];
   totalVacancies: number;
   currentPage: number;
   pageSize: number;
@@ -57,10 +57,8 @@ export const VacanciesTableContent = ({
         <Switch
           checked={vacancy.hide ?? false}
           onCheckedChange={async () => {
-            const result = await updateVacancy({
-              data: {
-                hide: !(vacancy.hide ?? false),
-              },
+            const result = await updateVacancyHide({
+              hide: !(vacancy.hide ?? false),
               id: vacancy.id,
             });
             if (!result.isSuccess) toast("Error occurred updating result");

@@ -1,6 +1,7 @@
 export {
   vacancyQueries,
-  type Vacancy,
+  type GetVacancies,
+  type GetVacancy,
   type VacancyWhereInput,
   type VacancyUpdateInput,
   type VacancyCreateInput,

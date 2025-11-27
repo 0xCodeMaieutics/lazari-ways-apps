@@ -1,7 +1,7 @@
 import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
-
-export default function RootLayout({
+import { Toaster } from "sonner";
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -10,6 +10,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={"antialiased"}>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );

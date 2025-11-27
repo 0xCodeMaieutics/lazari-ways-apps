@@ -1,6 +1,7 @@
 enum S3ObjectType {
   IMAGE
   DOCUMENT
+  VIDEO
 }
 
 enum S3ObjectAcl {
@@ -19,7 +20,17 @@ model S3Object {
   employeeId String?
   employee   Employee? @relation(fields: [employeeId], references: [id])
 
+  vacancyPhotoId String?
+  vacancyPhoto   Vacancy? @relation(name: "VacancyPhotos", fields: [vacancyPhotoId], references: [id])
+
+  vacancyVideoId String?
+  vacancyVideo   Vacancy? @relation(name: "VacancyVideos", fields: [vacancyVideoId], references: [id])
+
   applicationDocument ApplicationDocument?
+  vacancyId           String?              @unique
+  vacancy             Vacancy?             @relation("VacancyPhoto", fields: [vacancyId], references: [id])
+
+  vacancyReview VacancyReview?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

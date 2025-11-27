@@ -4,11 +4,22 @@ import { auth } from "@workspace/server/auth";
 import { redirect } from "next/navigation";
 import { applicationQueries, userQueries } from "@workspace/server/db";
 
-export default async function OnboardingPage() {
+export default async function OnboardingPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [x: string]: string | string[] | undefined }>;
+}) {
+  const params = await searchParams;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.session || !session.user) redirect("/login");
+
+  if (!session?.session || !session.user)
+    redirect(
+      "/login?" +
+        new URLSearchParams(params as Record<string, string>).toString()
+    );
 
   const userResult = await userQueries.getUserProfileById(session.user.id);
 

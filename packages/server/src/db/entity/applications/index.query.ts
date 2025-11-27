@@ -38,11 +38,17 @@ export const applicationQueries = {
           },
         }) satisfies Promise<GetApplication | null>
     ),
-  getApplicationByType: (type: ApplicationType) =>
+  getEmployeeApplicationByType: ({
+    employeeId,
+    type,
+  }: {
+    employeeId: string;
+    type: ApplicationType;
+  }) =>
     tryCatchAsync(
       () =>
         prisma.application.findFirst({
-          where: { type },
+          where: { employeeId, type },
         }) satisfies Promise<GetApplicationByType | null>
     ),
   getApplications: (

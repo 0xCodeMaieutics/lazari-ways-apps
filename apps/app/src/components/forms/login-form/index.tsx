@@ -14,11 +14,13 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { authClient } from "@workspace/server/auth/client";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 const DEV_EMAIL = "applicant@lazaryways.eu";
 const DEV_PASSWORD = "#ApplicantIsCool2025!";
 
 export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
+  const searchParams = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(loginType === "signup");
 
   const signUpMutation = useMutation<
@@ -63,7 +65,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
       return result;
     },
     onSuccess: () => {
-      window.location.href = "/";
+      window.location.href = "/?" + searchParams.toString();
     },
     onError: (error) => {
       toast.error(error.message);

@@ -1,6 +1,6 @@
 "use client";
 
-import { Vacancy } from "@workspace/server/db";
+import { GetVacancy } from "@workspace/server/db";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -14,34 +14,14 @@ import { Label } from "@workspace/ui/components/label";
 import { Card } from "@workspace/ui/components/card";
 
 import { updateVacancy } from "@/utils/server-actions/vacancy/update-vacancy";
-import z from "zod";
 import { Button } from "@workspace/ui/components/button";
 import { useRouter } from "next/navigation";
 
 import { format } from "date-fns";
 import { ka } from "date-fns/locale";
+import { VacancyFormData, vacancyFormSchema } from "./schema";
 
-const vacancyFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  location: z.string().min(1, "Location is required"),
-  beginDate: z.string().min(1, "Begin date is required"),
-  duration: z.string().min(1, "Duration is required"),
-  salary: z.string().min(1, "Salary is required"),
-  jobDescription: z.string().min(1, "Job description is required"),
-  schedule: z.string().min(1, "Schedule is required"),
-  accommodation: z.string().min(1, "Accommodation information is required"),
-  meals: z.string().min(1, "Meals information is required"),
-  availableTo: z.string().nullable().optional(),
-  languageLevel: z.string().nullable().optional(),
-  additionalInfo: z.string().nullable().optional(),
-  hide: z.boolean().nullable().optional(),
-  photos: z.array(z.string()).optional(),
-  videos: z.array(z.string()).optional(),
-});
-
-type VacancyFormData = z.infer<typeof vacancyFormSchema>;
-
-export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
+export const VacancyProfile = ({ vacancy }: { vacancy: GetVacancy }) => {
   const router = useRouter();
   const form = useForm({
     resolver: zodResolver(vacancyFormSchema),
@@ -59,8 +39,8 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
       languageLevel: vacancy.languageLevel ?? null,
       additionalInfo: vacancy.additionalInfo ?? null,
       hide: vacancy.hide ?? false,
-      photos: vacancy.photos ?? [],
-      videos: vacancy.videos ?? [],
+      photos: vacancy.photos.map((photo) => photo.key) || [],
+      videos: vacancy.videos.map((video) => video.key) || [],
     },
   });
 
@@ -68,12 +48,7 @@ export const VacancyProfile = ({ vacancy }: { vacancy: Vacancy }) => {
     mutationFn: async (data: VacancyFormData) => {
       const result = await updateVacancy({
         id: vacancy.id,
-        data: {
-          ...data,
-          availableTo: data.availableTo || null,
-          languageLevel: data.languageLevel || null,
-          additionalInfo: data.additionalInfo || null,
-        },
+        data,
       });
 
       if (!result.isSuccess) {

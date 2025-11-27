@@ -12,15 +12,14 @@ import {
   Briefcase,
   MapPin,
   Clock,
-  ImageIcon,
-  VideoIcon,
   LanguagesIcon,
   CheckCircle2,
   Copy,
+  ExternalLink,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Vacancy } from "@workspace/server/db";
+import { GetVacancies } from "@workspace/server/db";
 import { Badge } from "@workspace/ui/components/badge";
 import { translationsContext } from "@/lib/context/translations";
 import { Translations } from "@/i18n/translations";
@@ -30,10 +29,17 @@ import { useState } from "react";
 import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { sleep } from "@/utils/sleep";
+import { LogoAndText } from "../text-logo";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
-const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
+const VacancyCard = ({
+  vacancy,
+  lang,
+}: {
+  vacancy: GetVacancies;
+  lang: string;
+}) => {
   const [copied, setCopied] = useState(false);
   const vacancyIdWithPrefix = `${VACANCY_ID_PREFIX}${vacancy.vacancyId}`;
   const handleCopyVacancyId = async () => {
@@ -51,17 +57,14 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
     });
   };
 
-  const firstPhoto = vacancy.photos?.[0];
-  const hasMedia = vacancy.photos?.length > 0 || vacancy.videos?.length > 0;
-
   return (
     <Card className="group py-0 flex flex-col h-full overflow-hidden border-2">
       {/* Image Header with Overlays */}
       <div className="relative w-full h-[280px] overflow-hidden bg-linear-to-br from-primary/10 to-primary/5">
-        {firstPhoto ? (
+        {vacancy.photo ? (
           <>
             <Image
-              src={firstPhoto}
+              src={vacancy.photo.key}
               alt={vacancy.title}
               fill={true}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -71,7 +74,7 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
           </>
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <Briefcase className="size-24 text-primary/20" />
+            <LogoAndText lang="ka" />
           </div>
         )}
 
@@ -92,36 +95,17 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
           )}
           <span>{vacancyIdWithPrefix}</span>
         </Badge>
-
-        {hasMedia && (
-          <div className="absolute bottom-4 left-4 flex gap-2">
-            {vacancy.photos?.length > 0 && (
-              <Badge className="h-8 flex items-center gap-1.5 px-3 bg-background/95 backdrop-blur-sm">
-                <ImageIcon className="size-3.5" />
-                <span className="text-xs font-semibold">
-                  {vacancy.photos.length}
-                </span>
-              </Badge>
-            )}
-            {vacancy.videos?.length > 0 && (
-              <Badge className="h-8 flex items-center gap-1.5 px-3 bg-background/95 backdrop-blur-sm">
-                <VideoIcon className="size-3.5" />
-                <span className="text-xs font-semibold">
-                  {vacancy.videos.length}
-                </span>
-              </Badge>
-            )}
-          </div>
-        )}
       </div>
 
-      <CardHeader className="space-y-4 pb-4">
+      <CardHeader className="space-y-4">
         <div className="space-y-2">
           <CardTitle className="text-2xl font-bold leading-tight transition-colors">
             {vacancy.title}
           </CardTitle>
         </div>
+      </CardHeader>
 
+      <CardContent className="pt-0 pb-6 mt-auto space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
             <Clock className="size-5 text-foreground shrink-0 mt-0.5" />
@@ -152,9 +136,6 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
             <p className="font-bold text-sm">{vacancy.languageLevel}</p>
           </div>
         </div>
-      </CardHeader>
-
-      <CardContent className="pt-0 pb-6 mt-auto">
         <Button
           className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
           size="lg"
@@ -164,6 +145,17 @@ const VacancyCard = ({ vacancy, lang }: { vacancy: Vacancy; lang: string }) => {
             დეტალურად ნახვა
             <ArrowRight className="size-5 ml-2-x-1 transition-transform" />
           </Link>
+        </Button>
+        <Button
+          className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
+          size="lg"
+          variant={"outline"}
+          asChild
+        >
+          <a href={`http://localhost:3001?vacancyId=${vacancy.id}`}>
+            განაცხადის გაკეთება
+            <ExternalLink className="size-5 ml-2-x-1 transition-transform" />
+          </a>
         </Button>
       </CardContent>
     </Card>
@@ -177,7 +169,7 @@ export const VacanciesListingClient = ({
   currentPage,
   pageSize,
 }: {
-  vacancies: Vacancy[];
+  vacancies: GetVacancies[];
   translations: Translations;
   vacanciesTotal: number;
   currentPage: number;

@@ -18,9 +18,9 @@ enum ApplicationType {
 }
 
 model Application {
-  id   String          @id
-  type ApplicationType
+  id String @id
 
+  type   ApplicationType
   status ApplicationStatus? @default(USER_SUBMITTED)
 
   // Only applies if type is STUDENT
@@ -49,6 +49,9 @@ model Application {
 
   employeeId String?
   employee   Employee? @relation(fields: [employeeId], references: [id])
+
+  vacancyId String?
+  vacancy   Vacancy? @relation(fields: [vacancyId], references: [id])
 
   documents ApplicationDocument[]
 

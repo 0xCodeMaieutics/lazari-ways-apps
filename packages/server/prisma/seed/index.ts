@@ -6,7 +6,7 @@ import { createApplications } from "./application.js";
 import { createUsers } from "./user.js";
 import z from "zod";
 import { auth } from "../../src/auth/auth.js";
-import { Prisma } from "db/client.js";
+import { $Enums, ApplicationType, Prisma } from "db/client.js";
 import {
   getSignedUrlForDownload,
   uploadFilePathToStorage,
@@ -14,6 +14,7 @@ import {
 import path from "path";
 import { prisma } from "../../src/db/client.js";
 import { encrypt } from "../../src/utils/encrypt.js";
+import { faker } from "@faker-js/faker";
 
 void (async function () {
   console.log("✅ Existing data cleared!");
@@ -101,10 +102,10 @@ void (async function () {
       process.exit(1);
     }
 
-    const fileKey = "vacancies/hotels.webp";
+    const vacancyPhotoFileKey = "vacancies/hotels.webp";
     const uploadResult = await uploadFilePathToStorage({
       bucket: s3Env.value.S3_BUCKET_NAME,
-      fileKey: fileKey,
+      fileKey: vacancyPhotoFileKey,
       filePath: path.resolve(import.meta.dirname, "hotels.webp"),
       ACL: "public-read",
     });
@@ -117,28 +118,36 @@ void (async function () {
       process.exit(1);
     }
 
-    const signedUrl = await getSignedUrlForDownload({
+    const vacancySignedUrl = await getSignedUrlForDownload({
       bucket: s3Env.value.S3_BUCKET_NAME,
-      fileKey,
+      fileKey: vacancyPhotoFileKey,
       expiresInSeconds: 100 * 60 * 60, // 100 hours
     });
 
-    if (signedUrl.isErr()) {
+    if (vacancySignedUrl.isErr()) {
       console.error(
         "❌ Failed to get signed URL from S3 storage for seeding vacancies"
       );
       process.exit(1);
     }
 
+    const vacancyIds = Array.from({ length: applicationIds.length }).map(() =>
+      generateRandomString(32)
+    );
+
     await tx.vacancy.createMany({
-      data: Array.from({ length: 100 }).map((_, index) => {
+      data: vacancyIds.map((id, index) => {
         const vacancyId = BASE_VACANCY_ID + index;
         const createdAt = new Date();
         createdAt.setDate(createdAt.getDate() - index);
 
         return {
-          id: generateRandomString(32),
-          photoKey: fileKey,
+          id,
+
+          acceptableApplicationTypes: faker.helpers.arrayElements(
+            Object.values(ApplicationType),
+            faker.number.int({ min: 1, max: 2 })
+          ),
           vacancyId,
           title: "მცხობელი",
           jobDescription: `ვაკანსია მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
@@ -156,11 +165,86 @@ void (async function () {
             "- სამუშაო დღეებში 8 საათი\n- შაბათ-კვირას თავისუფალი\n- საღამოები თავისუფალი",
           additionalInfo: "გამოცდილება სასურველია, მაგრამ არა აუცილებელი.",
           createdAt: createdAt.toISOString(),
-          photos: [],
-          videos: [],
         } satisfies Prisma.VacancyCreateManyInput;
       }),
     });
+
+    const photosIds = vacancyIds.map(() => generateRandomString(32));
+    const photoIds = vacancyIds.map(() => generateRandomString(32));
+
+    await tx.s3Object.createMany({
+      data: photosIds.map(
+        (id) =>
+          ({
+            id,
+            key: vacancySignedUrl.value,
+            type: $Enums.S3ObjectType.IMAGE,
+            acl: $Enums.S3ObjectAcl.PUBLIC_READ,
+          }) satisfies Prisma.S3ObjectCreateManyInput
+      ),
+    });
+    await tx.s3Object.createMany({
+      data: photoIds.map(
+        (id) =>
+          ({
+            id,
+            key: vacancySignedUrl.value,
+            type: $Enums.S3ObjectType.IMAGE,
+            acl: $Enums.S3ObjectAcl.PUBLIC_READ,
+          }) satisfies Prisma.S3ObjectCreateManyInput
+      ),
+    });
+
+    // update vacancies with photo relation
+    for (let i = 0; i < vacancyIds.length; i++) {
+      const vacancyId = vacancyIds[i];
+      const photoId = photoIds[i];
+
+      await tx.vacancy.update({
+        where: { id: vacancyId },
+        data: {
+          photo: {
+            connect: { id: photoId },
+          },
+          photos: {
+            connect: { id: photosIds[i] },
+          },
+        },
+      });
+    }
+
+    // create vacancy reviews
+
+    await tx.vacancyReview.createMany({
+      data: vacancyIds.map(
+        (vacancyId, index) =>
+          ({
+            id: generateRandomString(32),
+            name: `მარიამ გოცირიძე ${index + 1}`,
+            review: `სასტუმროში მუშაობა ძალიან სასიამოვნო იყო. გარემო მეგობრული და მხარდაჭერით სავსე იყო. ვურჩევ ყველას, ვინც ამ სფეროში მუშაობას აპირებს.`,
+            instagram: `@mariam.gotsiridze${index + 1}`,
+            vacancyId,
+            imageId: photosIds[index],
+          }) satisfies Prisma.VacancyReviewCreateManyInput
+      ),
+    });
+
+    // connect some vacancies to applications
+    for (let i = 0; i < applicationIds.length; i++) {
+      if (i % 3 === 0) {
+        const applicationId = applicationIds[i];
+        const vacancyId = vacancyIds[i];
+
+        await tx.application.update({
+          where: { id: applicationId },
+          data: {
+            vacancy: {
+              connect: { id: vacancyId },
+            },
+          },
+        });
+      }
+    }
 
     console.log("✅ Seed completed successfully!");
     console.log(

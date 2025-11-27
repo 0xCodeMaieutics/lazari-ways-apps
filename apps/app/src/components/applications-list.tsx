@@ -23,6 +23,8 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@workspace/server/db/models";
+import { useRouter, useSearchParams } from "next/navigation";
+import { toast } from "sonner";
 
 const statusConfig: Record<
   ApplicationStatus,
@@ -121,29 +123,27 @@ function ApplicationCard({ application }: { application: GetApplications }) {
 }
 
 function ApplicationTypeButton({
-  href,
+  onPush,
   label,
   description,
 }: {
-  href: string;
+  onPush: () => void;
   label: string;
   description: string;
 }) {
   return (
     <Button
-      asChild
       variant="outline"
       className="h-auto p-4 flex flex-col items-start text-left hover:bg-accent"
+      onClick={onPush}
     >
-      <Link href={href}>
-        <div className="flex items-center gap-2 mb-1">
-          <Plus className="h-4 w-4" />
-          <span className="font-semibold">{label}</span>
-        </div>
-        <span className="text-xs text-muted-foreground whitespace-break-spaces">
-          {description}
-        </span>
-      </Link>
+      <div className="flex items-center gap-2 mb-1">
+        <Plus className="h-4 w-4" />
+        <span className="font-semibold">{label}</span>
+      </div>
+      <span className="text-xs text-muted-foreground whitespace-break-spaces">
+        {description}
+      </span>
     </Button>
   );
 }
@@ -153,6 +153,8 @@ export function ApplicationsList({
 }: {
   applications: GetApplications[];
 }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const hasKKB8Application = applications.some(
     (app) => app.type === ApplicationType.KKB8
   );
@@ -162,6 +164,49 @@ export function ApplicationsList({
   const hasStudentApplication = applications.some(
     (app) => app.type === ApplicationType.STUDENT
   );
+
+  const onPush = (type: ApplicationType) => {
+    const vacancyId = searchParams.get("vacancyId");
+    const error_type = searchParams.get("error_type");
+
+    const showToast = () => {
+      toast.info(
+        <>
+          <p>
+            <span className="mr-1">
+              Die angegebene Stelle wurde nicht gefunden. Bitte wählen Sie eine
+              gültige Stelle aus, um eine Bewerbung zu starten.
+            </span>
+            <a
+              className="underline cursor-pointer text-base"
+              href={
+                "http://localhost:3000/vacancies?" +
+                new URLSearchParams({
+                  application_type: type,
+                  utm_url: window.location.href,
+                  utm_code: "NO_VACANCY_ID",
+                }).toString()
+              }
+            >
+              hier
+            </a>
+          </p>
+        </>
+      );
+    };
+
+    if (error_type === "VACANCY_NOT_FOUND" || vacancyId === null) {
+      return showToast();
+    }
+
+    return router.push(
+      "/applications?" +
+        new URLSearchParams({
+          type,
+          vacancyId,
+        }).toString()
+    );
+  };
 
   return (
     <Card>
@@ -180,21 +225,21 @@ export function ApplicationsList({
             <div className="grid gap-3 md:grid-cols-3">
               {!hasKKB8Application && (
                 <ApplicationTypeButton
-                  href={`/applications?type=${ApplicationType.KKB8}`}
+                  onPush={() => onPush(ApplicationType.KKB8)}
                   label="KKB 8 Monaten"
                   description="Kurzzeitige kontingentierte Beschäftigung"
                 />
               )}
               {!hasKKB3Application && (
                 <ApplicationTypeButton
-                  href={`/applications?type=${ApplicationType.KKB3}`}
+                  onPush={() => onPush(ApplicationType.KKB3)}
                   label="KKB 3 Monaten"
                   description="Kurzzeitige kontingentierte Beschäftigung"
                 />
               )}
               {!hasStudentApplication && (
                 <ApplicationTypeButton
-                  href={`/applications?type=${ApplicationType.STUDENT}`}
+                  onPush={() => onPush(ApplicationType.STUDENT)}
                   label="Studentenvisum"
                   description="Antrag auf ein Studentenvisum stellen"
                 />

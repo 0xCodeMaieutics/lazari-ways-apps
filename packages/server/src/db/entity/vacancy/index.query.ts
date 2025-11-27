@@ -2,28 +2,11 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { prisma } from "../../client.js";
 import { Prisma } from "../../generated/prisma/client.js";
 
-export type Vacancy = Prisma.VacancyGetPayload<{
-  select: {
-    id: true;
-    location: true;
-    createdAt: true;
-    title: true;
-    vacancyId: true;
-    jobDescription: true;
-    beginDate: true;
-    accommodation: true;
-    duration: true;
-    meals: true;
-    salary: true;
-    availableTo: true;
-    schedule: true;
-    additionalInfo: true;
-    languageLevel: true;
-    photos: true;
-    videos: true;
-    reviews: true;
-    hide: true;
-  };
+export type GetVacancies = Prisma.VacancyGetPayload<{
+  include: { photo: true };
+}>;
+export type GetVacancy = Prisma.VacancyGetPayload<{
+  include: { photos: true; videos: true; photo: true; reviews: true };
 }>;
 
 export type VacancyWhereInput = Prisma.VacancyWhereInput;
@@ -48,32 +31,14 @@ export const vacancyQueries = {
       await tryCatchAsync(
         () =>
           prisma.vacancy.findMany({
-            select: {
-              id: true,
-              location: true,
-              createdAt: true,
-              title: true,
-              vacancyId: true,
-              jobDescription: true,
-              beginDate: true,
-              accommodation: true,
-              duration: true,
-              meals: true,
-              salary: true,
-              availableTo: true,
-              schedule: true,
-              languageLevel: true,
-              additionalInfo: true,
-              photos: true,
-              videos: true,
-              reviews: true,
-              hide: true,
-            },
             where,
+            include: {
+              photo: true,
+            },
             skip: options?.skip,
             take: options?.take,
             orderBy: options?.orderBy,
-          }) satisfies Promise<Vacancy[]>
+          }) satisfies Promise<GetVacancies[]>
       )
     ).mapErr((err) => {
       console.log(err);
@@ -139,27 +104,12 @@ export const vacancyQueries = {
           where: {
             id: vacancyId,
           },
-          select: {
-            id: true,
-            location: true,
-            createdAt: true,
-            title: true,
-            vacancyId: true,
-            jobDescription: true,
-            beginDate: true,
-            accommodation: true,
-            reviews: true,
-            availableTo: true,
-            additionalInfo: true,
-            duration: true,
-            meals: true,
-            salary: true,
-            languageLevel: true,
-            schedule: true,
+          include: {
             photos: true,
             videos: true,
-            hide: true,
+            photo: true,
+            reviews: true,
           },
-        }) satisfies Promise<Vacancy | null>
+        }) satisfies Promise<GetVacancy | null>
     ),
 };

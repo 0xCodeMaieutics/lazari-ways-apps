@@ -5,6 +5,7 @@ import {
   CreateS3ObjectInput,
   generateRandomString,
   s3ObjectQueries,
+  vacancyQueries,
 } from "@workspace/server/db";
 
 import { ApplicationFormData } from "@/utils/models/applications";
@@ -19,16 +20,26 @@ import { keyBuilders } from "@workspace/file-upload/key-builder";
 
 export const createApplication = async ({
   employeeId,
+  vacancyId,
   data,
   type,
 }: {
   employeeId: string;
+  vacancyId: string;
   // TODO: Change any to ApplicationFormData
   data: ApplicationFormData;
   type: ApplicationType;
 }) => {
+  const foundVacancy = await vacancyQueries.getVacancyById(vacancyId);
+  if (foundVacancy.isErr() || foundVacancy.value === null) {
+    console.error(`Vacancy not found: ${vacancyId}`);
+    return {
+      success: false,
+      type: "VACANCY_NOT_FOUND" as const,
+      message: "Vacancy not found.",
+    };
+  }
   const now = Date.now();
-
   const applicationId = generateRandomString(32);
 
   type Document = {
@@ -87,6 +98,7 @@ export const createApplication = async ({
     console.error(s3ObjectCreateResult.error);
     return {
       success: false,
+      type: "INTERNAL_SERVER_ERROR" as const,
       message: "Failed to create S3 object records.",
     };
   }
@@ -97,6 +109,11 @@ export const createApplication = async ({
     employee: {
       connect: {
         id: employeeId,
+      },
+    },
+    vacancy: {
+      connect: {
+        id: vacancyId,
       },
     },
     semesterBreakFrom: data.semesterBreakFrom
@@ -142,12 +159,14 @@ export const createApplication = async ({
     console.error(createdApplicationResult.error);
     return {
       success: false,
+      type: "INTERNAL_SERVER_ERROR" as const,
       message: "Failed to create application.",
     };
   }
 
   return {
     success: true,
+    type: "APPLICATION_CREATED" as const,
     message: "Application created successfully.",
   };
 };
