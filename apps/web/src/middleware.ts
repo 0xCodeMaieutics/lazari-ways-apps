@@ -15,11 +15,6 @@ export function middleware(request: NextRequest) {
   );
   const searchParamsHasViewport = request.nextUrl.searchParams.has("viewport");
 
-  console.log({
-    pathnameHasLocale,
-    searchParamsHasViewport,
-  });
-
   if (pathnameHasLocale && searchParamsHasViewport) return;
   else if (!searchParamsHasViewport) {
     request.nextUrl.searchParams.set("viewport", getDeviceType(request));

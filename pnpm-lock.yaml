@@ -226,9 +226,6 @@ importers:
       '@prisma/client':
         specifier: ^6.18.0
         version: 6.18.0(prisma@6.18.0(typescript@5.9.2))(typescript@5.9.2)
-      '@workspace/file-upload':
-        specifier: workspace:*
-        version: link:../../packages/file-upload
       '@workspace/server':
         specifier: workspace:*
         version: link:../../packages/server
