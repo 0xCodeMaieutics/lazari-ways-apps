@@ -1,14 +1,37 @@
 "use server";
 import {
   generateRandomString,
+  s3ObjectQueries,
   vacancyQueries,
   type VacancyCreateInput,
 } from "@workspace/server/db";
 import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
 import { env } from "@/env";
 import { NewVacancyFormData } from "@/app/(auth)/vacancies/new/schema";
-
+import { S3ObjectAcl, S3Object } from "@workspace/server/db/models";
 export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
+  const id = generateRandomString(32);
+
+  let photoKey: string | null = null;
+  if (photo !== null) {
+    const fileKey = `${env.S3_BUCKET_VACANCIES}/${id}/photo/${Date.now()}-${photo.name}`;
+    const uploadResult = await uploadFileToStorage({
+      file: photo,
+      bucket: env.S3_BUCKET_NAME,
+      fileKey: fileKey,
+      ACL: "public-read",
+    });
+
+    if (uploadResult.isErr()) {
+      console.error(uploadResult.error);
+      return {
+        isSuccess: false,
+        errorCode: "PHOTO_UPLOAD_FAILED",
+        errorMessage: "Failed to upload photo",
+      };
+    }
+    photoKey = fileKey;
+  }
   /**
    * TODO: implement handling of additional photos and videos
    */
@@ -38,28 +61,34 @@ export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
     console.error(result.error);
     return {
       isSuccess: false,
+      errorCode: "VACANCY_CREATION_FAILED",
+      errorMessage: "Failed to create vacancy",
     };
   }
 
-  let photoKey: string | undefined = undefined;
-
-  if (photo !== null) {
-    const fileKey = `${env.S3_BUCKET_VACANCIES}/${result.value.id}/photo/${Date.now()}-${photo.name}`;
-    const uploadResult = await uploadFileToStorage({
-      file: photo,
-      bucket: env.S3_BUCKET_NAME,
-      fileKey: fileKey,
+  if (photoKey) {
+    const s3ObjectResult = await s3ObjectQueries.createS3Object({
+      id: generateRandomString(32),
+      acl: S3ObjectAcl.PUBLIC_READ,
+      type: S3Object.IMAGE,
+      key: photoKey,
+      vacancy: {
+        connect: {
+          id: vacancyId,
+        },
+      },
     });
+    console.log({ photoKey });
 
-    if (uploadResult.isErr()) {
-      console.error(uploadResult.error);
+    if (s3ObjectResult.isErr()) {
       return {
         isSuccess: false,
+        errorCode: "S3_OBJECT_CREATION_FAILED",
+        errorMessage: "Failed to create S3 object for vacancy photo",
       };
     }
-
-    photoKey = fileKey;
   }
+
   return {
     isSuccess: true,
     id: result.value.id,

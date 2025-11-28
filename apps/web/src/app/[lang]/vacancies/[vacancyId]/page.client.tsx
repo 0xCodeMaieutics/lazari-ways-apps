@@ -44,6 +44,8 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { createWhatsappUrl } from "../../constants";
 import { GetVacancy } from "@workspace/server/db";
+import { LogoAndText } from "../../text-logo";
+import { Locale } from "@/i18n";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -375,16 +377,23 @@ export const VacancyClientPage = ({
                 {/* Media Thumbnails */}
 
                 {/* Placeholder if no media */}
-                {!selectedMedia &&
-                  (data.photos?.length ?? 0) === 0 &&
-                  (data.videos?.length ?? 0) === 0 && (
-                    <div className="w-full h-[400px] lg:h-[550px] rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 flex flex-col items-center justify-center border-2 border-dashed border-primary/20 space-y-4">
-                      <Briefcase className="size-24 text-primary/30" />
-                      <p className="text-muted-foreground">
-                        მედია არ არის ხელმისაწვდომი
-                      </p>
-                    </div>
-                  )}
+                {data.photo?.key === undefined ? (
+                  <div className="w-full h-[400px] lg:h-[550px] rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 flex flex-col items-center justify-center border-2 border-dashed border-primary/20 space-y-4">
+                    <LogoAndText lang={lang as Locale} />
+                    <p className="text-muted-foreground">
+                      მედია არ არის ხელმისაწვდომი
+                    </p>
+                  </div>
+                ) : (
+                  <div className="relative w-full h-[400px] lg:h-[550px] rounded-2xl overflow-hidden border-2 border-primary/20 shadow-lg">
+                    <Image
+                      src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${data.photo.key}`}
+                      alt={data.title}
+                      className="object-cover"
+                      fill
+                    />
+                  </div>
+                )}
               </div>
             </div>
           </div>

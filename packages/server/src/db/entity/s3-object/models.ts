@@ -1,6 +1,6 @@
 import {
   S3ObjectAcl as S3ObjectAclType,
-  S3ObjectType,
+  S3ObjectType as S3ObjectType,
 } from "../../generated/prisma/enums.js";
 
 export const S3Object = {

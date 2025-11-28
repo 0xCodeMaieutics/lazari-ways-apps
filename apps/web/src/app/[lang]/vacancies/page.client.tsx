@@ -64,7 +64,7 @@ const VacancyCard = ({
         {vacancy.photo ? (
           <>
             <Image
-              src={vacancy.photo.key}
+              src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${vacancy.photo.key}`}
               alt={vacancy.title}
               fill={true}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

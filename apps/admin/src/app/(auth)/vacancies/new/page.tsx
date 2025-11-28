@@ -12,7 +12,6 @@ import { Switch } from "@workspace/ui/components/switch";
 import { Label } from "@workspace/ui/components/label";
 import { Card } from "@workspace/ui/components/card";
 import { Button } from "@workspace/ui/components/button";
-import z from "zod";
 import { useRouter } from "next/navigation";
 import { createVacancy } from "@/utils/server-actions/vacancy/create-vacancy";
 import { FileUpload } from "@/components/file-upload";
@@ -429,11 +428,10 @@ Badezimmer: Duschkabine.`
               ) : (
                 <FileUpload
                   placeholder="Datei auswählen"
-                  accept=".png,.jpg,.jpeg"
+                  accept=".png,.jpg,.jpeg,.webp"
                   onChange={(file) => {
                     if (file === null) return;
                     form.setValue("photo", file as File);
-                    console.log({ file });
                   }}
                 />
               )}

@@ -22,7 +22,9 @@ export const env = createEnv({
    * isn't built with invalid env vars. To expose them to the client, prefix them with
    * `NEXT_PUBLIC_`.
    */
-  client: {},
+  client: {
+    NEXT_PUBLIC_S3_ENDPOINT: z.url(),
+  },
 
   /**
    *   *---- T3 Stack Config ----*
@@ -34,6 +36,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    NEXT_PUBLIC_S3_ENDPOINT: process.env.NEXT_PUBLIC_S3_ENDPOINT,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**

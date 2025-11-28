@@ -13,7 +13,7 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
+    
   minio-setup:
     image: minio/mc:latest
     depends_on:
