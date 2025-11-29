@@ -44,7 +44,7 @@ export const getS3Client = () => {
       accessKeyId: result.value.S3_ACCESS_KEY,
       secretAccessKey: result.value.S3_SECRET_KEY,
     },
-    forcePathStyle: true,
+    forcePathStyle: process.env.NODE_ENV === "development",
   });
 };
 
@@ -103,6 +103,7 @@ export async function uploadToStorage({
         const sha1Checksum = sha1ChecksumResult.value;
 
         const uploadStartTime = performance.now();
+
         const upload = new Upload({
           client: getS3Client(),
           params: {
