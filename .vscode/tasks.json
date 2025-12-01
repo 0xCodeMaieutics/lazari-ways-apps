@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "problemMatcher": [],
+      "command": "prs",
+      "label": "prs",
+      "detail": "prs"
+    },
+    {
+      "type": "shell",
+      "problemMatcher": [],
+      "command": "prs which",
+      "label": "prs which",
+      "detail": "prs which"
+    },
+    {
+      "type": "shell",
+      "problemMatcher": [],
+      "command": "git push -f",
+      "label": "git push -f",
+      "detail": "git push -f"
+    },
+    {
+      "type": "shell",
+      "problemMatcher": [],
+      "command": "git rebase -i HEAD~2",
+      "label": "git rebase -i HEAD~2",
+      "detail": "git rebase -i HEAD~2"
+    },
+    {
+      "type": "shell",
+      "problemMatcher": [],
+      "command": "git push",
+      "label": "git push",
+      "detail": "git push"
+    }
+  ]
+}
