@@ -37,6 +37,10 @@ export const getS3Client = () => {
       `S3 Client configuration error: ${JSON.stringify(result.error)}`
     );
   }
+  console.log({
+    isDev: process.env.NODE_ENV === "development",
+  });
+
   return new S3Client({
     region: result.value.S3_REGION,
     endpoint: result.value.S3_ENDPOINT,
@@ -120,7 +124,10 @@ export async function uploadToStorage({
                 }),
           },
         });
-        await upload.done();
+        const uploadResult = await tryCatchAsync(() => upload.done());
+        if (uploadResult.isErr()) {
+          return reject(uploadResult.error);
+        }
         const uploadEndTime = performance.now();
         console.log(
           `File upload took ${(uploadEndTime - uploadStartTime).toFixed(3)} ms`,
