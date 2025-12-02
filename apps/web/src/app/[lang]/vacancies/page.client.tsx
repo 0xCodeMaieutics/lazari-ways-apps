@@ -30,6 +30,7 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { sleep } from "@/utils/sleep";
 import { LogoAndText } from "../text-logo";
+import { env } from "@/env";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -152,7 +153,7 @@ const VacancyCard = ({
           variant={"outline"}
           asChild
         >
-          <a href={`http://localhost:3001?vacancyId=${vacancy.id}`}>
+          <a href={`${env.NEXT_PUBLIC_APP_URL}?vacancyId=${vacancy.id}`}>
             განაცხადის გაკეთება
             <ExternalLink className="size-5 ml-2-x-1 transition-transform" />
           </a>

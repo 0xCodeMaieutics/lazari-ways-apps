@@ -24,6 +24,7 @@ export const env = createEnv({
    */
   client: {
     NEXT_PUBLIC_S3_ENDPOINT: z.url(),
+    NEXT_PUBLIC_APP_URL: z.url(),
   },
 
   /**
@@ -37,6 +38,7 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NEXT_PUBLIC_S3_ENDPOINT: process.env.NEXT_PUBLIC_S3_ENDPOINT,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
     NODE_ENV: process.env.NODE_ENV,
   },
   /**
