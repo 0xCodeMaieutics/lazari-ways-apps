@@ -13,7 +13,7 @@ export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
   const id = generateRandomString(32);
 
   let photoKey: string | null = null;
-  if (photo !== null) {
+  if (photo !== null && photo !== undefined) {
     const fileKey = `${env.S3_BUCKET_VACANCIES}/${id}/photo/${Date.now()}-${photo.name}`;
     const uploadResult = await uploadFileToStorage({
       file: photo,
