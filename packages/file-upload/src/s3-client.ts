@@ -37,9 +37,6 @@ export const getS3Client = () => {
       `S3 Client configuration error: ${JSON.stringify(result.error)}`
     );
   }
-  console.log({
-    isDev: process.env.NODE_ENV === "development",
-  });
 
   return new S3Client({
     region: result.value.S3_REGION,
