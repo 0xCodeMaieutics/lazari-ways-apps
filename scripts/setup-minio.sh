@@ -3,7 +3,7 @@ set -e
 
 mc alias set local "$MINIO_HOST" minioadmin minioadmin
 
-BUCKET_NAME="lazary-ways"
+BUCKET_NAME="lazari-ways"
 
 echo "Creating bucket..."
 mc mb local/$BUCKET_NAME --with-lock
