@@ -86,12 +86,53 @@ Badezimmer: Duschkabine.`
     createMutation.mutate(data);
   };
 
+  const fillDefaultValues = () => {
+    const defaultValues = {
+      title: "Arbeit im Gewächshaus und auf dem Feld",
+      location: "In der Nähe von Dresden",
+      beginDate: "Mai",
+      duration: "3 Monate",
+      salary: "13,90 €/Stunde brutto",
+      jobDescription: `- Ernte von Erdbeeren, Himbeeren, Johannisbeeren und anderen Früchten im Gewächshaus und auf dem Feld;
+- Pflanzen von Pflanzen im Gewächshaus
+- Unkraut entfernen;
+- Im Herbst Sammeln von gepflückten Äpfeln und Aronia im Betrieb;
+- und andere Hilfsarbeiten im Betrieb`,
+      schedule: `- 48 Stunden/Woche und mehr
+- 8 - 10 Stunden täglich
+- 45 Min. Pause
+- 1 freier Tag pro Woche.`,
+      accommodation: `Unterkunft in Containern oder Häusern – 13 Euro/Tag pro Person, 4 - 8 Personen pro Zimmer.
+Vorhandener Komfort: Warmwasser, Heizung, Internet.
+Schlafzimmer: Bett mit Matratze, Kissen, Decke, Bettwäsche, Kleiderschrank.
+Küche: Herd, Kühlschrank, Kochgeschirr, Geschirr.
+Badezimmer: Duschkabine.`,
+      meals: "Auf eigene Kosten.",
+      availableTo: "Damen und Herren",
+      languageLevel: "Grundkenntnisse Deutsch",
+      additionalInfo: `Der Arbeitgeber stellt Arbeitsschuhe zur Verfügung, aber Sie sollten wettergerechte Kleidung und bequemes eigenes Schuhwerk mitbringen. Das Gehalt wird per Überweisung oder bar am 20. des Folgemonats ausgezahlt. Die Gehaltshöhe kann je nach geleisteten Arbeitsstunden variieren. Pro Stunde müssen 4 - 5 Kisten Erdbeeren, Himbeeren und Johannisbeeren gepflückt werden. Es gibt im Betrieb Normen, die erfüllt werden müssen. Achtung! Die Beschäftigungsdauer kann je nach Ernte und Wetterbedingungen verlängert oder verkürzt werden. Reisekosten und Versicherungspolice werden separat bezahlt.**`,
+      hide: false,
+    };
+
+    // Reset the form with default values
+    form.reset(defaultValues);
+
+    // Show a subtle toast notification
+    toast.success("Standardwerte eingefügt", {
+      duration: 1500,
+    });
+  };
+
   return (
     <div className="container mx-auto pt-44 px-4 max-w-7xl">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">
+            <h1
+              className="text-3xl font-bold text-foreground select-none"
+              onDoubleClick={fillDefaultValues}
+              title="Doppelklick zum Ausfüllen der Standardwerte"
+            >
               Neue Stellenanzeige erstellen
             </h1>
             <p className="text-muted-foreground mt-1">
