@@ -77,7 +77,7 @@ export const vacancyQueries = {
       prisma.$transaction(async () => {
         const lastVacancy = await prisma.vacancy.findFirst({
           orderBy: {
-            createdAt: "desc",
+            vacancyId: "desc",
           },
           select: {
             vacancyId: true,
