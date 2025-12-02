@@ -1,9 +1,16 @@
 import z from "zod";
 
+const acceptedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
+
+const isImageFile = (errorMsg: string) =>
+  z.instanceof(File).refine((file) => acceptedImageTypes.includes(file.type), {
+    message: errorMsg,
+  });
+
 export const newVacancyFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   location: z.string().min(1, "Location is required"),
-  photo: z.instanceof(File),
+  photo: isImageFile("Only PNG and JPEG files are allowed").optional(),
   beginDate: z.string().min(1, "Begin date is required"),
   duration: z.string().min(1, "Duration is required"),
   salary: z.string().min(1, "Salary is required"),
