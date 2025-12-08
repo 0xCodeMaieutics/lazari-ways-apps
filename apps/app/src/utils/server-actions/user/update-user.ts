@@ -10,7 +10,7 @@ import {
 import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
 import { keyBuilders } from "@workspace/file-upload/key-builder";
 import { env } from "@/env";
-import { S3Object, S3ObjectAcl } from "@workspace/server/db/models";
+import { S3Object } from "@workspace/server/db/models";
 
 export const updateUser = async ({
   userId,
@@ -65,7 +65,6 @@ export const updateUser = async ({
       fotos: {
         create: {
           id: generateRandomString(32),
-          acl: S3ObjectAcl.PRIVATE,
           key: fileKey,
           type: S3Object.IMAGE,
         },

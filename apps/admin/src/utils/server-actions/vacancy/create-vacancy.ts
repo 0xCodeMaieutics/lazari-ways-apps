@@ -8,7 +8,7 @@ import {
 import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
 import { env } from "@/env";
 import { NewVacancyFormData } from "@/app/(auth)/vacancies/new/schema";
-import { S3ObjectAcl, S3Object } from "@workspace/server/db/models";
+import { S3Object } from "@workspace/server/db/models";
 export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
   const id = generateRandomString(32);
 
@@ -69,7 +69,6 @@ export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
   if (photoKey) {
     const s3ObjectResult = await s3ObjectQueries.createS3Object({
       id: generateRandomString(32),
-      acl: S3ObjectAcl.PUBLIC_READ,
       type: S3Object.IMAGE,
       key: photoKey,
       vacancy: {

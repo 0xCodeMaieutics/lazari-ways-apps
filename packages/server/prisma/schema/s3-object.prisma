@@ -4,18 +4,12 @@ enum S3ObjectType {
   VIDEO
 }
 
-enum S3ObjectAcl {
-  PRIVATE
-  PUBLIC_READ
-  PUBLIC_READ_WRITE
-}
-
 model S3Object {
   id String @id
 
-  key  String
-  type S3ObjectType
-  acl  S3ObjectAcl
+  key                      String
+  type                     S3ObjectType
+  amzSignedUrlSearchParams String?
 
   employeeId String?
   employee   Employee? @relation(fields: [employeeId], references: [id])
