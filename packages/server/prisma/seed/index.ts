@@ -7,10 +7,7 @@ import { createUsers } from "./user.js";
 import z from "zod";
 import { auth } from "../../src/auth/auth.js";
 import { $Enums, ApplicationType, Prisma } from "db/client.js";
-import {
-  getSignedUrlForDownload,
-  uploadFilePathToStorage,
-} from "@workspace/file-upload/s3-client";
+import { uploadFilePathToStorage } from "@workspace/file-upload/s3-client";
 import path from "path";
 import { prisma } from "../../src/db/client.js";
 import { encrypt } from "../../src/utils/encrypt.js";
@@ -33,14 +30,12 @@ void (async function () {
     z.object({
       ENCRYPTION_KEY: z.string(),
       DATABASE_URL: z.string().url(),
+      S3_BUCKET_NAME: z.string(),
     })
   );
   if (envResult.isErr()) {
-    console.error(
-      "❌ Missing or invalid environment variables:",
-      envResult.error
-    );
-    process.exit(1);
+    console.error("ENV_VARIABLE_PARSE_ERROR", envResult.error);
+    return;
   }
 
   console.log(`⚙️  Seeding database: ${envResult.value.DATABASE_URL}`);
@@ -65,15 +60,43 @@ void (async function () {
     const userIds = Array.from({ length: userCount }).map(() =>
       generateRandomString(32)
     );
-    const employerIds = Array.from({ length: userCount }).map(() =>
+
+    const employeeIds = Array.from({ length: userCount }).map(() =>
       generateRandomString(32)
     );
 
     await createUsers({
       tx,
       userIds,
-      employerIds,
+      employeeIds,
     });
+
+    const employeeFotoKey = "employee/profile-picture.jpg";
+    const employeeFotoUploadResult = await uploadFilePathToStorage({
+      bucket: envResult.value.S3_BUCKET_NAME,
+      fileKey: employeeFotoKey,
+      filePath: path.resolve(import.meta.dirname, "hotels.webp"),
+      ACL: "public-read",
+    });
+    await tx.s3Object.createMany({
+      data: employeeIds.map(
+        (id) =>
+          ({
+            id,
+            key: employeeFotoKey,
+            type: $Enums.S3ObjectType.IMAGE,
+            employeeId: id,
+          }) satisfies Prisma.S3ObjectCreateManyInput
+      ),
+    });
+
+    if (employeeFotoUploadResult.isErr()) {
+      console.error(
+        "EMPLOYEE_FOTO_UPLOAD_ERROR",
+        employeeFotoUploadResult.error
+      );
+      return;
+    }
 
     console.log("📝 Creating applications with faker data...");
     const applicationIds = Array.from({ length: userCount }).map(() =>
@@ -82,53 +105,26 @@ void (async function () {
 
     await createApplications({
       applicationIds,
-      employerIds,
+      employeeIds,
       tx,
     });
 
     const BASE_VACANCY_ID = 375;
-    const s3Env = zodParse(
-      process.env,
-      z.object({
-        S3_BUCKET_NAME: z.string(),
-      })
-    );
-
-    if (s3Env.isErr()) {
-      console.error(
-        "❌ Missing S3_BUCKET_NAME environment variable for seeding vacancies"
-      );
-
-      process.exit(1);
-    }
 
     const vacancyPhotoFileKey = "vacancies/hotels.webp";
-    const uploadResult = await uploadFilePathToStorage({
-      bucket: s3Env.value.S3_BUCKET_NAME,
+    const vacancyPhotoUploadResult = await uploadFilePathToStorage({
+      bucket: envResult.value.S3_BUCKET_NAME,
       fileKey: vacancyPhotoFileKey,
       filePath: path.resolve(import.meta.dirname, "hotels.webp"),
       ACL: "public-read",
     });
 
-    if (uploadResult.isErr()) {
+    if (vacancyPhotoUploadResult.isErr()) {
       console.error(
-        "❌ Failed to upload file to S3 storage for seeding vacancies",
-        uploadResult.error
+        "VACANCY_PHOTO_UPLOAD_ERROR",
+        vacancyPhotoUploadResult.error
       );
-      process.exit(1);
-    }
-
-    const vacancySignedUrl = await getSignedUrlForDownload({
-      bucket: s3Env.value.S3_BUCKET_NAME,
-      fileKey: vacancyPhotoFileKey,
-      expiresInSeconds: 100 * 60 * 60, // 100 hours
-    });
-
-    if (vacancySignedUrl.isErr()) {
-      console.error(
-        "❌ Failed to get signed URL from S3 storage for seeding vacancies"
-      );
-      process.exit(1);
+      return;
     }
 
     const vacancyIds = Array.from({ length: applicationIds.length }).map(() =>
@@ -177,9 +173,8 @@ void (async function () {
         (id) =>
           ({
             id,
-            key: vacancySignedUrl.value,
+            key: employeeFotoKey,
             type: $Enums.S3ObjectType.IMAGE,
-            acl: $Enums.S3ObjectAcl.PUBLIC_READ,
           }) satisfies Prisma.S3ObjectCreateManyInput
       ),
     });
@@ -188,9 +183,8 @@ void (async function () {
         (id) =>
           ({
             id,
-            key: vacancySignedUrl.value,
+            key: employeeFotoKey,
             type: $Enums.S3ObjectType.IMAGE,
-            acl: $Enums.S3ObjectAcl.PUBLIC_READ,
           }) satisfies Prisma.S3ObjectCreateManyInput
       ),
     });

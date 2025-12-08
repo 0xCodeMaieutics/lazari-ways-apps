@@ -4,11 +4,11 @@ import { Prisma, $Enums } from "db/client";
 
 export const createApplications = async ({
   applicationIds,
-  employerIds,
+  employeeIds,
   tx,
 }: {
   applicationIds: string[];
-  employerIds: string[];
+  employeeIds: string[];
   tx: Prisma.TransactionClient;
 }) => {
   const allS3Objects: Array<{
@@ -135,7 +135,7 @@ export const createApplications = async ({
             { probability: 0.3 }
           ),
           employee: {
-            connect: { id: employerIds[index] },
+            connect: { id: employeeIds[index] },
           },
           hasBeenInGermanyBefore: faker.datatype.boolean(),
           semesterBreakFrom: faker.helpers.maybe(
