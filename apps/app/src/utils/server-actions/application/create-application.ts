@@ -14,7 +14,6 @@ import {
   ApplicationStatus,
   ApplicationType,
   S3Object,
-  S3ObjectAcl,
 } from "@workspace/server/db/models";
 import { keyBuilders } from "@workspace/file-upload/key-builder";
 
@@ -89,7 +88,6 @@ export const createApplication = async ({
     id: generateRandomString(32),
     key: documentPaths[index]!,
     type: S3Object.DOCUMENT,
-    acl: S3ObjectAcl.PRIVATE,
   })) satisfies CreateS3ObjectInput[];
 
   const s3ObjectCreateResult =

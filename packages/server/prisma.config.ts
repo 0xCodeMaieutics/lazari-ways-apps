@@ -20,5 +20,6 @@ export default {
   engine: "classic",
   datasource: {
     url: env("DATABASE_URL"),
+    directUrl: env("DATABASE_DIRECT_URL"),
   },
 } satisfies PrismaConfig;
