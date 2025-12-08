@@ -450,7 +450,7 @@ export async function getSignedUrlForDownload({
     },
     (error) => ({
       type: "ERROR_GETTING_DOWNLOAD_URL_FOR_FILE",
-      message: "Es konnte kein Download Link für die Datei erstellt werden.",
+      message: "Error getting download URL for file.",
       bucket,
       fileKey,
       errorName: error instanceof Error ? error.name : null,
