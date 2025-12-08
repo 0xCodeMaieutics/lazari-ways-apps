@@ -6,11 +6,11 @@ import { Prisma, $Enums } from "db/client";
 export const createUsers = async ({
   tx,
   userIds,
-  employerIds,
+  employeeIds,
 }: {
   tx: Prisma.TransactionClient;
   userIds: string[];
-  employerIds: string[];
+  employeeIds: string[];
 }) => {
   const emails = Array.from({ length: userIds.length }).map(() =>
     faker.internet.email()
@@ -44,7 +44,7 @@ export const createUsers = async ({
           },
           employee: {
             create: {
-              id: employerIds[index],
+              id: employeeIds[index],
               firstName: faker.person.firstName(),
               lastName: faker.person.lastName(),
               birthCountry: faker.location.country(),
