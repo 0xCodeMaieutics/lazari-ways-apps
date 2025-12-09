@@ -7,7 +7,10 @@ import {
   userQueries,
 } from "@workspace/server/db";
 
-import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
+import {
+  uploadFileToStorage,
+  getSignedUrlForDownload,
+} from "@workspace/file-upload/s3-client";
 import { keyBuilders } from "@workspace/file-upload/key-builder";
 import { env } from "@/env";
 import { S3Object } from "@workspace/server/db/models";
@@ -23,6 +26,7 @@ export const updateUser = async ({
   const now = Date.now();
   // Only upload new photo if provided
   let fileKey: string | undefined;
+  let fotoSignedUrlSearchParams: URLSearchParams | null = null;
   if (data.foto) {
     fileKey = keyBuilders.employees.photo.buildKey({
       employeeId,
@@ -42,6 +46,20 @@ export const updateUser = async ({
         message: "Failed to upload photo.",
       };
     }
+
+    const signedUrlResult = await getSignedUrlForDownload({
+      bucket: env.S3_BUCKET_NAME!,
+      fileKey,
+      expiresInSeconds: 24 * 3600, // 24 hours
+    });
+    if (signedUrlResult.isErr()) {
+      console.error(signedUrlResult.error);
+      return {
+        success: false,
+        message: "Failed to get signed URL for uploaded photo.",
+      };
+    }
+    fotoSignedUrlSearchParams = new URL(signedUrlResult.value).searchParams;
   }
 
   const updateUserData = {
@@ -61,15 +79,17 @@ export const updateUser = async ({
     facebook: "",
     instagram: "",
     taxId: "",
-    ...(fileKey && {
-      fotos: {
-        create: {
-          id: generateRandomString(32),
-          key: fileKey,
-          type: S3Object.IMAGE,
+    ...(fileKey &&
+      fotoSignedUrlSearchParams && {
+        fotos: {
+          create: {
+            id: generateRandomString(32),
+            key: fileKey,
+            type: S3Object.IMAGE,
+            amzSignedUrlSearchParams: fotoSignedUrlSearchParams.toString(),
+          },
         },
-      },
-    }),
+      }),
   } satisfies Omit<
     NonNullable<NonNullable<UpdateUserInput["employee"]>["upsert"]>["create"],
     "id"

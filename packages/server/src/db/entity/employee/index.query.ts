@@ -7,7 +7,15 @@ import { prisma } from "../../client.js";
 import { Prisma } from "../../generated/prisma/client.js";
 import { getSignedUrlForDownload } from "@workspace/file-upload/s3-client";
 
-export type GetEmployee = Prisma.EmployeeGetPayload<{}>;
+export type GetEmployee = Prisma.EmployeeGetPayload<{
+  include: {
+    user: {
+      select: {
+        email: true;
+      };
+    };
+  };
+}>;
 export const employeeQueries = {
   getEmployeeByUserId: (id: string) =>
     tryCatchAsync(
@@ -15,6 +23,13 @@ export const employeeQueries = {
         prisma.employee.findUnique({
           where: {
             userId: id,
+          },
+          include: {
+            user: {
+              select: {
+                email: true,
+              },
+            },
           },
         }) satisfies Promise<GetEmployee | null>
     ),

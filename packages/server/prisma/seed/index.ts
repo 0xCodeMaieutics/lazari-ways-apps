@@ -76,7 +76,6 @@ void (async function () {
       bucket: envResult.value.S3_BUCKET_NAME,
       fileKey: employeeFotoKey,
       filePath: path.resolve(import.meta.dirname, "hotels.webp"),
-      ACL: "public-read",
     });
     await tx.s3Object.createMany({
       data: employeeIds.map(
@@ -116,7 +115,6 @@ void (async function () {
       bucket: envResult.value.S3_BUCKET_NAME,
       fileKey: vacancyPhotoFileKey,
       filePath: path.resolve(import.meta.dirname, "hotels.webp"),
-      ACL: "public-read",
     });
 
     if (vacancyPhotoUploadResult.isErr()) {

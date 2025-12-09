@@ -1,5 +1,4 @@
 "use client";
-import Avatar from "boring-avatars";
 
 import {
   Card,
@@ -10,22 +9,25 @@ import {
 } from "@workspace/ui/components/card";
 import { Pencil, ArrowLeft } from "lucide-react";
 import { ApplicationsList } from "@/components/applications-list";
-import { GetApplications, GetUserProfile } from "@workspace/server/db";
+import { GetApplications, GetEmployee } from "@workspace/server/db";
 import { ProfileForm } from "@/components/forms/profile-form";
 import { useState } from "react";
 import { Button } from "@workspace/ui/components/button";
+import Image from "next/image";
 
 export function OnboardingPageClient({
   applications,
-  user,
+  employee,
+  employeeFoto,
 }: {
   applications: GetApplications[];
-  user: GetUserProfile;
+  employee: GetEmployee | null;
+  employeeFoto: string | null;
 }) {
   const [isEditing, setIsEditing] = useState(false);
 
-  const fullName = `${user.employee?.firstName ?? ""} ${
-    user.employee?.lastName ?? ""
+  const fullName = `${employee?.firstName ?? ""} ${
+    employee?.lastName ?? ""
   }`.trim();
 
   return (
@@ -33,10 +35,10 @@ export function OnboardingPageClient({
       <div className="space-y-6">
         {/* Profile Header */}
 
-        {user.employee === null || isEditing ? (
+        {employee === null || isEditing ? (
           <Card>
             <CardHeader>
-              {isEditing && user.employee !== null && (
+              {isEditing && employee !== null && (
                 <Button
                   variant="ghost"
                   onClick={() => setIsEditing(false)}
@@ -62,7 +64,7 @@ export function OnboardingPageClient({
               <>
                 <div className="pt-6">
                   <ProfileForm
-                    userInformation={user.employee}
+                    userInformation={employee}
                     onSaveSuccess={() => setIsEditing(false)}
                     onCancel={() => setIsEditing(false)}
                   />
@@ -72,8 +74,30 @@ export function OnboardingPageClient({
           </Card>
         ) : (
           <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-lg md:text-xl">Profil</CardTitle>
+            <CardHeader className="flex items-center justify-between space-y-0 pb-2">
+              <CardTitle>
+                <div className="flex items-center gap-2.5">
+                  {employeeFoto !== null && (
+                    <div className="relative rounded-full overflow-hidden size-20">
+                      <Image
+                        src={employeeFoto}
+                        fill
+                        alt="Employee photo"
+                        sizes="200x200"
+                      />
+                    </div>
+                  )}
+                  {fullName && employee.user.email && (
+                    <div>
+                      <p className="text-lg font-semibold">{fullName}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {employee.user.email}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </CardTitle>
+
               <Button
                 variant="outline"
                 size="sm"
@@ -81,40 +105,22 @@ export function OnboardingPageClient({
                 className="gap-2"
               >
                 <Pencil className="h-4 w-4" />
-                Bearbeiten
+                Bearbeite
               </Button>
             </CardHeader>
             <CardContent>
               <>
-                {/* User Information Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
-                  {fullName && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        Vollständiger Name
-                      </p>
-                      <p className="text-base">{fullName}</p>
-                    </div>
-                  )}
-                  {user.email && (
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-muted-foreground">
-                        E-Mail
-                      </p>
-                      <p className="text-base">{user.email}</p>
-                    </div>
-                  )}
-
                   {/* Gender */}
-                  {user.employee?.gender && (
+                  {employee?.gender && (
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Geschlecht
                       </p>
                       <p className="text-base">
-                        {user.employee.gender === "MALE"
+                        {employee.gender === "MALE"
                           ? "Männlich"
-                          : user.employee.gender === "FEMALE"
+                          : employee.gender === "FEMALE"
                             ? "Weiblich"
                             : "Divers"}
                       </p>
@@ -122,23 +128,23 @@ export function OnboardingPageClient({
                   )}
 
                   {/* Nationality */}
-                  {user.employee?.nationality && (
+                  {employee?.nationality && (
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Staatsangehörigkeit
                       </p>
-                      <p className="text-base">{user.employee?.nationality}</p>
+                      <p className="text-base">{employee?.nationality}</p>
                     </div>
                   )}
 
                   {/* Birth Date */}
-                  {user.employee?.birthDate && (
+                  {employee?.birthDate && (
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Geburtsdatum
                       </p>
                       <p className="text-base">
-                        {new Date(user.employee.birthDate).toLocaleDateString(
+                        {new Date(employee?.birthDate).toLocaleDateString(
                           "de-DE",
                           {
                             year: "numeric",
@@ -151,22 +157,22 @@ export function OnboardingPageClient({
                   )}
 
                   {/* Birth Place */}
-                  {user.employee?.birthPlace && (
+                  {employee?.birthPlace && (
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Geburtsort
                       </p>
-                      <p className="text-base">{user.employee.birthPlace}</p>
+                      <p className="text-base">{employee.birthPlace}</p>
                     </div>
                   )}
 
                   {/* Birth Country */}
-                  {user.employee?.birthCountry && (
+                  {employee?.birthCountry && (
                     <div className="space-y-1">
                       <p className="text-sm font-medium text-muted-foreground">
                         Geburtsland
                       </p>
-                      <p className="text-base">{user.employee.birthCountry}</p>
+                      <p className="text-base">{employee.birthCountry}</p>
                     </div>
                   )}
                 </div>
@@ -176,7 +182,7 @@ export function OnboardingPageClient({
         )}
 
         {/* Profile Form */}
-        {user.employee !== null && !isEditing && (
+        {employee !== null && !isEditing && (
           <ApplicationsList applications={applications} />
         )}
       </div>

@@ -17,7 +17,7 @@ import {
 import { Input } from "@workspace/ui/components/input";
 import { ProfileFormData, profileFormSchema } from "./schema";
 import { Save, X } from "lucide-react";
-import { GetUserProfile } from "@workspace/server/db";
+import { GetEmployee } from "@workspace/server/db";
 import { Gender } from "@workspace/server/db/models";
 import { updateUser } from "@/utils/server-actions/user/update-user";
 import { authClient } from "@workspace/server/auth/client";
@@ -44,7 +44,7 @@ export function ProfileForm({
   onSaveSuccess,
   onCancel,
 }: {
-  userInformation: GetUserProfile["employee"];
+  userInformation: GetEmployee | null;
   onSaveSuccess?: () => void;
   onCancel?: () => void;
 }) {

@@ -74,7 +74,7 @@ export const applicationQueries = {
           skip,
           take,
           orderBy,
-        }) satisfies Promise<GetApplications[] | null>
+        }) satisfies Promise<GetApplications[]>
     );
   },
   getApplicationsCount: (where?: ApplicationWhereInput) =>

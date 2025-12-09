@@ -2,7 +2,12 @@ import { headers } from "next/headers";
 import { OnboardingPageClient } from "./page.client";
 import { auth } from "@workspace/server/auth";
 import { redirect } from "next/navigation";
-import { applicationQueries, userQueries } from "@workspace/server/db";
+import {
+  applicationQueries,
+  employeeQueries,
+  GetApplications,
+} from "@workspace/server/db";
+import { env } from "@/env";
 
 export default async function OnboardingPage({
   searchParams,
@@ -25,38 +30,53 @@ export default async function OnboardingPage({
     );
   }
 
-  const userResult = await userQueries.getUserProfileById(session.user.id);
+  const employeeResult = await employeeQueries.getEmployeeByUserId(
+    session.user.id
+  );
 
-  if (userResult.isErr()) {
-    console.error("USER_ERROR:", userResult.error);
+  if (employeeResult.isErr()) {
+    console.error("EMPLOYEE_ERROR:", employeeResult.error);
     throw new Error("INTERNAL_SERVER_ERROR", {
-      cause: userResult.error.cause,
+      cause: employeeResult.error.type,
     });
   }
 
-  const user = userResult.value;
-  if (user === null) {
-    console.error("USER_NOT_FOUND");
-    return redirect(
-      "/login?" +
-        new URLSearchParams({
-          vacancyId: params.vacancyId as string,
-        }).toString()
+  let employeeFoto: string | null = null;
+  if (employeeResult.value !== null) {
+    const employeeFotoResult = await employeeQueries.getEmployeeFotoSignedUrl(
+      employeeResult.value.id
     );
+
+    if (employeeFotoResult.isErr()) {
+      console.error("EMPLOYEE_FOTO_ERROR:", employeeFotoResult.error);
+      throw new Error("INTERNAL_SERVER_ERROR");
+    }
+
+    if (employeeFotoResult.value.amzSignedUrlSearchParams !== null) {
+      employeeFoto = `${env.S3_ENDPOINT}/${env.S3_BUCKET_NAME}/${employeeFotoResult.value.key}?${employeeFotoResult.value.amzSignedUrlSearchParams}`;
+    }
   }
 
-  const applicationsResult = await applicationQueries.getApplications({
-    employeeId: user?.employee?.id,
-  });
+  let applications: GetApplications[] = [];
 
-  if (applicationsResult.isErr()) {
-    console.error("APPLICATIONS ERROR:", applicationsResult.error);
-    throw new Error("INTERNAL_SERVER_ERROR", {
-      cause: applicationsResult.error.cause,
+  if (employeeResult.value !== null) {
+    const applicationsResult = await applicationQueries.getApplications({
+      employeeId: employeeResult.value.id,
     });
+    if (applicationsResult.isErr()) {
+      console.error("APPLICATIONS ERROR:", applicationsResult.error);
+      throw new Error("INTERNAL_SERVER_ERROR", {
+        cause: applicationsResult.error.cause,
+      });
+    }
+    applications = applicationsResult.value;
   }
 
   return (
-    <OnboardingPageClient applications={applicationsResult.value} user={user} />
+    <OnboardingPageClient
+      applications={applications}
+      employee={employeeResult.value}
+      employeeFoto={employeeFoto}
+    />
   );
 }
