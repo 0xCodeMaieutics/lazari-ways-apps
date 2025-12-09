@@ -232,6 +232,20 @@ export function ProfileForm({
     form.reset();
   };
 
+  const handleFillTestData = () => {
+    form.setValue("firstName", "Anna", { shouldDirty: true });
+    form.setValue("lastName", "Schmidt", { shouldDirty: true });
+    form.setValue("gender", Gender.FEMALE, { shouldDirty: true });
+    form.setValue("nationality", "Deutsch", { shouldDirty: true });
+    form.setValue("birthDate", "1990-05-15", { shouldDirty: true });
+    form.setValue("birthPlace", "München", { shouldDirty: true });
+    form.setValue("birthCountry", "Deutschland", { shouldDirty: true });
+    form.setValue("street", "Musterstraße 45", { shouldDirty: true });
+    form.setValue("postalCode", "80331", { shouldDirty: true });
+    form.setValue("city", "München", { shouldDirty: true });
+    form.setValue("country", "Deutschland", { shouldDirty: true });
+  };
+
   return (
     <div className="w-full">
       <form
@@ -242,7 +256,11 @@ export function ProfileForm({
         {/* Basic Information */}
 
         <div>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <h3
+            className="text-lg font-semibold mb-4 flex items-center gap-2"
+            onDoubleClick={handleFillTestData}
+            title="Double-click to fill with test data"
+          >
             <div className="h-1 w-1 rounded-full bg-primary" />
             Grundlegende Informationen
           </h3>
