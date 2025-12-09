@@ -53,7 +53,7 @@ export default async function OnboardingPage({
     }
 
     if (employeeFotoResult.value.amzSignedUrlSearchParams !== null) {
-      employeeFoto = `${env.S3_ENDPOINT}/${env.S3_BUCKET_NAME}/${employeeFotoResult.value.key}?${employeeFotoResult.value.amzSignedUrlSearchParams}`;
+      employeeFoto = `${env.S3_ENDPOINT}/${process.env.NODE_ENV === "development" ? env.S3_BUCKET_NAME + "/" : ""}${employeeFotoResult.value.key}?${employeeFotoResult.value.amzSignedUrlSearchParams}`;
     }
   }
 
