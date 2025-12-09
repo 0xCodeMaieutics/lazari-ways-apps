@@ -40,7 +40,7 @@ export const getS3Client = () => {
 
   return new S3Client({
     region: result.value.S3_REGION,
-    endpoint: result.value.S3_ENDPOINT,
+    endpoint: "https://s3.eu-central-1.amazonaws.com",
     credentials: {
       accessKeyId: result.value.S3_ACCESS_KEY,
       secretAccessKey: result.value.S3_SECRET_KEY,
@@ -54,13 +54,11 @@ export async function uploadFileToStorage({
   bucket,
   fileKey,
   lockUntil = null,
-  ACL = "public-read",
 }: {
   file: File;
   bucket: string;
   fileKey: string;
   lockUntil?: Date | null;
-  ACL?: "private" | "public-read" | "public-read-write";
 }) {
   const fileBufferResult = await tryCatchAsync(async () =>
     Buffer.from(await file.arrayBuffer())

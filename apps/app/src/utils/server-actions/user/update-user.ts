@@ -48,7 +48,7 @@ export const updateUser = async ({
     }
 
     const signedUrlResult = await getSignedUrlForDownload({
-      bucket: env.S3_BUCKET_NAME!,
+      bucket: env.S3_BUCKET_NAME,
       fileKey,
       expiresInSeconds: 24 * 3600, // 24 hours
     });
