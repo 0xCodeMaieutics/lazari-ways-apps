@@ -61,7 +61,7 @@ const buildApplicationSearchWhereClause = (search?: string) => {
   } as ApplicationWhereInput;
 };
 
-export default async function DashboardPage({
+export default async function AllApplicationsPage({
   searchParams: searchParamsPromise,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -105,15 +105,12 @@ export default async function DashboardPage({
   const [totalApplications, applications] = applicationResult.value;
 
   return (
-    <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Bewerbungen</h1>
-        <div>
-          <SearchInput
-            placeholder="Name, Instagram, E-Mail, Telefon..."
-            defaultValue={search}
-          />
-        </div>
+    <div>
+      <div className="flex justify-end">
+        <SearchInput
+          placeholder="Name, Instagram, E-Mail, Telefon..."
+          defaultValue={search}
+        />
       </div>
       <div className="space-y-2">
         <Table className="w-full z-0">
