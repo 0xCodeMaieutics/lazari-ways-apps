@@ -181,7 +181,7 @@ export function OnboardingPageClient({
           </Card>
         )}
 
-        {/* Profile Form */}
+        {/* Applications List */}
         {employee !== null && !isEditing && (
           <ApplicationsList applications={applications} />
         )}

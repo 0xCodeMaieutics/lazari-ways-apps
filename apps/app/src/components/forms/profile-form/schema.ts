@@ -22,6 +22,32 @@ export const profileFormSchema = z.object({
   postalCode: z.string().min(1, "Postleitzahl ist erforderlich"),
   city: z.string().min(1, "Stadt ist erforderlich"),
   country: z.string().min(1, "Land ist erforderlich"),
+  phone: z
+    .string()
+    .refine(
+      (val) =>
+        val.trim() === "" ||
+        /^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,9}$/.test(
+          val.trim()
+        ),
+      "Ungültiges Telefonnummernformat"
+    )
+    .optional(),
+  instagram: z
+    .string()
+    .refine(
+      (val) => val.trim() === "" || /^[\w\.]+$/.test(val.trim()),
+      "Ungültiges Instagram-Format (nur Benutzername ohne @)"
+    )
+    .optional(),
+  facebook: z
+    .string()
+    .refine(
+      (val) => val.trim() === "" || /^[\w\.]+$/.test(val.trim()),
+      "Ungültiges Facebook-Format (nur Benutzername oder Profilname)"
+    )
+    .optional(),
+  taxId: z.string().optional(),
   foto: isImageFile("Nur PNG und JPEG Dateien sind erlaubt").optional(),
 });
 

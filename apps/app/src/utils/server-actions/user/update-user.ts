@@ -74,11 +74,10 @@ export const updateUser = async ({
     nationality: data.nationality,
     postalCode: data.postalCode,
     street: data.street,
-    // TODO: missing these
-    phone: "",
-    facebook: "",
-    instagram: "",
-    taxId: "",
+    phone: data.phone || "",
+    facebook: data.facebook || "",
+    instagram: data.instagram || "",
+    taxId: data.taxId || "",
     ...(fileKey &&
       fotoSignedUrlSearchParams && {
         fotos: {

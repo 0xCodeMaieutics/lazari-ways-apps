@@ -31,14 +31,6 @@ import { useRouter } from "next/navigation";
 import { FileUpload } from "@/components/file-upload";
 import { format } from "date-fns";
 
-/**
- * Form is missing the following fields
- * TODO: phone
- * TODO: instagram
- * TODO: facebook
- * TODO: taxIs (move this to application)
- */
-
 export function ProfileForm({
   userInformation,
   onSaveSuccess,
@@ -132,6 +124,24 @@ export function ProfileForm({
             ? "Deutschland"
             : ""
           : userInformation.country,
+      phone:
+        userInformation?.phone === null || userInformation?.phone === undefined
+          ? "+49 123 456789"
+          : userInformation.phone,
+      instagram:
+        userInformation?.instagram === null ||
+        userInformation?.instagram === undefined
+          ? "username"
+          : userInformation.instagram,
+      facebook:
+        userInformation?.facebook === null ||
+        userInformation?.facebook === undefined
+          ? "username"
+          : userInformation.facebook,
+      taxId:
+        userInformation?.taxId === null || userInformation?.taxId === undefined
+          ? "123456789"
+          : userInformation.taxId,
       foto: undefined,
     },
   });
@@ -244,6 +254,10 @@ export function ProfileForm({
     form.setValue("postalCode", "80331", { shouldDirty: true });
     form.setValue("city", "München", { shouldDirty: true });
     form.setValue("country", "Deutschland", { shouldDirty: true });
+    form.setValue("phone", "+49 123 456789", { shouldDirty: true });
+    form.setValue("instagram", "username", { shouldDirty: true });
+    form.setValue("facebook", "username", { shouldDirty: true });
+    form.setValue("taxId", "123456789", { shouldDirty: true });
   };
 
   return (
@@ -570,6 +584,115 @@ export function ProfileForm({
             </div>
           </FieldGroup>
         </div>
+
+        {/* Contact & Social Media Information */}
+        <div className="border-t pt-8">
+          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+            <div className="h-1 w-1 rounded-full bg-primary" />
+            Kontakt & Soziale Medien
+          </h3>
+          <FieldGroup>
+            <Controller
+              name="phone"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="phone" className="text-sm font-medium">
+                    Telefonnummer
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="phone"
+                    type="tel"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="+49 123 456789"
+                    className="transition-colors"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Controller
+                name="instagram"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="instagram"
+                      className="text-sm font-medium"
+                    >
+                      Instagram
+                    </FieldLabel>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground">@</span>
+                      <Input
+                        {...field}
+                        id="instagram"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="benutzername"
+                        className="transition-colors"
+                      />
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="facebook"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor="facebook"
+                      className="text-sm font-medium"
+                    >
+                      Facebook
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="facebook"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="benutzername oder Profilname"
+                      className="transition-colors"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+
+            <Controller
+              name="taxId"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="taxId" className="text-sm font-medium">
+                    Steuer-ID
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="taxId"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Steueridentifikationsnummer"
+                    className="transition-colors"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </div>
+
         <div className="border-t pt-8">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
             <div className="h-1 w-1 rounded-full bg-primary" />
