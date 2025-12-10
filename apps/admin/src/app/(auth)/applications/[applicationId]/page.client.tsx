@@ -24,7 +24,7 @@ import type React from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { GetApplication } from "@workspace/server/db";
-import { ApplicationStatus } from "@workspace/server/db/models";
+import { ApplicationStatus, Gender } from "@workspace/server/db/models";
 import { toast } from "sonner";
 import { updateApplicationStatus } from "@/utils/server-actions/application/update-status";
 import { WHATSAPP_URL } from "@/utils/constants";
@@ -201,16 +201,17 @@ const ApplicationStatusSelect = ({
 
 export const ApplicationDetail = ({
   application,
+  employee,
   fotoUrl,
 }: {
   application: GetApplication;
+  employee: NonNullable<GetApplication["employee"]>;
   fotoUrl: string | null;
 }) => {
   const [activeTab, setActiveTab] = useState<"personal" | "employment">(
     "personal"
   );
 
-  const employee = application.employee;
   const fullName =
     `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim();
 
@@ -388,9 +389,20 @@ export const ApplicationDetail = ({
                 <InformationItem label="Nationalität">
                   <InformationValue>{employee?.nationality}</InformationValue>
                 </InformationItem>
-                <InformationItem label="Geschlecht">
-                  <InformationValue>{employee?.gender}</InformationValue>
-                </InformationItem>
+                {employee?.gender !== null && (
+                  <InformationItem label="Geschlecht">
+                    <InformationValue>
+                      {
+                        {
+                          [Gender.MALE]: "Männlich",
+                          [Gender.FEMALE]: "Weiblich",
+                          [Gender.DIVERSE]: "Divers",
+                        }[employee.gender]
+                      }
+                    </InformationValue>
+                  </InformationItem>
+                )}
+
                 <InformationItem label="Geburtsort">
                   <InformationValue>{employee?.birthPlace}</InformationValue>
                 </InformationItem>

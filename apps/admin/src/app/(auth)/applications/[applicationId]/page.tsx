@@ -33,8 +33,14 @@ const ApplicationDetailPage = async ({
     }
   }
 
+  if (application.employee === null) return notFound();
+
   return (
-    <ApplicationDetail application={application} fotoUrl={fotoUrl ?? null} />
+    <ApplicationDetail
+      application={application}
+      employee={application.employee}
+      fotoUrl={fotoUrl ?? null}
+    />
   );
 };
 
