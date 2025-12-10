@@ -61,6 +61,7 @@ export default async function VacanciesPage({
     vacancyQueries.getVacancies(where, {
       skip: (page - 1) * getPageSize(viewport),
       take: getPageSize(viewport),
+      orderBy: { createdAt: "desc" },
     }),
     vacancyQueries.getVacanciesCount(where),
   ]);
