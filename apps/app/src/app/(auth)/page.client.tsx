@@ -81,6 +81,7 @@ export function OnboardingPageClient({
                     <div className="relative rounded-full overflow-hidden size-20">
                       <Image
                         src={employeeFoto}
+                        className="object-cover"
                         fill
                         alt="Employee photo"
                         sizes="200x200"
