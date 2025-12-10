@@ -17,8 +17,8 @@ const nextConfig = {
       ...remotePatterns,
       {
         protocol: "https",
-        hostname: "s3.eu-central-1.amazonaws.com",
-        pathname: "/lazari-ways-bucket/**/*",
+        hostname: "lazari-ways-bucket.s3.eu-central-1.amazonaws.com",
+        pathname: "/**/*",
       },
     ],
   },
