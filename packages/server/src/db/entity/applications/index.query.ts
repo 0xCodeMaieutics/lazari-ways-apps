@@ -9,7 +9,22 @@ export type ApplicationUpdateInput = Prisma.ApplicationUpdateInput;
 
 export type GetApplication = Prisma.ApplicationGetPayload<{
   include: {
-    employee: true;
+    employee: {
+      include: {
+        fotos: {
+          select: {
+            id: true;
+            key: true;
+            amzSignedUrlSearchParams: true;
+          };
+        };
+        user: {
+          select: {
+            email: true;
+          };
+        };
+      };
+    };
   };
 }>;
 
@@ -34,7 +49,22 @@ export const applicationQueries = {
         prisma.application.findUnique({
           where: { id: applicationId },
           include: {
-            employee: true,
+            employee: {
+              include: {
+                fotos: {
+                  select: {
+                    id: true,
+                    key: true,
+                    amzSignedUrlSearchParams: true,
+                  },
+                },
+                user: {
+                  select: {
+                    email: true,
+                  },
+                },
+              },
+            },
           },
         }) satisfies Promise<GetApplication | null>
     ),

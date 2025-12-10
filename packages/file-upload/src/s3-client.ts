@@ -40,7 +40,10 @@ export const getS3Client = () => {
 
   return new S3Client({
     region: result.value.S3_REGION,
-    endpoint: "https://s3.eu-central-1.amazonaws.com",
+    endpoint:
+      process.env.NODE_ENV === "development"
+        ? result.value.S3_ENDPOINT
+        : "https://s3.eu-central-1.amazonaws.com",
     credentials: {
       accessKeyId: result.value.S3_ACCESS_KEY,
       secretAccessKey: result.value.S3_SECRET_KEY,
