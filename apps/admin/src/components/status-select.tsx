@@ -11,33 +11,56 @@ import { ApplicationStatus } from "@workspace/server/db/models";
 import { updateApplicationStatus } from "@/utils/server-actions/application/update-status";
 import { useTransition } from "react";
 import { toast } from "sonner";
+import clsx from "clsx";
 
-interface StatusSelectProps {
-  applicationId: string;
-  currentStatus: ApplicationStatus;
-}
-const statusOptions = [
-  {
+const statusOptions = {
+  [ApplicationStatus.USER_SUBMITTED]: {
     value: ApplicationStatus.USER_SUBMITTED,
-    label: "Pending",
+    label: "Ausstehend",
     color: "text-yellow-700",
   },
-  {
+  [ApplicationStatus.APPROVED_BY_AGENCY]: {
     value: ApplicationStatus.APPROVED_BY_AGENCY,
-    label: "Approved",
+    label: "Genehmigt",
     color: "text-green-700",
   },
-  {
+  [ApplicationStatus.APPROVED_BY_EMPLOYER]: {
     value: ApplicationStatus.APPROVED_BY_EMPLOYER,
-    label: "Rejected",
+    label: "Abgelehnt",
     color: "text-red-700",
   },
-] satisfies { value: ApplicationStatus; label: string; color: string }[];
+  [ApplicationStatus.REJECTED_BY_AGENCY]: {
+    value: ApplicationStatus.REJECTED_BY_AGENCY,
+    label: "Von Agentur abgelehnt",
+    color: "text-red-700",
+  },
+  [ApplicationStatus.REJECTED_BY_EMPLOYER]: {
+    value: ApplicationStatus.REJECTED_BY_EMPLOYER,
+    label: "Von Arbeitgeber abgelehnt",
+    color: "text-red-700",
+  },
+  [ApplicationStatus.IN_REVIEW_BY_AGENCY]: {
+    value: ApplicationStatus.IN_REVIEW_BY_AGENCY,
+    label: "In Prüfung durch Agentur",
+    color: "text-yellow-700",
+  },
+  [ApplicationStatus.IN_REVIEW_BY_EMPLOYER]: {
+    value: ApplicationStatus.IN_REVIEW_BY_EMPLOYER,
+    label: "In Prüfung durch Arbeitgeber",
+    color: "text-yellow-700",
+  },
+} satisfies Record<
+  ApplicationStatus,
+  { value: ApplicationStatus; label: string; color: string }
+>;
 
 export const StatusSelect = ({
   applicationId,
   currentStatus,
-}: StatusSelectProps) => {
+}: {
+  applicationId: string;
+  currentStatus: ApplicationStatus;
+}) => {
   const [isPending, startTransition] = useTransition();
 
   const handleStatusChange = (newStatus: ApplicationStatus) => {
@@ -46,15 +69,13 @@ export const StatusSelect = ({
         status: newStatus,
       });
 
-      if (result.success) {
-        toast.success("Application status updated successfully");
-      } else {
-        toast.error(result.error || "Failed to update status");
-      }
+      if (!result.success)
+        toast.error("Status konnte nicht aktualisiert werden");
+      else toast.success("Bewerbungsstatus erfolgreich aktualisiert");
     });
   };
 
-  const currentOption = statusOptions.find(
+  const currentOption = Object.values(statusOptions).find(
     (option) => option.value === currentStatus
   );
 
@@ -64,16 +85,12 @@ export const StatusSelect = ({
       onValueChange={handleStatusChange}
       disabled={isPending}
     >
-      <SelectTrigger className={`w-32 ${currentOption?.color || ""}`}>
+      <SelectTrigger className={clsx("ml-auto", currentOption?.color)}>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
-        {statusOptions.map((option) => (
-          <SelectItem
-            key={option.value}
-            value={option.value}
-            className={option.color}
-          >
+        {Object.values(statusOptions).map((option) => (
+          <SelectItem key={option.value} value={option.value}>
             {option.label}
           </SelectItem>
         ))}

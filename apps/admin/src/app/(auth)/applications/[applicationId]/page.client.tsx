@@ -311,12 +311,9 @@ export const ApplicationDetail = ({
                     />
                     <Button className="h-10 py-0 mb-0 mt-0 pb-0">
                       <Download className="size-4" />
-                      Herunterladen
+                      CV Herunterladen
                     </Button>
                   </div>
-                  {/* <div
-                    className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap ${statusInfo?.color || ""}`}
-                  ></div> */}
                 </div>
               </div>
             </div>
