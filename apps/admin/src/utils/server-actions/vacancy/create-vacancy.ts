@@ -19,7 +19,6 @@ export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
       file: photo,
       bucket: env.S3_BUCKET_NAME,
       fileKey: fileKey,
-      ACL: "public-read",
     });
 
     if (uploadResult.isErr()) {
