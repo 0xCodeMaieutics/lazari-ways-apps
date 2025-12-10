@@ -180,7 +180,7 @@ export function ApplicationsList({
             <a
               className="underline cursor-pointer text-base"
               href={
-                "http://localhost:3000/vacancies?" +
+                `${process.env.NEXT_PUBLIC_WEB_URL}/vacancies?` +
                 new URLSearchParams({
                   application_type: type,
                   utm_url: window.location.href,

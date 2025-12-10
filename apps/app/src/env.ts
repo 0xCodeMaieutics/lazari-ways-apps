@@ -31,7 +31,9 @@ export const env = createEnv({
    * isn't built with invalid env vars. To expose them to the client, prefix them with
    * `NEXT_PUBLIC_`.
    */
-  client: {},
+  client: {
+    NEXT_PUBLIC_WEB_URL: z.string().url(),
+  },
 
   /**
    *   *---- T3 Stack Config ----*
@@ -53,6 +55,8 @@ export const env = createEnv({
     S3_BUCKET_NAME: process.env.S3_BUCKET_NAME,
 
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
+
+    NEXT_PUBLIC_WEB_URL: process.env.NEXT_PUBLIC_WEB_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
