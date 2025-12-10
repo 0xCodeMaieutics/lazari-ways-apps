@@ -15,7 +15,6 @@ export const createApplications = async ({
     id: string;
     key: string;
     type: $Enums.S3ObjectType;
-    acl: $Enums.S3ObjectAcl;
   }> = [];
 
   const applicationDocumentsMap = new Map<
@@ -47,7 +46,6 @@ export const createApplications = async ({
         id: doc.s3ObjectId,
         key: doc.key,
         type: doc.s3DocType,
-        acl: $Enums.S3ObjectAcl.PRIVATE,
       }))
     );
   });

@@ -11,7 +11,7 @@
     "db:generate": "prisma generate",
     "db:generate:sql": "prisma generate --sql",
     "db:reset": "dotenv -e .env -- pnpm prisma migrate reset --skip-seed",
-    "db:reset-migrate": "dotenv -e .env -- pnpm prisma migrate reset && pnpm db:migrate",
+    "db:reset-migrate": "dotenv -e .env -- prisma migrate reset --skip-generate -f && prisma migrate dev",
     "db:migrate": "dotenv -e .env -- prisma migrate dev",
     "db:deploy": "dotenv -e .env.prod -- prisma migrate deploy",
     "db:seed": "prisma db seed",

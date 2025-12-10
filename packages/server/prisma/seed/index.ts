@@ -7,7 +7,10 @@ import { createUsers } from "./user.js";
 import z from "zod";
 import { auth } from "../../src/auth/auth.js";
 import { $Enums, ApplicationType, Prisma } from "db/client.js";
-import { uploadFilePathToStorage } from "@workspace/file-upload/s3-client";
+import {
+  getSignedUrlForDownload,
+  uploadFilePathToStorage,
+} from "@workspace/file-upload/s3-client";
 import path from "path";
 import { prisma } from "../../src/db/client.js";
 import { encrypt } from "../../src/utils/encrypt.js";
@@ -75,16 +78,36 @@ void (async function () {
     const employeeFotoUploadResult = await uploadFilePathToStorage({
       bucket: envResult.value.S3_BUCKET_NAME,
       fileKey: employeeFotoKey,
-      filePath: path.resolve(import.meta.dirname, "hotels.webp"),
+      filePath: path.resolve(import.meta.dirname, "profile-student.jpg"),
     });
+
+    let employeeSignedUrlParams: string[] = [];
+
+    for (const id of employeeIds) {
+      const signedUrls = await getSignedUrlForDownload({
+        bucket: envResult.value.S3_BUCKET_NAME,
+        fileKey: employeeFotoKey,
+        expiresInSeconds: 60 * 60 * 24, // 1 day
+      });
+      if (signedUrls.isErr()) {
+        console.error("SIGNED_URL_GENERATION_ERROR", signedUrls.error);
+        return;
+      }
+
+      employeeSignedUrlParams.push(
+        new URL(signedUrls.value).searchParams.toString()
+      );
+    }
+
     await tx.s3Object.createMany({
       data: employeeIds.map(
-        (id) =>
+        (id, i) =>
           ({
             id,
             key: employeeFotoKey,
             type: $Enums.S3ObjectType.IMAGE,
             employeeId: id,
+            amzSignedUrlSearchParams: employeeSignedUrlParams[i],
           }) satisfies Prisma.S3ObjectCreateManyInput
       ),
     });
