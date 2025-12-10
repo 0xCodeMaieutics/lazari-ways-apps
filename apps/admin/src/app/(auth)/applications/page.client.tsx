@@ -43,7 +43,7 @@ export const DashboardTableContent = ({
     return (
       <TableRow
         onClick={() => {
-          router.push(`/${application.id}`);
+          router.push(`/applications/${application.id}`);
         }}
         key={application.id}
         className="h-14 cursor-pointer"
