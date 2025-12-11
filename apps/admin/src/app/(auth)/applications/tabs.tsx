@@ -1,42 +1,35 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import clsx from "clsx";
+import { usePathname, useRouter } from "next/navigation";
+import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 
 const tabs = [
   {
     label: "Alle Bewerbungen",
-    href: "/applications/all",
+    value: "/applications/all",
   },
   {
     label: "Benötigt Bearbeitung",
-    href: "/applications/needs-review",
+    value: "/applications/needs-review",
   },
 ];
 
 export function ApplicationsTabs() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const activeTab =
+    tabs.find((tab) => pathname === tab.value)?.value ?? tabs[0]?.value ?? "";
 
   return (
-    <div className="flex gap-2 border-b border-slate-200 mb-6">
-      {tabs.map((tab) => {
-        const isActive = pathname === tab.href;
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            className={clsx(
-              "px-4 py-3 font-medium border-b-2 transition-colors",
-              isActive
-                ? "border-blue-500 text-blue-600"
-                : "border-transparent text-slate-600 hover:text-slate-900"
-            )}
-          >
+    <Tabs value={activeTab} onValueChange={(value) => router.push(value)}>
+      <TabsList>
+        {tabs.map((tab) => (
+          <TabsTrigger key={tab.value} value={tab.value}>
             {tab.label}
-          </Link>
-        );
-      })}
-    </div>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+    </Tabs>
   );
 }

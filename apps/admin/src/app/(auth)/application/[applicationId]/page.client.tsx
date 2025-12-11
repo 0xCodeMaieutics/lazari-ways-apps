@@ -9,6 +9,12 @@ import {
   SelectTrigger,
 } from "@workspace/ui/components/select";
 import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@workspace/ui/components/tabs";
+import {
   ArrowLeft,
   Phone,
   Calendar,
@@ -16,10 +22,10 @@ import {
   FileText,
   Download,
   LucideIcon,
+  MapPin,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 import type React from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
@@ -109,7 +115,7 @@ export const InformationSection = ({
   return (
     <Card className="p-6 shadow-sm border-slate-200">
       <h2 className="text-lg font-semibold text-slate-900 mb-6 flex items-center gap-2">
-        {TitleIcon && <TitleIcon className="w-5 h-5 text-blue-500" />}
+        {TitleIcon && <TitleIcon className="size-5 text-primary" />}
         {title}
       </h2>
       <div className="space-y-5">{children}</div>
@@ -208,10 +214,6 @@ export const ApplicationDetail = ({
   employee: NonNullable<GetApplication["employee"]>;
   fotoUrl: string | null;
 }) => {
-  const [activeTab, setActiveTab] = useState<"personal" | "employment">(
-    "personal"
-  );
-
   const fullName =
     `${employee?.firstName || ""} ${employee?.lastName || ""}`.trim();
 
@@ -273,7 +275,7 @@ export const ApplicationDetail = ({
           <div className="px-6 sm:px-8 pb-6 pt-0">
             <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-end -mt-16">
               {fotoUrl !== null ? (
-                <div className="relative h-40 w-40 rounded-lg border-4 border-background shadow-lg overflow-hidden">
+                <div className="relative size-40 border-4 border-background shadow-lg overflow-hidden rounded-full">
                   <Image
                     src={fotoUrl}
                     alt={fullName}
@@ -321,36 +323,19 @@ export const ApplicationDetail = ({
         </Card>
 
         {/* Tab Navigation */}
-        <div className="mb-8">
-          <div className="flex gap-2 border-b border-slate-200">
-            <button
-              onClick={() => setActiveTab("personal")}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
-                activeTab === "personal"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-slate-600 hover:text-slate-900"
-              }`}
-            >
+        <Tabs defaultValue="personal" className="mb-8">
+          <TabsList>
+            <TabsTrigger value="personal">
               Persönliche Informationen
-            </button>
-            <button
-              onClick={() => setActiveTab("employment")}
-              className={`px-4 py-3 font-medium border-b-2 transition-colors ${
-                activeTab === "employment"
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-slate-600 hover:text-slate-900"
-              }`}
-            >
+            </TabsTrigger>
+            <TabsTrigger value="employment">
               Beschäftigung & Bewerbung
-            </button>
-          </div>
-        </div>
+            </TabsTrigger>
+          </TabsList>
 
-        {/* Content Sections */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Personal Information Tab */}
-          {activeTab === "personal" && (
-            <>
+          {/* Personal Information Tab Content */}
+          <TabsContent value="personal" className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               <InformationSection title="Kontaktinformationen" titleIcon={User}>
                 {employee?.phone && (
                   <InformationItemExternalLink
@@ -407,12 +392,12 @@ export const ApplicationDetail = ({
                   <InformationValue>{employee?.city}</InformationValue>
                 </InformationItem>
               </InformationSection>
-            </>
-          )}
+            </div>
+          </TabsContent>
 
-          {/* Employment Information Tab */}
-          {activeTab === "employment" && (
-            <>
+          {/* Employment Information Tab Content */}
+          <TabsContent value="employment" className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
               <InformationSection
                 title="Bewerbungsdetails"
                 titleIcon={Calendar}
@@ -420,12 +405,12 @@ export const ApplicationDetail = ({
                 <InformationItem Icon={Calendar} label="Bewerbungsdatum">
                   <InformationValue>{application.createdAt}</InformationValue>
                 </InformationItem>
-                <InformationItem Icon={null} label="Anwendungstyp">
+                <InformationItem Icon={FileText} label="Anwendungstyp">
                   <InformationValue>{application.type}</InformationValue>
                 </InformationItem>
-                <InformationItem Icon={null} label="In Deutschland gewesen">
+                <InformationItem Icon={MapPin} label="In Deutschland gewesen">
                   <InformationValue>
-                    {application.hasBeenInGermanyBefore}
+                    {application.hasBeenInGermanyBefore ? "Ja" : "Nein"}
                   </InformationValue>
                 </InformationItem>
                 <InformationItem Icon={null} label="Führerschein">
@@ -470,38 +455,36 @@ export const ApplicationDetail = ({
                   <InformationValue>{application.allergies}</InformationValue>
                 </InformationItem>
               </InformationSection>
-            </>
-          )}
-        </div>
+            </div>
 
-        {/* Description Section */}
-        {/* Currently no description field in Application */}
+            {/* Description Section */}
+            {/* Currently no description field in Application */}
 
-        {/* Previous Stay Section */}
-        {activeTab === "employment" && (
-          <div className="mb-8">
-            <InformationSection
-              title="Vorherige Deutschlandaufenthalte"
-              titleIcon={Calendar}
-            >
-              <InformationItem label="Ort des Aufenthalts">
-                <InformationValue>
-                  {application.previousStayPlace}
-                </InformationValue>
-              </InformationItem>
-              <InformationItem label="Von">
-                <InformationValue>
-                  {application.previousStayPeriodFrom}
-                </InformationValue>
-              </InformationItem>
-              <InformationItem label="Bis">
-                <InformationValue>
-                  {application.previousStayPeriodTo}
-                </InformationValue>
-              </InformationItem>
-            </InformationSection>
-          </div>
-        )}
+            {/* Previous Stay Section */}
+            <div className="mb-8">
+              <InformationSection
+                title="Vorherige Deutschlandaufenthalte"
+                titleIcon={Calendar}
+              >
+                <InformationItem label="Ort des Aufenthalts">
+                  <InformationValue>
+                    {application.previousStayPlace}
+                  </InformationValue>
+                </InformationItem>
+                <InformationItem label="Von">
+                  <InformationValue>
+                    {application.previousStayPeriodFrom}
+                  </InformationValue>
+                </InformationItem>
+                <InformationItem label="Bis">
+                  <InformationValue>
+                    {application.previousStayPeriodTo}
+                  </InformationValue>
+                </InformationItem>
+              </InformationSection>
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* Metadata Footer */}
         <div className="border-t border-slate-200 pt-6 text-sm text-slate-500">

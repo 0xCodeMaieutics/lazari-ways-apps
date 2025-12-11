@@ -2,9 +2,18 @@
 import { StatusSelect } from "@/components/status-select";
 import { TableCell, TableRow } from "@workspace/ui/components/table";
 import { GetApplications } from "@workspace/server/db";
-import { ApplicationStatus } from "@workspace/server/db/models";
+import {
+  ApplicationStatus,
+  ApplicationType,
+} from "@workspace/server/db/models";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+
+const applicationTypeToLabel = {
+  [ApplicationType.KKB3]: "KKB3",
+  [ApplicationType.KKB8]: "KKB8",
+  [ApplicationType.STUDENT]: "STUDENT",
+};
 
 export const DashboardTableContent = ({
   applications,
@@ -59,7 +68,7 @@ export const DashboardTableContent = ({
           {application.employee?.phone}
         </TableCell>
         <TableCell className="font-semibold">
-          {/* {applicationTypeToLabel[application.type] || "-"} */}
+          {applicationTypeToLabel[application.type]}
         </TableCell>
         <TableCell onClick={(e) => e.stopPropagation()}>
           <StatusSelect
