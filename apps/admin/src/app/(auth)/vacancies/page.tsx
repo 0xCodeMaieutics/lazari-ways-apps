@@ -1,4 +1,3 @@
-// import { DashboardTableContent } from "./page.client";
 import {
   Table,
   TableBody,

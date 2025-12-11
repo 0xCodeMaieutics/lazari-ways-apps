@@ -163,21 +163,21 @@ void (async function () {
             faker.number.int({ min: 1, max: 2 })
           ),
           vacancyId,
-          title: "მცხობელი",
-          jobDescription: `ვაკანსია მუშაობა სასტუმროში დასასვენებელ კომპლექსში`,
-          location: "ნიუბერგის ახლოს",
+          title: "Bäcker",
+          jobDescription: `Stellenausschreibung für Arbeit im Hotel in einem Erholungskomplex`,
+          location: "In der Nähe von Neuberg",
           beginDate: "2024-09-01",
-          accommodation: "სასტუმროში",
-          duration: `${30 + index} დღე`,
-          meals: "სამჯერადი",
+          accommodation: "Im Hotel",
+          duration: `${30 + index} Tage`,
+          meals: "Dreimal täglich",
           salary: `${800 + index * 10} EUR`,
-          languageLevel: "ინგლისური ან რუსული ენის მინიმალური დონე",
+          languageLevel: "Mindestniveau in Englisch oder Russisch",
           hide: false,
-          availableTo:
-            index % 2 === 0 ? "მხოლოდ ქალბატონებისთვის" : "ყველასთვის",
+          availableTo: index % 2 === 0 ? "Nur für Damen" : "Für alle",
           schedule:
-            "- სამუშაო დღეებში 8 საათი\n- შაბათ-კვირას თავისუფალი\n- საღამოები თავისუფალი",
-          additionalInfo: "გამოცდილება სასურველია, მაგრამ არა აუცილებელი.",
+            "- 8 Stunden an Arbeitstagen\n- Wochenenden frei\n- Abende frei",
+          additionalInfo:
+            "Erfahrung ist wünschenswert, aber nicht erforderlich.",
           acceptedApplicationTypes: faker.helpers.arrayElements(
             Object.values(ApplicationType),
             faker.number.int({ min: 1, max: 2 })
@@ -234,8 +234,8 @@ void (async function () {
         (vacancyId, index) =>
           ({
             id: generateRandomString(32),
-            name: `მარიამ გოცირიძე ${index + 1}`,
-            review: `სასტუმროში მუშაობა ძალიან სასიამოვნო იყო. გარემო მეგობრული და მხარდაჭერით სავსე იყო. ვურჩევ ყველას, ვინც ამ სფეროში მუშაობას აპირებს.`,
+            name: `Mariam Gotsiridze ${index + 1}`,
+            review: `Die Arbeit im Hotel war sehr angenehm. Die Atmosphäre war freundlich und unterstützend. Ich empfehle es allen, die in diesem Bereich arbeiten möchten.`,
             instagram: `@mariam.gotsiridze${index + 1}`,
             vacancyId,
             imageId: vacancyPhotoIds[index],
