@@ -29,6 +29,12 @@
     },
     "db:deploy": {
       "cache": false
+    },
+    "db:reset-migrate": {
+      "cache": false
+    },
+    "db:studio": {
+      "cache": false
     }
   },
   "globalEnv": [

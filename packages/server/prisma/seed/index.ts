@@ -186,21 +186,21 @@ void (async function () {
       }),
     });
 
-    const photosIds = vacancyIds.map(() => generateRandomString(32));
-    const photoIds = vacancyIds.map(() => generateRandomString(32));
+    const vacancyPhotoIds = vacancyIds.map(() => generateRandomString(32));
+    const employeePhotoIds = employeeIds.map(() => generateRandomString(32));
 
     await tx.s3Object.createMany({
-      data: photosIds.map(
+      data: vacancyPhotoIds.map(
         (id) =>
           ({
             id,
-            key: employeeFotoKey,
+            key: vacancyPhotoFileKey,
             type: $Enums.S3ObjectType.IMAGE,
           }) satisfies Prisma.S3ObjectCreateManyInput
       ),
     });
     await tx.s3Object.createMany({
-      data: photoIds.map(
+      data: employeePhotoIds.map(
         (id) =>
           ({
             id,
@@ -212,24 +212,20 @@ void (async function () {
 
     // update vacancies with photo relation
     for (let i = 0; i < vacancyIds.length; i++) {
-      const vacancyId = vacancyIds[i];
-      const photoId = photoIds[i];
-
       await tx.vacancy.update({
-        where: { id: vacancyId },
+        where: { id: vacancyIds[i] },
         data: {
           photo: {
-            connect: { id: photoId },
+            connect: { id: vacancyPhotoIds[i] },
           },
           photos: {
-            connect: { id: photosIds[i] },
+            connect: { id: vacancyPhotoIds[i] },
           },
         },
       });
     }
 
     // create vacancy reviews
-
     await tx.vacancyReview.createMany({
       data: vacancyIds.map(
         (vacancyId, index) =>
@@ -239,7 +235,7 @@ void (async function () {
             review: `სასტუმროში მუშაობა ძალიან სასიამოვნო იყო. გარემო მეგობრული და მხარდაჭერით სავსე იყო. ვურჩევ ყველას, ვინც ამ სფეროში მუშაობას აპირებს.`,
             instagram: `@mariam.gotsiridze${index + 1}`,
             vacancyId,
-            imageId: photosIds[index],
+            imageId: vacancyPhotoIds[index],
           }) satisfies Prisma.VacancyReviewCreateManyInput
       ),
     });
