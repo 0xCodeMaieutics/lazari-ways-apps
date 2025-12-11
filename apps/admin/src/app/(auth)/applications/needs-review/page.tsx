@@ -21,15 +21,6 @@ import { ApplicationStatus } from "@workspace/server/db/models";
 
 export const dynamic = "force-dynamic";
 
-const TABLE_HEADERS = [
-  "Name",
-  "E-Mail",
-  "Instagram",
-  "Telefon",
-  "Visumstyp",
-  "Status",
-];
-
 const DEFAULT_PAGE = "1";
 const DEFAULT_PAGE_SIZE = "10";
 const DEFAULT_PAGES = [10, 25, 50, 100];
@@ -126,13 +117,16 @@ export default async function NeedsReviewApplicationsPage({
       </div>
       <div className="space-y-2">
         <Table className="w-full z-0">
-          <TableHeader className="h-14 ssticky top-0 z-10 pb-1">
+          <TableHeader className="pb-1">
             <TableRow>
-              {TABLE_HEADERS.map((header) => (
-                <TableHead className="text-xs" key={header}>
-                  {header}
-                </TableHead>
-              ))}
+              <TableHead className="text-xs">Name</TableHead>
+              <TableHead className="text-xs">E-Mail</TableHead>
+              <TableHead className="text-xs">Instagram</TableHead>
+              <TableHead className="text-xs">Telefon</TableHead>
+              <TableHead className="text-xs">Bewerber-Typ</TableHead>
+              <TableHead className="text-xs pr-6">
+                <div className="flex justify-end">Status</div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="overflow-y-auto">
@@ -140,7 +134,7 @@ export default async function NeedsReviewApplicationsPage({
               fallback={
                 <TableRow>
                   <TableCell
-                    colSpan={TABLE_HEADERS.length}
+                    colSpan={6}
                     className="text-center text-muted-foreground"
                   >
                     <LoaderCircle className="mr-2 inline-block size-4 animate-spin" />

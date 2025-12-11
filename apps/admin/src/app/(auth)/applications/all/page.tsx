@@ -114,13 +114,16 @@ export default async function AllApplicationsPage({
       </div>
       <div className="space-y-2">
         <Table className="w-full z-0">
-          <TableHeader className="h-14 ssticky top-0 z-10 pb-1">
+          <TableHeader className="pb-1">
             <TableRow>
-              {TABLE_HEADERS.map((header) => (
-                <TableHead className="text-xs" key={header}>
-                  {header}
-                </TableHead>
-              ))}
+              <TableHead className="text-xs">Name</TableHead>
+              <TableHead className="text-xs">E-Mail</TableHead>
+              <TableHead className="text-xs">Instagram</TableHead>
+              <TableHead className="text-xs">Telefon</TableHead>
+              <TableHead className="text-xs">Bewerber-Typ</TableHead>
+              <TableHead className="text-xs pr-6">
+                <div className="flex justify-end">Status</div>
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody className="overflow-y-auto">
