@@ -37,6 +37,11 @@ export type GetApplications = Prisma.ApplicationGetPayload<{
         user: true;
       };
     };
+    vacancy: {
+      select: {
+        vacancyId: true;
+      };
+    };
   };
 }>;
 
@@ -97,6 +102,11 @@ export const applicationQueries = {
             employee: {
               include: {
                 user: true,
+              },
+            },
+            vacancy: {
+              select: {
+                vacancyId: true,
               },
             },
           },

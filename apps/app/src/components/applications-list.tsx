@@ -16,7 +16,6 @@ import {
   Plus,
   Calendar,
 } from "lucide-react";
-import Link from "next/link";
 import { format } from "date-fns";
 import { GetApplications } from "@workspace/server/db";
 import {
@@ -35,56 +34,57 @@ const statusConfig: Record<
   }
 > = {
   USER_SUBMITTED: {
-    label: "Submitted",
+    label: "Eingereicht",
     variant: "secondary",
     icon: <Clock className="h-3 w-3" />,
   },
   IN_REVIEW_BY_AGENCY: {
-    label: "Under Review by Agency",
+    label: "In Prüfung durch Agentur",
     variant: "secondary",
     icon: <Clock className="h-3 w-3" />,
   },
   APPROVED_BY_AGENCY: {
-    label: "Approved by Agency",
+    label: "Von Agentur genehmigt",
     variant: "default",
     icon: <CheckCircle className="h-3 w-3" />,
   },
   REJECTED_BY_AGENCY: {
-    label: "Rejected by Agency",
+    label: "Von Agentur abgelehnt",
     variant: "destructive",
     icon: <XCircle className="h-3 w-3" />,
   },
   IN_REVIEW_BY_EMPLOYER: {
-    label: "Under Review by Employer",
+    label: "In Prüfung durch Arbeitgeber",
     variant: "secondary",
     icon: <Clock className="h-3 w-3" />,
   },
   APPROVED_BY_EMPLOYER: {
-    label: "Approved by Employer",
+    label: "Von Arbeitgeber genehmigt",
     variant: "default",
     icon: <CheckCircle className="h-3 w-3" />,
   },
   REJECTED_BY_EMPLOYER: {
-    label: "Rejected by Employer",
+    label: "Von Arbeitgeber abgelehnt",
     variant: "destructive",
     icon: <XCircle className="h-3 w-3" />,
   },
 };
 
 const applicationTypeToLabel = {
-  KKB3: "KKB 3 months",
-  KKB8: "KKB 8 months",
-  STUDENT: "Student",
+  KKB3: "KKB 3 Monate",
+  KKB8: "KKB 8 Monate",
+  STUDENT: "Studentenvisum",
 } satisfies Record<ApplicationType, string>;
 
 function ApplicationCard({ application }: { application: GetApplications }) {
   const applicationStatus =
     application.status ?? ApplicationStatus.USER_SUBMITTED;
   const status = statusConfig[applicationStatus];
+  console.log({ application });
 
   return (
     <Card>
-      <CardContent className="pt-6">
+      <CardContent>
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-start gap-4">
             <div className="p-2 rounded-lg bg-primary/10">
@@ -99,13 +99,12 @@ function ApplicationCard({ application }: { application: GetApplications }) {
                 }
               </h3>
               <p className="text-sm text-muted-foreground">
-                {/* FIXME: fetch user information in the server component and display */}
-                {/* {application.firstName} {application.lastName} */}
+                Stellen-ID: {application?.vacancy?.vacancyId}
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3" />
                 <span>
-                  Submitted {format(new Date(application.createdAt), "PPP")}
+                  Eingereicht {format(new Date(application.createdAt), "PPP")}
                 </span>
               </div>
             </div>
@@ -155,15 +154,6 @@ export function ApplicationsList({
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const hasKKB8Application = applications.some(
-    (app) => app.type === ApplicationType.KKB8
-  );
-  const hasKKB3Application = applications.some(
-    (app) => app.type === ApplicationType.KKB3
-  );
-  const hasStudentApplication = applications.some(
-    (app) => app.type === ApplicationType.STUDENT
-  );
 
   const onPush = (type: ApplicationType) => {
     const vacancyId = searchParams.get("vacancyId");
@@ -211,42 +201,32 @@ export function ApplicationsList({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg md:text-xl">Bewerbugen</CardTitle>
+        <CardTitle className="text-lg md:text-xl">Bewerbungen</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* New Application Section */}
-        {hasKKB8Application &&
-        hasKKB3Application &&
-        hasStudentApplication ? null : (
-          <div>
-            <h3 className="text-sm font-medium text-muted-foreground mb-3">
-              Beginnen Sie mit der Erstellung einer neuen Bewerbung
-            </h3>
-            <div className="grid gap-3 md:grid-cols-3">
-              {!hasKKB8Application && (
-                <ApplicationTypeButton
-                  onPush={() => onPush(ApplicationType.KKB8)}
-                  label="KKB 8 Monaten"
-                  description="Kurzzeitige kontingentierte Beschäftigung"
-                />
-              )}
-              {!hasKKB3Application && (
-                <ApplicationTypeButton
-                  onPush={() => onPush(ApplicationType.KKB3)}
-                  label="KKB 3 Monaten"
-                  description="Kurzzeitige kontingentierte Beschäftigung"
-                />
-              )}
-              {!hasStudentApplication && (
-                <ApplicationTypeButton
-                  onPush={() => onPush(ApplicationType.STUDENT)}
-                  label="Studentenvisum"
-                  description="Antrag auf ein Studentenvisum stellen"
-                />
-              )}
-            </div>
+        <div>
+          <h3 className="text-sm font-medium text-muted-foreground mb-3">
+            Beginnen Sie mit der Erstellung einer neuen Bewerbung
+          </h3>
+          <div className="grid gap-3 md:grid-cols-3">
+            <ApplicationTypeButton
+              onPush={() => onPush(ApplicationType.KKB8)}
+              label="KKB 8 Monaten"
+              description="Kurzzeitige kontingentierte Beschäftigung"
+            />
+            <ApplicationTypeButton
+              onPush={() => onPush(ApplicationType.KKB3)}
+              label="KKB 3 Monaten"
+              description="Kurzzeitige kontingentierte Beschäftigung"
+            />
+            <ApplicationTypeButton
+              onPush={() => onPush(ApplicationType.STUDENT)}
+              label="Studentenvisum"
+              description="Antrag auf ein Studentenvisum stellen"
+            />
           </div>
-        )}
+        </div>
 
         {/* Existing Applications */}
         <div>
