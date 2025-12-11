@@ -11,12 +11,12 @@ import { LoaderCircle } from "lucide-react";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Pagination } from "@/components/pagination";
-import { SearchInput } from "@/components/search-input";
 import { Results } from "@workspace/shared/error-handling/result";
 import { vacancyQueries, VacancyWhereInput } from "@workspace/server/db";
 import { VacanciesTableContent } from "./page.client";
 import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
+import { SearchInput } from "@/components/search-input";
 
 export const dynamic = "force-dynamic";
 
@@ -117,21 +117,19 @@ export default async function DashboardPage({
   return (
     <div className="h-dvh w-full mx-auto space-y-6 pt-40 pb-10">
       <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold">Stellenanzeigen</h1>
-          {isVacanciesEmpty === false && (
-            <div>
-              <SearchInput
-                placeholder="Stellenanzeigen ID"
-                defaultValue={search}
-              />
-            </div>
-          )}
-        </div>
+        {isVacanciesEmpty === false && (
+          <div>
+            <SearchInput
+              placeholder="Stellenanzeigen ID"
+              defaultValue={search}
+            />
+          </div>
+        )}
         <Button asChild className="cursor-pointer">
           <Link href={"/vacancies/new"}>Neu erstellen</Link>
         </Button>
       </div>
+
       <div className="space-y-2">
         <Table className="w-full z-0">
           <TableHeader className="h-14 ssticky top-0 z-10 pb-1">
