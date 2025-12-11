@@ -182,6 +182,9 @@ void (async function () {
             Object.values(ApplicationType),
             faker.number.int({ min: 1, max: 2 })
           ),
+          createdAt: new Date(
+            new Date().getDate() - index * 60 * 60 * 24 * 1000
+          ).toISOString(),
         } satisfies Prisma.VacancyCreateManyInput;
       }),
     });
