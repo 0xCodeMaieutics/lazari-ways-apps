@@ -106,7 +106,7 @@ export default async function AllApplicationsPage({
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <SearchInput
           placeholder="Name, Instagram, E-Mail, Telefon..."
           defaultValue={search}

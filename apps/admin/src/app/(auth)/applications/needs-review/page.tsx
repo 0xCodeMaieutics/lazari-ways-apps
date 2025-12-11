@@ -118,7 +118,7 @@ export default async function NeedsReviewApplicationsPage({
 
   return (
     <div>
-      <div className="flex justify-end">
+      <div className="flex justify-start">
         <SearchInput
           placeholder="Name, Instagram, E-Mail, Telefon..."
           defaultValue={search}

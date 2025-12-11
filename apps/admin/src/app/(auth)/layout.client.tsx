@@ -19,11 +19,10 @@ const LogoAndText = () => {
     </Link>
   );
 };
-const Underline = () => (
-  <span className="absolute bottom-0 left-0 w-full h-0.5 bg-current opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-in-out" />
-);
+
 export const Header = () => {
   const pathname = usePathname();
+  console.log(pathname);
 
   const logoRef = React.useRef<HTMLDivElement>(null);
   return (
@@ -38,7 +37,7 @@ export const Header = () => {
         <nav className="flex-1 flex justify-center gap-3">
           <Button
             className={clsx(
-              "flex items-center gap-2 relative font-medium group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
+              "flex items-center gap-2 relative font-normal group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
               {
                 "font-semibold": pathname === "/vacancies",
               }
@@ -46,25 +45,19 @@ export const Header = () => {
             variant={"link"}
             asChild
           >
-            <Link href={"/vacancies"}>
-              Stellenanzeigen
-              <Underline />
-            </Link>
+            <Link href={"/vacancies"}>Stellenanzeigen</Link>
           </Button>
           <Button
             className={clsx(
-              "flex items-center gap-2 relative font-medium group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
+              "flex items-center gap-2 relative font-normal group hover:no-underline text-lg px-0.5 cursor-pointer max-w-max",
               {
-                "font-semibold": pathname === "/applications",
+                "font-semibold": pathname.includes("/applications"),
               }
             )}
             variant={"link"}
             asChild
           >
-            <Link href="/applications">
-              Kandidaten
-              <Underline />
-            </Link>
+            <Link href="/applications">Bewerbungen</Link>
           </Button>
         </nav>
         <div
