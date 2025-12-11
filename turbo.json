@@ -22,19 +22,6 @@
     "db:generate": {
       "outputs": ["generated/prisma/**"],
       "cache": false
-    },
-    "db:migrate": {
-      "cache": false,
-      "persistent": true
-    },
-    "db:deploy": {
-      "cache": false
-    },
-    "db:reset-migrate": {
-      "cache": false
-    },
-    "db:studio": {
-      "cache": false
     }
   },
   "globalEnv": [

@@ -1,5 +1,5 @@
 import z from "zod";
-
+import { ApplicationType } from "@workspace/server/db/models";
 const acceptedImageTypes = ["image/png", "image/jpeg", "image/jpg"];
 
 const isImageFile = (errorMsg: string) =>
@@ -18,6 +18,10 @@ export const newVacancyFormSchema = z.object({
   schedule: z.string().min(1, "Schedule is required"),
   accommodation: z.string().min(1, "Accommodation information is required"),
   meals: z.string().min(1, "Meals information is required"),
+  acceptedApplicationTypes: z
+    .enum([ApplicationType.KKB3, ApplicationType.KKB8, ApplicationType.STUDENT])
+    .array()
+    .min(1, "Accepted application types is required"),
   availableTo: z.string().nullable().optional(),
   languageLevel: z.string().nullable().optional(),
   additionalInfo: z.string().nullable().optional(),

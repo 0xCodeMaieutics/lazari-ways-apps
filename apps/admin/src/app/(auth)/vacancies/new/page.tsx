@@ -17,6 +17,7 @@ import { createVacancy } from "@/utils/server-actions/vacancy/create-vacancy";
 import { FileUpload } from "@/components/file-upload";
 import { X } from "lucide-react";
 import { NewVacancyFormData, newVacancyFormSchema } from "./schema";
+import { ApplicationType } from "@workspace/server/db/models";
 
 export default function VacanciesNewPage() {
   const router = useRouter();
@@ -69,6 +70,10 @@ Badezimmer: Duschkabine.`
       hide: false,
       photos: [],
       videos: [],
+      acceptedApplicationTypes:
+        process.env.NODE_ENV === "development"
+          ? [ApplicationType.KKB3, ApplicationType.KKB8]
+          : [],
     },
   });
 
@@ -112,6 +117,7 @@ Badezimmer: Duschkabine.`,
       languageLevel: "Grundkenntnisse Deutsch",
       additionalInfo: `Der Arbeitgeber stellt Arbeitsschuhe zur Verfügung, aber Sie sollten wettergerechte Kleidung und bequemes eigenes Schuhwerk mitbringen. Das Gehalt wird per Überweisung oder bar am 20. des Folgemonats ausgezahlt. Die Gehaltshöhe kann je nach geleisteten Arbeitsstunden variieren. Pro Stunde müssen 4 - 5 Kisten Erdbeeren, Himbeeren und Johannisbeeren gepflückt werden. Es gibt im Betrieb Normen, die erfüllt werden müssen. Achtung! Die Beschäftigungsdauer kann je nach Ernte und Wetterbedingungen verlängert oder verkürzt werden. Reisekosten und Versicherungspolice werden separat bezahlt.**`,
       hide: false,
+      acceptedApplicationTypes: [ApplicationType.KKB3, ApplicationType.KKB8],
     };
 
     // Reset the form with default values
@@ -405,6 +411,59 @@ Badezimmer: Duschkabine.`,
                     placeholder="Weitere relevante Informationen..."
                     className="mt-2 min-h-[100px]"
                   />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="acceptedApplicationTypes"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <Label>
+                    Akzeptierte Bewerbungstypen *{" "}
+                    <span className="text-muted-foreground text-sm font-normal">
+                      (mindestens eine Auswahl erforderlich)
+                    </span>
+                  </Label>
+                  <div className="mt-3 space-y-3">
+                    {[
+                      { value: ApplicationType.KKB3, label: "KKB3" },
+                      { value: ApplicationType.KKB8, label: "KKB8" },
+                      { value: ApplicationType.STUDENT, label: "Student" },
+                    ].map((option) => (
+                      <div
+                        key={option.value}
+                        className="flex items-center space-x-2"
+                      >
+                        <input
+                          type="checkbox"
+                          id={`acceptedApplicationTypes-${option.value}`}
+                          checked={field.value?.includes(option.value) ?? false}
+                          onChange={(e) => {
+                            const currentValue = field.value ?? [];
+                            if (e.target.checked) {
+                              field.onChange([...currentValue, option.value]);
+                            } else {
+                              field.onChange(
+                                currentValue.filter((v) => v !== option.value)
+                              );
+                            }
+                          }}
+                          className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <Label
+                          htmlFor={`acceptedApplicationTypes-${option.value}`}
+                          className="text-sm font-normal cursor-pointer"
+                        >
+                          {option.label}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}

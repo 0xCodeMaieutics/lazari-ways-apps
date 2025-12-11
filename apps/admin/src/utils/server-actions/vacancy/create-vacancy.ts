@@ -8,7 +8,7 @@ import {
 import { uploadFileToStorage } from "@workspace/file-upload/s3-client";
 import { env } from "@/env";
 import { NewVacancyFormData } from "@/app/(auth)/vacancies/new/schema";
-import { S3Object } from "@workspace/server/db/models";
+import { ApplicationType, S3Object } from "@workspace/server/db/models";
 export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
   const id = generateRandomString(32);
 
@@ -52,7 +52,8 @@ export const createVacancy = async ({ photo, ...data }: NewVacancyFormData) => {
     availableTo: data.availableTo,
     additionalInfo: data.additionalInfo,
     hide: data.hide,
-    acceptableApplicationTypes: ["KKB3", "KKB8", "STUDENT"], // TODO: make dynamic based on selected
+    acceptableApplicationTypes:
+      data.acceptedApplicationTypes as ApplicationType[],
     reviews: {}, // TODO: implement reviews
   } satisfies VacancyCreateInput);
 

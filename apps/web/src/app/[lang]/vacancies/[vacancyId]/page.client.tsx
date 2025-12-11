@@ -44,10 +44,17 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { createWhatsappUrl } from "../../constants";
 import { GetVacancy } from "@workspace/server/db";
+import { ApplicationType } from "@workspace/server/db/models";
 import { LogoAndText } from "../../text-logo";
 import { Locale } from "@/i18n";
 
 const VACANCY_ID_PREFIX = "LZRY-";
+
+const applicationTypeLabels = {
+  [ApplicationType.KKB3]: "KKB 3 თვე",
+  [ApplicationType.KKB8]: "KKB 8 თვე",
+  [ApplicationType.STUDENT]: "სტუდენტი",
+} as Record<ApplicationType, string>;
 
 export const VacancyClientPage = ({
   data,
@@ -227,6 +234,36 @@ export const VacancyClientPage = ({
                       </CardContent>
                     </Card>
                   )}
+
+                  {/* Acceptable Application Types */}
+                  {data.acceptableApplicationTypes &&
+                    data.acceptableApplicationTypes.length > 0 && (
+                      <Card className="border-2 sm:col-span-2">
+                        <CardContent className="p-5">
+                          <div className="flex items-start gap-3">
+                            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                              <UserCheck className="size-5 text-primary" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm text-muted-foreground font-medium mb-2">
+                                მიღებადი განაცხადის ტიპები
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {data.acceptableApplicationTypes.map((type) => (
+                                  <Badge
+                                    key={type}
+                                    variant="secondary"
+                                    className="text-sm font-semibold"
+                                  >
+                                    {applicationTypeLabels[type]}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    )}
 
                   {/* Schedule */}
                   <Card className="border-2 sm:col-span-2">

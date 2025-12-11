@@ -16,10 +16,12 @@ import {
   CheckCircle2,
   Copy,
   ExternalLink,
+  UserCheck,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { GetVacancies } from "@workspace/server/db";
+import { ApplicationType } from "@workspace/server/db/models";
 import { Badge } from "@workspace/ui/components/badge";
 import { translationsContext } from "@/lib/context/translations";
 import { Translations } from "@/i18n/translations";
@@ -33,6 +35,12 @@ import { LogoAndText } from "../text-logo";
 import { env } from "@/env";
 
 const VACANCY_ID_PREFIX = "LZRY-";
+
+const applicationTypeLabels: Record<ApplicationType, string> = {
+  [ApplicationType.KKB3]: "KKB 3 თვე",
+  [ApplicationType.KKB8]: "KKB 8 თვე",
+  [ApplicationType.STUDENT]: "სტუდენტი",
+};
 
 const VacancyCard = ({
   vacancy,
@@ -137,6 +145,28 @@ const VacancyCard = ({
             <p className="font-bold text-sm">{vacancy.languageLevel}</p>
           </div>
         </div>
+        {vacancy.acceptableApplicationTypes &&
+          vacancy.acceptableApplicationTypes.length > 0 && (
+            <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+              <UserCheck className="size-5 text-foreground shrink-0 mt-0.5" />
+              <div className="min-w-0 flex-1">
+                <p className="text-xs text-muted-foreground font-medium mb-2">
+                  მიღებადი განაცხადის ტიპები
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {vacancy.acceptableApplicationTypes.map((type) => (
+                    <Badge
+                      key={type}
+                      variant="secondary"
+                      className="text-xs font-semibold"
+                    >
+                      {applicationTypeLabels[type]}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
         <Button
           className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
           size="lg"

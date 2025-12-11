@@ -6,7 +6,13 @@ import {
 
 export const ApplicationStatus = ApplicationStatusEnum;
 export type ApplicationStatus = ApplicationStatusEnum;
-export const ApplicationType = ApplicationTypeEnum;
+
+export const ApplicationType = {
+  KKB3: ApplicationTypeEnum.KKB3,
+  KKB8: ApplicationTypeEnum.KKB8,
+  STUDENT: ApplicationTypeEnum.STUDENT,
+} satisfies Record<string, ApplicationTypeEnum>;
+
 export type ApplicationType = ApplicationTypeEnum;
 
 export const ApplicationDocument = {

@@ -155,9 +155,6 @@ void (async function () {
     await tx.vacancy.createMany({
       data: vacancyIds.map((id, index) => {
         const vacancyId = BASE_VACANCY_ID + index;
-        const createdAt = new Date();
-        createdAt.setDate(createdAt.getDate() - index);
-
         return {
           id,
 
@@ -181,7 +178,10 @@ void (async function () {
           schedule:
             "- სამუშაო დღეებში 8 საათი\n- შაბათ-კვირას თავისუფალი\n- საღამოები თავისუფალი",
           additionalInfo: "გამოცდილება სასურველია, მაგრამ არა აუცილებელი.",
-          createdAt: createdAt.toISOString(),
+          acceptedApplicationTypes: faker.helpers.arrayElements(
+            Object.values(ApplicationType),
+            faker.number.int({ min: 1, max: 2 })
+          ),
         } satisfies Prisma.VacancyCreateManyInput;
       }),
     });

@@ -18,6 +18,7 @@ model Vacancy {
   hide                       Boolean?          @default(false)
   photos                     S3Object[]        @relation(name: "VacancyPhotos")
   videos                     S3Object[]        @relation(name: "VacancyVideos")
+  acceptedApplicationTypes   ApplicationType[] @default([])
   createdAt                  DateTime          @default(now())
   updatedAt                  DateTime          @updatedAt
 
