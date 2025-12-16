@@ -82,16 +82,26 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
   });
 
   return (
-    <div className="w-full max-w-md mx-auto px-4">
+    <div className="h-dvh w-full flex flex-col justify-center items-center">
       <form
         onSubmit={form.handleSubmit((data) =>
           isSignUp ? signUpMutation.mutate(data) : signInMutation.mutate(data)
         )}
         noValidate
+        className="w-full max-w-md mx-auto px-4"
       >
         <div className="space-y-4">
           <div className="flex flex-col items-center justify-center gap-1">
-            <div className="relative h-12 w-[190px]">
+            <div
+              role="button"
+              onClick={() => {
+                if (process.env.NODE_ENV === "development") {
+                  form.setValue("email", DEV_EMAIL);
+                  form.setValue("password", DEV_PASSWORD);
+                }
+              }}
+              className="relative h-12 w-[190px]"
+            >
               <Image
                 src={"/images/logos/logo-text.svg"}
                 alt="Lazary Ways image Logo"

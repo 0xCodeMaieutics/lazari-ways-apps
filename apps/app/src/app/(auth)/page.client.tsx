@@ -103,15 +103,15 @@ export function OnboardingPageClient({
                 variant="outline"
                 size="sm"
                 onClick={() => setIsEditing(true)}
-                className="gap-2"
+                className="gap-2 hidden md:block"
               >
                 <Pencil className="h-4 w-4" />
                 Bearbeite
               </Button>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex flex-col gap-6">
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-6">
                   {/* Gender */}
                   {employee?.gender && (
                     <div className="space-y-1">
@@ -178,6 +178,15 @@ export function OnboardingPageClient({
                   )}
                 </div>
               </>
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => setIsEditing(true)}
+                className="gap-2 flex md:hidden w-full"
+              >
+                <Pencil className="size-4" />
+                Bearbeite
+              </Button>
             </CardContent>
           </Card>
         )}
