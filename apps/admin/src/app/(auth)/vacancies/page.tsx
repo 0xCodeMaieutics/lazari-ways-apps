@@ -17,7 +17,6 @@ import { Button } from "@workspace/ui/components/button";
 import Link from "next/link";
 import { SearchInput } from "@/components/search-input";
 
-export const dynamic = "force-dynamic";
 
 const TABLE_HEADERS = [
   "Stellenanzeigen #ID",

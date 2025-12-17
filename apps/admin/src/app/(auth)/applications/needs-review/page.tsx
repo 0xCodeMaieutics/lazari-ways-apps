@@ -19,7 +19,6 @@ import {
 } from "@workspace/server/db";
 import { ApplicationStatus } from "@workspace/server/db/models";
 
-export const dynamic = "force-dynamic";
 
 const DEFAULT_PAGE = "1";
 const DEFAULT_PAGE_SIZE = "10";

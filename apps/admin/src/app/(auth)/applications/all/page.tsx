@@ -18,7 +18,6 @@ import {
   ApplicationWhereInput,
 } from "@workspace/server/db";
 
-export const dynamic = "force-dynamic";
 
 const TABLE_HEADERS = [
   "Name",

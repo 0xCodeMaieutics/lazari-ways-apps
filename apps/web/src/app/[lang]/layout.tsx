@@ -19,6 +19,8 @@ import { Toaster } from "@workspace/ui/components/sonner";
 //   };
 // }
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Lazari Ways - საკონსულტაციო ფირმა",
   description:

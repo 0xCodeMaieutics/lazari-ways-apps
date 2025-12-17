@@ -2,6 +2,8 @@ import "@workspace/ui/globals.css";
 import { Providers } from "@/components/providers";
 import { Toaster } from "sonner";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: "Administrator-Dashboard - Lazari Ways",
   description:

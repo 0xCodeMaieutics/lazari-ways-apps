@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { env } from "@/env";
 import { ApplicationDetail } from "./page.client";
 
-export const dynamic = "force-dynamic";
 
 const ApplicationDetailPage = async ({
   params,
