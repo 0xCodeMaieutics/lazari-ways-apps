@@ -1,9 +1,8 @@
 "use client";
 import Image from "next/image";
 import { Button } from "@workspace/ui/components/button";
-import { scrollSmoothlyToSection, SECTION_IDS } from "../../utils";
+import { SECTION_IDS } from "../../utils";
 import {
-  ArrowDown,
   CheckCircle2,
   Euro,
   Briefcase,
@@ -47,6 +46,7 @@ import { GetVacancy } from "@workspace/server/db";
 import { ApplicationType } from "@workspace/server/db/models";
 import { LogoAndText } from "../../text-logo";
 import { Locale } from "@/i18n";
+import { env } from "@/env";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -69,7 +69,12 @@ export const VacancyClientPage = ({
     type: "photo" | "video";
     url: string;
   } | null>(
-    data.photos?.[0] ? { type: "photo", url: data.photos[0].key } : null
+    data.photos?.[0]
+      ? {
+          type: "photo",
+          url: `${process.env.NEXT_PUBLIC_S3_ENDPOINT}${data.photos[0].key}`,
+        }
+      : null
   );
 
   const vacancyIdWithPrefix = useMemo(
@@ -252,7 +257,6 @@ export const VacancyClientPage = ({
                                 {data.acceptableApplicationTypes.map((type) => (
                                   <Badge
                                     key={type}
-                                    variant="secondary"
                                     className="text-sm font-semibold"
                                   >
                                     {applicationTypeLabels[type]}
@@ -375,45 +379,26 @@ export const VacancyClientPage = ({
                 <Button
                   size="lg"
                   className="w-full sm:w-auto flex gap-2 items-center text-lg font-semibold h-14 px-8 shadow-lg hover:shadow-xl transition-all group"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollSmoothlyToSection(SECTION_IDS.contact);
-                  }}
+                  asChild
                 >
-                  <Sparkles className="size-5" />
-                  განაცხადის გაგზავნა
-                  <ArrowDown className="animate-bounce size-4 group-hover:translate-y-1 transition-transform" />
+                  <a
+                    href={
+                      `${env.NEXT_PUBLIC_APP_URL}?` +
+                      new URLSearchParams({
+                        vacancyId: data.id,
+                        loginType: "signup",
+                      })
+                    }
+                  >
+                    <Sparkles className="size-5" />
+                    განაცხადის გაგზავნა
+                    <ArrowRight className="animate-bounce-left size-4 group-hover:translate-y-1 transition-transform" />
+                  </a>
                 </Button>
               </div>
 
               {/* Right Column - Media Gallery */}
               <div className="relative lg:sticky lg:top-8 space-y-6">
-                {/* Main Media Display */}
-                {selectedMedia && (
-                  <div className="relative group">
-                    <div className="absolute -inset-1 bg-linear-to-r from-primary to-primary/50 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
-                    <div className="relative w-full h-[400px] lg:h-[550px] overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10 bg-black">
-                      {selectedMedia.type === "photo" ? (
-                        <Image
-                          src={selectedMedia.url}
-                          alt={data.title}
-                          fill
-                          className="object-cover"
-                        />
-                      ) : (
-                        <video
-                          src={selectedMedia.url}
-                          controls
-                          className="w-full h-full object-contain"
-                        />
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Media Thumbnails */}
-
-                {/* Placeholder if no media */}
                 {data.photo?.key === undefined ? (
                   <div className="w-full h-[400px] lg:h-[550px] rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 flex flex-col items-center justify-center border-2 border-dashed border-primary/20 space-y-4">
                     <LogoAndText lang={lang as Locale} />
@@ -422,13 +407,16 @@ export const VacancyClientPage = ({
                     </p>
                   </div>
                 ) : (
-                  <div className="relative w-full h-[400px] lg:h-[550px] rounded-2xl overflow-hidden border-2 border-primary/20 shadow-lg">
-                    <Image
-                      src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${data.photo.key}`}
-                      alt={data.title}
-                      className="object-cover"
-                      fill
-                    />
+                  <div className="relative group">
+                    <div className="absolute -inset-1 bg-linear-to-r from-primary to-primary/50 rounded-3xl blur opacity-25 group-hover:opacity-40 transition duration-500" />
+                    <div className="relative w-full h-[400px] lg:h-[550px] overflow-hidden rounded-2xl shadow-2xl border-2 border-primary/10 bg-black">
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${data.photo.key}`}
+                        alt={data.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
@@ -459,7 +447,7 @@ export const VacancyClientPage = ({
                       }`}
                     >
                       <Image
-                        src={photo.key}
+                        src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${photo.key}`}
                         alt={`${data.title} ${idx + 1}`}
                         fill
                         className="object-cover"

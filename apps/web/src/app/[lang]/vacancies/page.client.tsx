@@ -15,7 +15,6 @@ import {
   LanguagesIcon,
   CheckCircle2,
   Copy,
-  ExternalLink,
   UserCheck,
 } from "lucide-react";
 import Image from "next/image";
@@ -32,7 +31,6 @@ import { tryCatchAsync } from "@workspace/shared/error-handling/result";
 import { toast } from "sonner";
 import { sleep } from "@/utils/sleep";
 import { LogoAndText } from "../text-logo";
-import { env } from "@/env";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -67,22 +65,22 @@ const VacancyCard = ({
   };
 
   return (
-    <Card className="group py-0 flex flex-col h-full overflow-hidden border-2">
+    <Card className="group pt-0 flex flex-col h-full gap-4 sm:gap-6 overflow-hidden border-2">
       {/* Image Header with Overlays */}
-      <div className="relative w-full h-[280px] overflow-hidden bg-linear-to-br from-primary/10 to-primary/5">
+      <div className="relative">
         {vacancy.photo ? (
-          <>
+          <div className="relative w-full h-[280px]">
             <Image
               src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${vacancy.photo.key}`}
+              fill
               alt={vacancy.title}
-              fill={true}
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
               className="object-cover transition-transform duration-700"
             />
             <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent" />
-          </>
+          </div>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
+          <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-primary/10 to-primary/5">
             <LogoAndText lang="ka" />
           </div>
         )}
@@ -114,9 +112,9 @@ const VacancyCard = ({
         </div>
       </CardHeader>
 
-      <CardContent className="pt-0 pb-6 mt-auto space-y-4">
+      <CardContent className="px-4 sm:px-6 space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+          <div className="flex items-start gap-2 p-3 rounded-lg border border-border">
             <Clock className="size-5 text-foreground shrink-0 mt-0.5" />
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground font-medium">
@@ -126,7 +124,7 @@ const VacancyCard = ({
             </div>
           </div>
 
-          <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+          <div className="flex items-start gap-2 p-3 rounded-lg border border-border">
             <Calendar className="size-5 text-foreground shrink-0 mt-0.5" />
             <div className="min-w-0">
               <p className="text-xs text-muted-foreground font-medium">
@@ -136,7 +134,7 @@ const VacancyCard = ({
             </div>
           </div>
         </div>
-        <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+        <div className="flex items-start gap-2 p-3 rounded-lg border border-border">
           <LanguagesIcon className="size-5 text-foreground shrink-0 mt-0.5" />
           <div className="min-w-0">
             <p className="text-xs text-muted-foreground font-medium">
@@ -147,7 +145,7 @@ const VacancyCard = ({
         </div>
         {vacancy.acceptableApplicationTypes &&
           vacancy.acceptableApplicationTypes.length > 0 && (
-            <div className="flex items-start gap-2 p-3 bg-secondary/50 rounded-lg border border-border">
+            <div className="flex items-start gap-2 p-3 rounded-lg border border-border">
               <UserCheck className="size-5 text-foreground shrink-0 mt-0.5" />
               <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground font-medium mb-2">
@@ -155,11 +153,7 @@ const VacancyCard = ({
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {vacancy.acceptableApplicationTypes.map((type) => (
-                    <Badge
-                      key={type}
-                      variant="secondary"
-                      className="text-xs font-semibold"
-                    >
+                    <Badge key={type} className="text-xs font-semibold">
                       {applicationTypeLabels[type]}
                     </Badge>
                   ))}
@@ -167,27 +161,18 @@ const VacancyCard = ({
               </div>
             </div>
           )}
-        <Button
-          className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
-          size="lg"
-          asChild
-        >
-          <Link href={`/${lang}/vacancies/${vacancy.id}`}>
-            დეტალურად ნახვა
-            <ArrowRight className="size-5 ml-2-x-1 transition-transform" />
-          </Link>
-        </Button>
-        <Button
-          className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
-          size="lg"
-          variant={"outline"}
-          asChild
-        >
-          <a href={`${env.NEXT_PUBLIC_APP_URL}?vacancyId=${vacancy.id}`}>
-            განაცხადის გაკეთება
-            <ExternalLink className="size-5 ml-2-x-1 transition-transform" />
-          </a>
-        </Button>
+        <div className="space-y-2">
+          <Button
+            className="w-full h-12 text-base font-semibold shadow-md hover:shadow-xl transition-all"
+            size="lg"
+            asChild
+          >
+            <Link href={`/${lang}/vacancies/${vacancy.id}`}>
+              დეტალურად ნახვა
+              <ArrowRight className="size-5 ml-2-x-1 transition-transform" />
+            </Link>
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

@@ -100,47 +100,39 @@ export function ProfileForm({
       street:
         userInformation?.street === null ||
         userInformation?.street === undefined
-          ? process.env.NODE_ENV === "development"
-            ? "Musterstraße 45"
-            : ""
+          ? ""
           : userInformation.street,
       postalCode:
         userInformation?.postalCode === null ||
         userInformation?.postalCode === undefined
-          ? process.env.NODE_ENV === "development"
-            ? "80331"
-            : ""
+          ? ""
           : userInformation.postalCode,
       city:
         userInformation?.city === null || userInformation?.city === undefined
-          ? process.env.NODE_ENV === "development"
-            ? "München"
-            : ""
+          ? ""
           : userInformation.city,
       country:
         userInformation?.country === null ||
         userInformation?.country === undefined
-          ? process.env.NODE_ENV === "development"
-            ? "Deutschland"
-            : ""
+          ? ""
           : userInformation.country,
       phone:
         userInformation?.phone === null || userInformation?.phone === undefined
-          ? "+49 123 456789"
+          ? ""
           : userInformation.phone,
       instagram:
         userInformation?.instagram === null ||
         userInformation?.instagram === undefined
-          ? "username"
+          ? ""
           : userInformation.instagram,
       facebook:
         userInformation?.facebook === null ||
         userInformation?.facebook === undefined
-          ? "username"
+          ? ""
           : userInformation.facebook,
       taxId:
         userInformation?.taxId === null || userInformation?.taxId === undefined
-          ? "123456789"
+          ? ""
           : userInformation.taxId,
       foto: undefined,
     },
@@ -275,8 +267,7 @@ export function ProfileForm({
             onDoubleClick={handleFillTestData}
             title="Double-click to fill with test data"
           >
-            <div className="h-1 w-1 rounded-full bg-primary" />
-            Grundlegende Informationen
+            Persönliche Informationen
           </h3>
           <FieldGroup>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -399,93 +390,86 @@ export function ProfileForm({
         </div>
 
         {/* Birth Information */}
-        <div className="border-t pt-8">
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <div className="h-1 w-1 rounded-full bg-primary" />
-            Geburtsinformationen
-          </h3>
-          <FieldGroup>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <Controller
-                name="birthDate"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel
-                      htmlFor="birthDate"
-                      className="text-sm font-medium"
-                    >
-                      Geburtsdatum *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="birthDate"
-                      type="date"
-                      aria-invalid={fieldState.invalid}
-                      className="transition-colors"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="birthPlace"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel
-                      htmlFor="birthPlace"
-                      className="text-sm font-medium"
-                    >
-                      Geburtsort *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="birthPlace"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Stadt"
-                      className="transition-colors"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="birthCountry"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel
-                      htmlFor="birthCountry"
-                      className="text-sm font-medium"
-                    >
-                      Geburtsland *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="birthCountry"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Land"
-                      className="transition-colors"
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-            </div>
-          </FieldGroup>
-        </div>
+        <FieldGroup>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Controller
+              name="birthDate"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel
+                    htmlFor="birthDate"
+                    className="text-sm font-medium"
+                  >
+                    Geburtsdatum *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="birthDate"
+                    type="date"
+                    aria-invalid={fieldState.invalid}
+                    className="transition-colors"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="birthPlace"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel
+                    htmlFor="birthPlace"
+                    className="text-sm font-medium"
+                  >
+                    Geburtsort *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="birthPlace"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Stadt"
+                    className="transition-colors"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="birthCountry"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel
+                    htmlFor="birthCountry"
+                    className="text-sm font-medium"
+                  >
+                    Geburtsland *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="birthCountry"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Land"
+                    className="transition-colors"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </div>
+        </FieldGroup>
 
         {/* Address Information */}
         <div className="border-t pt-8">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <div className="h-1 w-1 rounded-full bg-primary" />
             Adresse
           </h3>
           <FieldGroup>
@@ -588,7 +572,6 @@ export function ProfileForm({
         {/* Contact & Social Media Information */}
         <div className="border-t pt-8">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <div className="h-1 w-1 rounded-full bg-primary" />
             Kontakt & Soziale Medien
           </h3>
           <FieldGroup>
@@ -695,7 +678,6 @@ export function ProfileForm({
 
         <div className="border-t pt-8">
           <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <div className="h-1 w-1 rounded-full bg-primary" />
             Profilfoto
           </h3>
           <FieldGroup>

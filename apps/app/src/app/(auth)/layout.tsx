@@ -6,7 +6,6 @@ import { PropsWithChildren } from "react";
 export default async function AuthLayout({ children }: PropsWithChildren) {
   const h = await headers();
   const forwardedSearchParams = h.get("x-forwarded-search-params");
-  console.log(forwardedSearchParams);
 
   const params = new URLSearchParams(forwardedSearchParams || "");
 

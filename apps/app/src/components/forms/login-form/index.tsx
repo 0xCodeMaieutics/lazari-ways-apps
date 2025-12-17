@@ -23,6 +23,10 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
   const searchParams = useSearchParams();
   const [isSignUp, setIsSignUp] = useState(loginType === "signup");
 
+  const onSuccess = () => {
+    window.location.href = "/?" + searchParams.toString();
+  };
+
   const signUpMutation = useMutation<
     unknown,
     Error,
@@ -40,9 +44,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
       if (result.error) throw new Error(result.error.message);
       return result;
     },
-    onSuccess: () => {
-      window.location.href = "/";
-    },
+    onSuccess,
     onError: (error) => {
       toast.error(error.message);
     },
@@ -64,9 +66,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
       if (result.error) throw new Error(result.error.message);
       return result;
     },
-    onSuccess: () => {
-      window.location.href = "/?" + searchParams.toString();
-    },
+    onSuccess,
     onError: (error) => {
       toast.error(error.message);
     },

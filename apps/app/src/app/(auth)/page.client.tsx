@@ -3,7 +3,6 @@
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
@@ -36,7 +35,7 @@ export function OnboardingPageClient({
         {/* Profile Header */}
 
         {employee === null || isEditing ? (
-          <Card>
+          <Card className="pt-0">
             <CardHeader>
               {isEditing && employee !== null && (
                 <Button
@@ -48,28 +47,13 @@ export function OnboardingPageClient({
                   Züruck zum Profil
                 </Button>
               )}
-
-              <div className="flex items-center gap-4">
-                <div className="flex-1">
-                  <CardTitle className="text-lg md:text-xl">
-                    Persönliche Informationen
-                  </CardTitle>
-                  <CardDescription>
-                    Verwalten Sie Ihre persönlichen Daten
-                  </CardDescription>
-                </div>
-              </div>
             </CardHeader>
             <CardContent>
-              <>
-                <div className="pt-6">
                   <ProfileForm
                     userInformation={employee}
                     onSaveSuccess={() => setIsEditing(false)}
                     onCancel={() => setIsEditing(false)}
                   />
-                </div>
-              </>
             </CardContent>
           </Card>
         ) : (
@@ -78,7 +62,7 @@ export function OnboardingPageClient({
               <CardTitle>
                 <div className="flex items-center gap-2.5">
                   {employeeFoto !== null && (
-                    <div className="relative rounded-full overflow-hidden size-20">
+                    <div className="relative rounded-full overflow-hidden size-28 md:size-20">
                       <Image
                         src={employeeFoto}
                         className="object-cover"
