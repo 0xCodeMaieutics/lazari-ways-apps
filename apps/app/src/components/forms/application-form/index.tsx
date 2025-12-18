@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import * as z from "zod";
 import { useEffect, useCallback } from "react";
 
 import { Button } from "@workspace/ui/components/button";
@@ -45,32 +44,63 @@ export function ApplicationForm({
   const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationFormSchema),
     defaultValues: {
-      passport: undefined,
-
-      semesterBreakFrom: "2024-07-01",
-      semesterBreakTo: "2024-09-30",
-      university: "Ludwig-Maximilians-Universität München",
-      studySubject: "Betriebswirtschaftslehre",
-      germanLevel: "B2",
-      otherLanguages: "Englisch B2, Französisch A2",
+      semesterBreakFrom: "",
+      semesterBreakTo: "",
+      university: "",
+      studySubject: "",
+      germanLevel: "A1",
+      otherLanguages: "",
 
       driverLicense: "B",
       canRideBike: false,
       shiftWork: false,
 
-      healthRestrictions: "Keine besonderen Einschränkungen",
-      allergies: "Nussallergie",
-      clothingSize: "M",
-      shoeSize: "38",
+      healthRestrictions: "",
+      allergies: "",
+      clothingSize: "",
+      shoeSize: "",
       hasBeenInGermanyBefore: false,
-      previousStayPlace: "Hamburg",
-      previousStayPeriodFrom: "July 2022",
-      previousStayPeriodTo: "August 2023",
+      previousStayPlace: "",
+      previousStayPeriodFrom: "",
+      previousStayPeriodTo: "",
 
-      emergencyContactName: "Maria Schmidt",
-      emergencyPhone: "+49 89 98765432",
+      emergencyContactName: "",
+      emergencyPhone: "",
+
+      passport: undefined,
+      certificateOfEnrollment: undefined,
+      languageCertificate: undefined,
+      studyCertificate: undefined,
     },
   });
+
+  const handleTestValuesClick = () => {
+    if (process.env.NODE_ENV !== "development") {
+      return;
+    }
+    form.setValue("semesterBreakFrom", "2024-07-01");
+    form.setValue("semesterBreakTo", "2024-09-30");
+    form.setValue("university", "Ludwig-Maximilians-Universität München");
+    form.setValue("studySubject", "Betriebswirtschaftslehre");
+    form.setValue("germanLevel", "B2");
+    form.setValue("otherLanguages", "Englisch B2, Französisch A2");
+    form.setValue("driverLicense", "B");
+    form.setValue("canRideBike", false);
+    form.setValue("shiftWork", false);
+    form.setValue("healthRestrictions", "Keine besonderen Einschränkungen");
+    form.setValue("allergies", "Nussallergie");
+    form.setValue("clothingSize", "M");
+    form.setValue("shoeSize", "38");
+    form.setValue("hasBeenInGermanyBefore", false);
+    form.setValue("previousStayPlace", "Hamburg");
+    form.setValue("previousStayPeriodFrom", "July 2022");
+    form.setValue("previousStayPeriodTo", "August 2023");
+    form.setValue("emergencyContactName", "Maria Schmidt");
+    form.setValue("emergencyPhone", "+49 89 98765432");
+    form.setValue("passport", undefined);
+    form.setValue("languageCertificate", undefined);
+    form.setValue("certificateOfEnrollment", undefined);
+  };
 
   const scrollToFirstError = useCallback(() => {
     const errors = form.formState.errors;
@@ -221,321 +251,34 @@ export function ApplicationForm({
 
   const isDirty = form.formState.isDirty;
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-bold mb-2">KKB Bewerbungsformular</h1>
-      <p className="text-sm text-muted-foreground mb-6">
-        Bitte füllen Sie alle erforderlichen Felder aus.
-      </p>
-
-      <form
-        id="application-form"
-        onSubmit={form.handleSubmit(
-          (data) => submitApplication(data),
-          onInvalid
-        )}
-        noValidate
-      >
-        <div className="space-y-8">
-          {/* Study Information */}
-          {type === ApplicationType.STUDENT && (
-            <div>
-              <h2 className="text-lg font-semibold mb-4">
-                Studium & Qualifikationen
-              </h2>
-              <FieldGroup>
-                <div className="flex gap-3">
-                  <Controller
-                    name="semesterBreakFrom"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="semesterBreakFrom">
-                          Semesterferien von
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="semesterBreakFrom"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="z.B. 01.07.2024"
-                          type="date"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="semesterBreakTo"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="semesterBreakTo">
-                          Semesterferien (von – bis)
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="semesterBreakTo"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="z.B. 31.09.2024"
-                          type="date"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Controller
-                    name="university"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="university">
-                          Universität
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="university"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Name der Universität"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="studySubject"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="studySubject">
-                          Studienfach
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="studySubject"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Studienfach"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
-
-                <Controller
-                  name="germanLevel"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Deutschniveau</FieldLabel>
-                      <div className="flex gap-4">
-                        {["A1", "A2", "B1", "B2", "C1"].map((level) => (
-                          <div key={level} className="flex items-center gap-2">
-                            <Checkbox
-                              key={level}
-                              checked={field.value === level}
-                              onChange={() =>
-                                field.onChange(
-                                  field.value === level ? undefined : level
-                                )
-                              }
-                              id={`german-${field.value}`}
-                            />
-                            <label
-                              htmlFor={`german-${field.value}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {level}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="otherLanguages"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="otherLanguages">
-                        Weitere Sprachkenntnisse / Sprachniveau
-                      </FieldLabel>
-                      <Textarea
-                        {...field}
-                        id="otherLanguages"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="z.B. Englisch B2, Französisch A1"
-                        rows={3}
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="driverLicense"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="driverLicense">
-                        Führerschein
-                      </FieldLabel>
-                      <Input
-                        {...field}
-                        id="driverLicense"
-                        aria-invalid={fieldState.invalid}
-                        placeholder="Führerscheinklasse (z.B. B, A1)"
-                      />
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="canRideBike"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Kannst Du Fahrrad fahren?</FieldLabel>
-                      <div className="flex gap-4">
-                        <Radio
-                          {...field}
-                          value="Ja"
-                          checked={field.value === true}
-                          onChange={() => field.onChange(true)}
-                          label="Ja"
-                          id="bike-yes"
-                        />
-                        <Radio
-                          {...field}
-                          value="Nein"
-                          checked={field.value === false}
-                          onChange={() => field.onChange(false)}
-                          label="Nein"
-                          id="bike-no"
-                        />
-                      </div>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-
-                <Controller
-                  name="shiftWork"
-                  control={form.control}
-                  render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel>Schichtbereitschaft</FieldLabel>
-                      <div className="flex gap-4">
-                        <Radio
-                          {...field}
-                          value="Ja"
-                          checked={field.value === true}
-                          onChange={() => field.onChange(true)}
-                          label="Ja"
-                          id="shift-yes"
-                        />
-                        <Radio
-                          {...field}
-                          value="Nein"
-                          checked={field.value === false}
-                          onChange={() => field.onChange(false)}
-                          label="Nein"
-                          id="shift-no"
-                        />
-                      </div>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </Field>
-                  )}
-                />
-              </FieldGroup>
-            </div>
-          )}
-
-          {/* Health & Personal Information */}
+    <form
+      id="application-form"
+      onSubmit={form.handleSubmit((data) => submitApplication(data), onInvalid)}
+      noValidate
+    >
+      <div className="space-y-8">
+        {/* Study Information */}
+        {type === ApplicationType.STUDENT && (
           <div>
             <h2 className="text-lg font-semibold mb-4">
-              Gesundheit & Persönliche Angaben
+              Studium & Qualifikationen
             </h2>
             <FieldGroup>
-              <Controller
-                name="healthRestrictions"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="healthRestrictions">
-                      Gesundheitliche Einschränkungen
-                    </FieldLabel>
-                    <Textarea
-                      {...field}
-                      id="healthRestrictions"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Bitte beschreiben Sie eventuelle gesundheitliche Einschränkungen"
-                      rows={3}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <Controller
-                name="allergies"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="allergies">Allergien</FieldLabel>
-                    <Textarea
-                      {...field}
-                      id="allergies"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Bitte listen Sie bekannte Allergien auf"
-                      rows={3}
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex gap-3">
                 <Controller
-                  name="clothingSize"
+                  name="semesterBreakFrom"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="clothingSize">
-                        Kleidergröße
+                      <FieldLabel htmlFor="semesterBreakFrom">
+                        Semesterferien von
                       </FieldLabel>
                       <Input
                         {...field}
-                        id="clothingSize"
+                        id="semesterBreakFrom"
                         aria-invalid={fieldState.invalid}
-                        placeholder="z.B. M, L, XL"
+                        placeholder="z.B. 01.07.2024"
+                        type="date"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -544,16 +287,19 @@ export function ApplicationForm({
                   )}
                 />
                 <Controller
-                  name="shoeSize"
+                  name="semesterBreakTo"
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="shoeSize">Schuhgröße</FieldLabel>
+                      <FieldLabel htmlFor="semesterBreakTo">
+                        Semesterferien (von – bis)
+                      </FieldLabel>
                       <Input
                         {...field}
-                        id="shoeSize"
+                        id="semesterBreakTo"
                         aria-invalid={fieldState.invalid}
-                        placeholder="z.B. 42, 43, 44"
+                        placeholder="z.B. 31.09.2024"
+                        type="date"
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -562,21 +308,127 @@ export function ApplicationForm({
                   )}
                 />
               </div>
-            </FieldGroup>
-          </div>
-
-          {/* Previous Stay in Germany */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">
-              Aufenthalt in Deutschland
-            </h2>
-            <FieldGroup>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Controller
+                  name="university"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="university">Universität</FieldLabel>
+                      <Input
+                        {...field}
+                        id="university"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Name der Universität"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="studySubject"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="studySubject">
+                        Studienfach
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="studySubject"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Studienfach"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
               <Controller
-                name="hasBeenInGermanyBefore"
+                name="germanLevel"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel>Aufenthalt in Deutschland</FieldLabel>
+                    <FieldLabel>Deutschniveau</FieldLabel>
+                    <div className="flex gap-4">
+                      {["A1", "A2", "B1", "B2", "C1"].map((level) => (
+                        <div key={level} className="flex items-center gap-2">
+                          <Checkbox
+                            key={level}
+                            checked={field.value === level}
+                            onChange={() =>
+                              field.onChange(
+                                field.value === level ? undefined : level
+                              )
+                            }
+                            id={`german-${field.value}`}
+                          />
+                          <label
+                            htmlFor={`german-${field.value}`}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {level}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="otherLanguages"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="otherLanguages">
+                      Weitere Sprachkenntnisse / Sprachniveau
+                    </FieldLabel>
+                    <Textarea
+                      {...field}
+                      id="otherLanguages"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="z.B. Englisch B2, Französisch A1"
+                      rows={3}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="driverLicense"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="driverLicense">
+                      Führerschein
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id="driverLicense"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="Führerscheinklasse (z.B. B, A1)"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="canRideBike"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel>Kannst Du Fahrrad fahren?</FieldLabel>
                     <div className="flex gap-4">
                       <Radio
                         {...field}
@@ -595,80 +447,6 @@ export function ApplicationForm({
                         id="bike-no"
                       />
                     </div>
-
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-
-              {form.watch("hasBeenInGermanyBefore") && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Controller
-                    name="previousStayPlace"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="previousStayPlace">
-                          Wenn ja, wo
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="previousStayPlace"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="Stadt/Region in Deutschland"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                  <Controller
-                    name="previousStayPeriodFrom"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="previousStayPeriodFrom">
-                          Zeitraum
-                        </FieldLabel>
-                        <Input
-                          {...field}
-                          id="previousStayPeriodFrom"
-                          aria-invalid={fieldState.invalid}
-                          placeholder="z.B. Juli 2023"
-                          type="date"
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
-              )}
-            </FieldGroup>
-          </div>
-
-          {/* Emergency Contact */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Notfallkontakt</h2>
-            <FieldGroup>
-              <Controller
-                name="emergencyContactName"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="emergencyContactName">
-                      Notfall-Kontaktperson *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="emergencyContactName"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="Vollständiger Name der Kontaktperson"
-                    />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -676,20 +454,29 @@ export function ApplicationForm({
                 )}
               />
               <Controller
-                name="emergencyPhone"
+                name="shiftWork"
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="emergencyPhone">
-                      Notfall-Telefonnummer *
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id="emergencyPhone"
-                      type="tel"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="+49 XXX XXXXXXX"
-                    />
+                    <FieldLabel>Schichtbereitschaft</FieldLabel>
+                    <div className="flex gap-4">
+                      <Radio
+                        {...field}
+                        value="Ja"
+                        checked={field.value === true}
+                        onChange={() => field.onChange(true)}
+                        label="Ja"
+                        id="shift-yes"
+                      />
+                      <Radio
+                        {...field}
+                        value="Nein"
+                        checked={field.value === false}
+                        onChange={() => field.onChange(false)}
+                        label="Nein"
+                        id="shift-no"
+                      />
+                    </div>
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -698,104 +485,322 @@ export function ApplicationForm({
               />
             </FieldGroup>
           </div>
-
-          {/* File Upload */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Reisepass Upload</h2>
-            <FieldGroup>
-              <Controller
-                name="passport"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="passport">Passport *</FieldLabel>
-                    <FileUpload
-                      id="passport"
-                      accept=".pdf"
-                      value={field.value || null}
-                      onChange={(file) => field.onChange(file)}
-                      placeholder="Reisepass hochladen"
-                      required
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              <Controller
-                name="languageCertificate"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
-                    <FieldLabel htmlFor="languageCertificate">
-                      Sprach Nachweis (optional)
-                    </FieldLabel>
-                    <FileUpload
-                      id="languageCertificate"
-                      accept=".pdf"
-                      value={field.value || null}
-                      onChange={(file) => field.onChange(file)}
-                      placeholder="Sprach Nachweis hochladen"
-                      required
-                    />
-                    {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
-                  </Field>
-                )}
-              />
-              {type === ApplicationType.STUDENT && (
-                <div>
-                  <Controller
-                    name="certificateOfEnrollment"
-                    control={form.control}
-                    render={({ field, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <FieldLabel htmlFor="certificateOfEnrollment">
-                          Studien Nachweis (optional)
-                        </FieldLabel>
-                        <FileUpload
-                          id="certificateOfEnrollment"
-                          accept=".pdf"
-                          value={field.value || null}
-                          onChange={(file) => field.onChange(file)}
-                          placeholder="Studien Nachweis hochladen"
-                          required
-                        />
-                        {fieldState.invalid && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </Field>
-                    )}
-                  />
-                </div>
-              )}
-            </FieldGroup>
-          </div>
-        </div>
-
-        <div className="mt-8 flex flex-col-reverse sm:flex-row gap-4">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={isSubmitting}
-            onClick={() => {
-              form.reset(form.getValues());
-              const fileInputs =
-                document.querySelectorAll('input[type="file"]');
-              fileInputs.forEach((input) => {
-                (input as HTMLInputElement).value = "";
-              });
-            }}
+        )}
+        {/* Health & Personal Information */}
+        <div>
+          <h2
+            onClick={handleTestValuesClick}
+            role="button"
+            className="text-lg font-semibold mb-4"
+            title="Double-click to fill with test data"
           >
-            Formular zurücksetzen
-          </Button>
-          <Button type="submit" disabled={isSubmitting || !isDirty}>
-            {isSubmitting ? "Wird eingereicht..." : "Bewerbung einreichen"}
-          </Button>
+            Gesundheit & Persönliche Angaben
+          </h2>
+          <FieldGroup>
+            <Controller
+              name="healthRestrictions"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="healthRestrictions">
+                    Gesundheitliche Einschränkungen
+                  </FieldLabel>
+                  <Textarea
+                    {...field}
+                    id="healthRestrictions"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Bitte beschreiben Sie eventuelle gesundheitliche Einschränkungen"
+                    rows={3}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="allergies"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="allergies">Allergien</FieldLabel>
+                  <Textarea
+                    {...field}
+                    id="allergies"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Bitte listen Sie bekannte Allergien auf"
+                    rows={3}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Controller
+                name="clothingSize"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="clothingSize">Kleidergröße</FieldLabel>
+                    <Input
+                      {...field}
+                      id="clothingSize"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="z.B. M, L, XL"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="shoeSize"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="shoeSize">Schuhgröße</FieldLabel>
+                    <Input
+                      {...field}
+                      id="shoeSize"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="z.B. 42, 43, 44"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </div>
+          </FieldGroup>
         </div>
-      </form>
-    </div>
+        {/* Previous Stay in Germany */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">
+            Aufenthalt in Deutschland
+          </h2>
+          <FieldGroup>
+            <Controller
+              name="hasBeenInGermanyBefore"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Aufenthalt in Deutschland</FieldLabel>
+                  <div className="flex gap-4">
+                    <Radio
+                      {...field}
+                      value="Ja"
+                      checked={field.value === true}
+                      onChange={() => field.onChange(true)}
+                      label="Ja"
+                      id="bike-yes"
+                    />
+                    <Radio
+                      {...field}
+                      value="Nein"
+                      checked={field.value === false}
+                      onChange={() => field.onChange(false)}
+                      label="Nein"
+                      id="bike-no"
+                    />
+                  </div>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            {form.watch("hasBeenInGermanyBefore") && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Controller
+                  name="previousStayPlace"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="previousStayPlace">
+                        Wenn ja, wo
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="previousStayPlace"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Stadt/Region in Deutschland"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+                <Controller
+                  name="previousStayPeriodFrom"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="previousStayPeriodFrom">
+                        Zeitraum
+                      </FieldLabel>
+                      <Input
+                        {...field}
+                        id="previousStayPeriodFrom"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="z.B. Juli 2023"
+                        type="date"
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+            )}
+          </FieldGroup>
+        </div>
+        {/* Emergency Contact */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Notfallkontakt</h2>
+          <FieldGroup>
+            <Controller
+              name="emergencyContactName"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="emergencyContactName">
+                    Notfall-Kontaktperson *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="emergencyContactName"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Vollständiger Name der Kontaktperson"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="emergencyPhone"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="emergencyPhone">
+                    Notfall-Telefonnummer *
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="emergencyPhone"
+                    type="tel"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="+49 XXX XXXXXXX"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </div>
+        {/* File Upload */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">Reisepass Upload</h2>
+          <FieldGroup>
+            <Controller
+              name="passport"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="passport">Passport *</FieldLabel>
+                  <FileUpload
+                    id="passport"
+                    accept=".pdf"
+                    value={field.value || null}
+                    onChange={(file) => field.onChange(file)}
+                    placeholder="Reisepass hochladen"
+                    required
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="languageCertificate"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="languageCertificate">
+                    Sprach Nachweis (optional)
+                  </FieldLabel>
+                  <FileUpload
+                    id="languageCertificate"
+                    accept=".pdf"
+                    value={field.value || null}
+                    onChange={(file) => field.onChange(file)}
+                    placeholder="Sprach Nachweis hochladen"
+                    required
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            {type === ApplicationType.STUDENT && (
+              <div>
+                <Controller
+                  name="certificateOfEnrollment"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="certificateOfEnrollment">
+                        Studien Nachweis (optional)
+                      </FieldLabel>
+                      <FileUpload
+                        id="certificateOfEnrollment"
+                        accept=".pdf"
+                        value={field.value || null}
+                        onChange={(file) => field.onChange(file)}
+                        placeholder="Studien Nachweis hochladen"
+                        required
+                      />
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </div>
+            )}
+          </FieldGroup>
+        </div>
+      </div>
+      <div className="mt-8 flex flex-col-reverse sm:flex-row gap-4">
+        <Button
+          type="button"
+          variant="outline"
+          disabled={isSubmitting}
+          onClick={() => {
+            form.reset(form.getValues());
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            fileInputs.forEach((input) => {
+              (input as HTMLInputElement).value = "";
+            });
+          }}
+        >
+          Formular zurücksetzen
+        </Button>
+        <Button type="submit" disabled={isSubmitting || !isDirty}>
+          {isSubmitting ? "Wird eingereicht..." : "Bewerbung einreichen"}
+        </Button>
+      </div>
+    </form>
   );
 }

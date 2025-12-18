@@ -7,10 +7,24 @@ import {
 } from "@workspace/server/db";
 import { ApplicationType } from "@workspace/server/db/models";
 import { Button } from "@workspace/ui/components/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import { Separator } from "@workspace/ui/components/separator";
 import { ArrowLeft } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+
+const applicationTypeToLabel = {
+  KKB3: "Kontingentierte Beschäftigung - 3 Monate",
+  KKB8: "Kontingentierte Beschäftigung - 8 Monate",
+  STUDENT: "Antrag auf ein Studentenvisum",
+} satisfies Record<ApplicationType, string>;
 
 export default async function ApplicationsPage({
   searchParams: searchParamsPromise,
@@ -19,8 +33,7 @@ export default async function ApplicationsPage({
     string | Record<string, string> | string[][] | URLSearchParams | undefined
   >;
 }) {
-  const s = await searchParamsPromise;
-  const searchParams = new URLSearchParams(s);
+  const searchParams = new URLSearchParams(await searchParamsPromise);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -29,7 +42,7 @@ export default async function ApplicationsPage({
     redirect("/login?" + searchParams.toString());
 
   const type = searchParams.get("type") as ApplicationType | null;
-  const vacancyId = searchParams.get("vacancyId");
+  const vacancyId = searchParams.get("vacancyId") || null;
 
   const isValidType = Object.values(ApplicationType).includes(
     type as ApplicationType
@@ -113,14 +126,32 @@ export default async function ApplicationsPage({
   }
 
   return (
-    <div className="w-full mx-auto max-w-7xl space-y-6 pt-10 pb-10 px-10">
+    <div className="container mx-auto py-8 px-4 max-w-4xl space-y-6">
       <Button variant={"ghost"} className="flex max-w-max" asChild>
-        <Link href={"/"}>
+        <Link
+          href={
+            "/?" +
+            new URLSearchParams({
+              vacancyId,
+            }).toString()
+          }
+        >
           <ArrowLeft className="mr-2" />
-          Back
+          Zurück zur Bewerbungsliste
         </Link>
       </Button>
-      <ApplicationForm employeeId={employee.id} type={type} />
+      <Card>
+        <CardHeader>
+          <CardTitle>{applicationTypeToLabel[type]}</CardTitle>
+          <CardDescription>
+            Bitte füllen Sie alle erforderlichen Felder aus.
+          </CardDescription>
+        </CardHeader>
+        <Separator />
+        <CardContent>
+          <ApplicationForm employeeId={employee.id} type={type} />
+        </CardContent>
+      </Card>
     </div>
   );
 }
