@@ -77,7 +77,6 @@ export default async function OnboardingPage({
     <OnboardingPageClient
       applications={applications}
       employee={employeeResult.value}
-      employeeFoto={employeeFoto}
     />
   );
 }

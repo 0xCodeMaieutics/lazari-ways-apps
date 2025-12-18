@@ -48,7 +48,7 @@ export const profileFormSchema = z.object({
     )
     .optional(),
   taxId: z.string().optional(),
-  foto: isImageFile("Nur PNG und JPEG Dateien sind erlaubt").optional(),
+  foto: isImageFile("Nur PNG und JPEG Dateien sind erlaubt"),
 });
 
 export type ProfileFormData = z.infer<typeof profileFormSchema>;

@@ -15,6 +15,12 @@ import { toast } from "sonner";
 import { authClient } from "@workspace/server/auth/client";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
+import {
+  BaseError,
+  err,
+  ok,
+  Result,
+} from "@workspace/shared/error-handling/result";
 
 const DEV_EMAIL = "applicant@lazaryways.eu";
 const DEV_PASSWORD = "#ApplicantIsCool2025!";
@@ -28,7 +34,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
   };
 
   const signUpMutation = useMutation<
-    unknown,
+    Result<unknown, BaseError>,
     Error,
     {
       email: string;
@@ -38,20 +44,39 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
     mutationFn: async (data) => {
       const result = await authClient.signUp.email({
         email: data.email,
-        password: data.password,
         name: "",
+        password: data.password,
       });
-      if (result.error) throw new Error(result.error.message);
-      return result;
+      if (result.data === null) {
+        return err({
+          type: result.error.code || "UNKNOWN_ERROR",
+        });
+      }
+      return ok(result);
     },
-    onSuccess,
-    onError: (error) => {
-      toast.error(error.message);
+    onSuccess: (result) => {
+      result.match({
+        ok: () => {
+          toast.success("Registrierung erfolgreich");
+          onSuccess();
+        },
+        err: (error) => {
+          if (error.type === "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL")
+            return form.setError("email", {
+              message:
+                "E-Mail-Adresse ist bereits in Verwendung. Bitte verwenden Sie eine andere E-Mail-Adresse.",
+            });
+          form.setError("email", {
+            message:
+              "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+          });
+        },
+      });
     },
   });
 
   const signInMutation = useMutation<
-    unknown,
+    Result<unknown, BaseError>,
     Error,
     {
       email: string;
@@ -63,12 +88,32 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
         email: data.email,
         password: data.password,
       });
-      if (result.error) throw new Error(result.error.message);
-      return result;
+      if (result.data === null) {
+        return err({
+          type: result.error.code || "UNKNOWN_ERROR",
+        });
+      }
+      return ok(result);
     },
-    onSuccess,
-    onError: (error) => {
-      toast.error(error.message);
+    onSuccess: (result) => {
+      result.match({
+        ok: () => {
+          toast.success("Anmeldung erfolgreich");
+          onSuccess();
+        },
+        err: (error) => {
+          console.log(error);
+
+          if (error.type === "INVALID_EMAIL_OR_PASSWORD")
+            return form.setError("email", {
+              message: "Ungültige E-Mail-Adresse oder Passwort.",
+            });
+          form.setError("password", {
+            message:
+              "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+          });
+        },
+      });
     },
   });
 
@@ -104,7 +149,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
             >
               <Image
                 src={"/images/logos/logo-text.svg"}
-                alt="Lazary Ways image Logo"
+                alt="Lazary Ways Logo"
                 fill
               />
             </div>
@@ -119,7 +164,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
                   type="email"
                   id="email"
                   aria-invalid={fieldState.invalid}
-                  placeholder="Email"
+                  placeholder="E-Mail"
                   className="h-12"
                 />
                 {fieldState.invalid && (
@@ -139,7 +184,7 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
                   type="password"
                   id="password"
                   aria-invalid={fieldState.invalid}
-                  placeholder="Password"
+                  placeholder="Passwort"
                   className="h-12"
                 />
                 {fieldState.invalid && (
@@ -161,11 +206,11 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
           >
             {isSignUp
               ? signUpMutation.isPending
-                ? "Signing up..."
-                : "Sign Up"
+                ? "Registrierung läuft..."
+                : "Registrieren"
               : signInMutation.isPending
-                ? "Logging in..."
-                : "Login"}
+                ? "Anmeldung läuft..."
+                : "Anmelden"}
           </Button>
         </div>
       </form>
@@ -178,8 +223,8 @@ export function LoginForm({ loginType }: { loginType?: "login" | "signup" }) {
           className="text-sm hover:underline"
         >
           {isSignUp
-            ? "Already have an account? Login"
-            : "Don't have an account? Sign up"}
+            ? "Bereits ein Konto? Anmelden"
+            : "Noch kein Konto? Registrieren"}
         </Button>
       </div>
     </div>

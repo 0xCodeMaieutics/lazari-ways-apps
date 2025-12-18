@@ -34,16 +34,12 @@ import { format } from "date-fns";
 export function ProfileForm({
   userInformation,
   onSaveSuccess,
-  onCancel,
 }: {
   userInformation: GetEmployee | null;
   onSaveSuccess?: () => void;
-  onCancel?: () => void;
 }) {
   const router = useRouter();
   const session = authClient.useSession.get();
-
-  const isUpdating = userInformation !== null;
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileFormSchema),
@@ -211,19 +207,6 @@ export function ProfileForm({
     },
   });
 
-  const onSubmit = (data: ProfileFormData) => {
-    // If this is a new profile (not updating), require foto
-    if (!isUpdating && !data.foto) {
-      form.setError("foto", {
-        type: "manual",
-        message: "Foto ist erforderlich",
-      });
-      scrollToFirstError();
-      return;
-    }
-    updateProfile(data);
-  };
-
   const onInvalid = () => {
     setTimeout(() => {
       scrollToFirstError();
@@ -255,7 +238,9 @@ export function ProfileForm({
   return (
     <div className="w-full">
       <form
-        onSubmit={form.handleSubmit(onSubmit, onInvalid)}
+        onSubmit={form.handleSubmit((data: ProfileFormData) => {
+          updateProfile(data);
+        }, onInvalid)}
         noValidate
         className="space-y-8"
       >
@@ -686,18 +671,14 @@ export function ProfileForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="foto">
-                    Foto hochladen {isUpdating ? "(optional)" : "*"}
-                  </FieldLabel>
+                  <FieldLabel htmlFor="foto">Foto hochladen</FieldLabel>
                   <FileUpload
                     id="foto"
                     accept=".png,.jpg,.jpeg"
                     value={field.value}
                     onChange={(file) => field.onChange(file)}
-                    placeholder={
-                      isUpdating ? "Neues Foto auswählen" : "Foto auswählen"
-                    }
-                    required={!isUpdating}
+                    placeholder={"Foto auswählen"}
+                    required
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -710,18 +691,6 @@ export function ProfileForm({
 
         {/* Action Buttons */}
         <div className="flex flex-col-reverse sm:flex-row gap-3 pt-6 border-t">
-          {isUpdating && onCancel && (
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={onCancel}
-              disabled={isSubmitting}
-              className="gap-2"
-            >
-              <X className="h-4 w-4" />
-              Abbrechen
-            </Button>
-          )}
           <Button
             type="button"
             variant="outline"
