@@ -109,6 +109,7 @@ export default async function ApplicationsPage({
     await applicationQueries.getEmployeeApplicationByType({
       type,
       employeeId: employee.id,
+      vacancyId,
     });
 
   if (foundApplication.isErr()) {

@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@workspace/ui/components/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -23,9 +17,20 @@ import {
   ApplicationStatus,
   ApplicationType,
 } from "@workspace/server/db/models";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import clsx from "clsx";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@workspace/ui/components/dialog";
+import { env } from "@/env";
 
 const statusConfig: Record<
   ApplicationStatus,
@@ -77,6 +82,41 @@ const applicationTypeToLabel = {
   KKB8: "KKB 8 Monate",
   STUDENT: "Studentenvisum",
 } satisfies Record<ApplicationType, string>;
+
+const errorMessages: Record<
+  | "INVALID_TYPE"
+  | "VACANCY_NOT_FOUND"
+  | "VACANCY_ID_NOT_SPECIFIED"
+  | "APPLICATION_ALREADY_SUBMITTED"
+  | "EMPLOYEE_NOT_FOUND",
+  { title: string; description: string }
+> = {
+  INVALID_TYPE: {
+    title: "Ungültiger Bewerbungstyp",
+    description:
+      "Der angegebene Bewerbungstyp ist ungültig. Bitte wählen Sie einen gültigen Typ aus.",
+  },
+  VACANCY_NOT_FOUND: {
+    title: "Stelle nicht gefunden",
+    description:
+      "Die angegebene Stelle konnte nicht gefunden werden. Bitte überprüfen Sie die Stellen-ID.",
+  },
+  VACANCY_ID_NOT_SPECIFIED: {
+    title: "Stellen-ID fehlt",
+    description:
+      "Es wurde keine Stellen-ID angegeben. Bitte geben Sie eine gültige Stellen-ID an.",
+  },
+  APPLICATION_ALREADY_SUBMITTED: {
+    title: "Bewerbung bereits eingereicht",
+    description:
+      "Für diese Stelle wurde bereits eine Bewerbung eingereicht. Sie können keine weitere Bewerbung erstellen.",
+  },
+  EMPLOYEE_NOT_FOUND: {
+    title: "Mitarbeiter nicht gefunden",
+    description:
+      "Ihr Benutzerkonto konnte nicht gefunden werden. Bitte kontaktieren Sie den Support.",
+  },
+};
 
 function ApplicationCard({ application }: { application: GetApplications }) {
   const applicationStatus =
@@ -141,28 +181,44 @@ function ApplicationCard({ application }: { application: GetApplications }) {
   );
 }
 
+const typeToLabel = {
+  [ApplicationType.KKB8]: "KKB 8 Monaten",
+  [ApplicationType.KKB3]: "KKB 3 Monaten",
+  [ApplicationType.STUDENT]: "Studentenvisum",
+} satisfies Record<ApplicationType, string>;
+
 function ApplicationTypeButton({
-  onPush,
-  label,
+  type,
   description,
 }: {
-  onPush: () => void;
-  label: string;
+  type: ApplicationType;
   description: string;
 }) {
+  const searchParams = useSearchParams();
+
   return (
     <Button
       variant="outline"
       className="h-auto p-4 flex flex-col items-start text-left hover:bg-accent"
-      onClick={onPush}
+      asChild
     >
-      <div className="flex items-center gap-2 mb-1">
-        <Plus className="h-4 w-4" />
-        <span className="font-semibold">{label}</span>
-      </div>
-      <span className="text-xs text-muted-foreground whitespace-break-spaces">
-        {description}
-      </span>
+      <Link
+        href={
+          "/applications?" +
+          new URLSearchParams({
+            type,
+            vacancyId: searchParams.get("vacancyId") as string,
+          }).toString()
+        }
+      >
+        <div className="flex items-center gap-2 mb-1">
+          <Plus className="h-4 w-4" />
+          <span className="font-semibold">{typeToLabel[type]}</span>
+        </div>
+        <span className="text-xs text-muted-foreground whitespace-break-spaces">
+          {description}
+        </span>
+      </Link>
     </Button>
   );
 }
@@ -172,51 +228,34 @@ export function ApplicationsList({
 }: {
   applications: GetApplications[];
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const errorType = (searchParams.get("error_type") ?? null) as
+    | "INVALID_TYPE"
+    | "VACANCY_NOT_FOUND"
+    | "VACANCY_ID_NOT_SPECIFIED"
+    | "APPLICATION_ALREADY_SUBMITTED"
+    | "EMPLOYEE_NOT_FOUND"
+    | undefined;
 
-  const onPush = (type: ApplicationType) => {
-    const vacancyId = searchParams.get("vacancyId");
-    const error_type = searchParams.get("error_type");
+  const [isErrorDialogOpen, setIsErrorDialogOpen] = useState(false);
 
-    const showToast = () => {
-      toast.info(
-        <>
-          <p>
-            <span className="mr-1">
-              Die angegebene Stelle wurde nicht gefunden. Bitte wählen Sie eine
-              gültige Stelle aus, um eine Bewerbung zu starten.
-            </span>
-            <a
-              className="underline cursor-pointer text-base"
-              href={
-                `${process.env.NEXT_PUBLIC_WEB_URL}/vacancies?` +
-                new URLSearchParams({
-                  application_type: type,
-                  utm_url: window.location.href,
-                  utm_code: "NO_VACANCY_ID",
-                }).toString()
-              }
-            >
-              hier
-            </a>
-          </p>
-        </>
-      );
-    };
-
-    if (error_type === "VACANCY_NOT_FOUND" || vacancyId === null) {
-      return showToast();
+  useEffect(() => {
+    if (errorType) {
+      setIsErrorDialogOpen(true);
+    } else {
+      setIsErrorDialogOpen(false);
     }
+  }, [errorType]);
 
-    return router.push(
-      "/applications?" +
-        new URLSearchParams({
-          type,
-          vacancyId,
-        }).toString()
-    );
+  const handleCloseErrorDialog = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("error_type");
+    const newUrl = params.toString() ? `?${params.toString()}` : "";
+    router.replace(`/${newUrl}`, { scroll: false });
   };
+
+  const errorMessage = errorType ? errorMessages[errorType] : null;
 
   return (
     <div className="space-y-6">
@@ -254,22 +293,42 @@ export function ApplicationsList({
         </h3>
         <div className="grid gap-3 md:grid-cols-3">
           <ApplicationTypeButton
-            onPush={() => onPush(ApplicationType.KKB8)}
-            label="KKB 8 Monaten"
+            type={ApplicationType.KKB8}
             description="Kurzzeitige kontingentierte Beschäftigung"
           />
           <ApplicationTypeButton
-            onPush={() => onPush(ApplicationType.KKB3)}
-            label="KKB 3 Monaten"
+            type={ApplicationType.KKB3}
             description="Kurzzeitige kontingentierte Beschäftigung"
           />
           <ApplicationTypeButton
-            onPush={() => onPush(ApplicationType.STUDENT)}
-            label="Studentenvisum"
+            type={ApplicationType.STUDENT}
             description="Antrag auf ein Studentenvisum stellen"
           />
         </div>
       </div>
+
+      {/* Error Dialog */}
+      <Dialog open={isErrorDialogOpen} onOpenChange={handleCloseErrorDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <div className="flex items-center gap-3">
+              <XCircle className="h-6 w-6 text-destructive" />
+              <DialogTitle>{errorMessage?.title || "Fehler"}</DialogTitle>
+            </div>
+            <DialogDescription>
+              {errorMessage?.description ||
+                "Ein unbekannter Fehler ist aufgetreten."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button asChild type="button">
+              <a href={`${env.NEXT_PUBLIC_WEB_URL}/vacancies`}>
+                Geh zur Stellenansicht
+              </a>
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
