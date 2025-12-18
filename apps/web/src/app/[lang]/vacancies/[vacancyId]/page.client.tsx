@@ -196,7 +196,9 @@ export const VacancyClientPage = ({
                             როდის იწყებთ
                           </p>
                           <p className="font-bold text-lg mt-1">
-                            {format(new Date(data.beginDate), "LLLL M yyyy")}
+                            {isNaN(new Date(data.beginDate).getTime())
+                              ? "დასადგენია"
+                              : format(new Date(data.beginDate), "LLLL M yyyy")}
                           </p>
                         </div>
                       </div>
