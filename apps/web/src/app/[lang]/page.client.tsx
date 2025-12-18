@@ -13,7 +13,7 @@ import {
   Award,
   CheckCircle2,
   Clock,
-  ExternalLink,
+  PhoneIcon,
 } from "lucide-react";
 import { EmployersGallery } from "@/components/employers-gallery";
 import { TypeAnimation } from "react-type-animation";
@@ -26,6 +26,7 @@ import { translationsContext } from "@/lib/context/translations";
 import { CTASection } from "@/components/cta-section";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { WHATSAPP_URL } from "./constants";
 
 export const HomeClient = ({
   translations,
@@ -121,12 +122,14 @@ export const HomeClient = ({
               <CardContent>
                 <Button
                   size="lg"
-                  className="text-lg font-semibold h-12 w-full mx-auto max-w-xs"
+                  className="text-lg font-semibold h-12 w-full mx-auto max-w-sm"
                   asChild
                 >
-                  <a target="_blank" rel="noreferrer">
-                    განაცხადის გაგზავნა
-                    <ExternalLink className="animate-bounce" />
+                  <a href={WHATSAPP_URL} target="_blank" rel="noreferrer">
+                    დაგვიკავშირდით WhatsApp-ით
+                    <span className="flex size-8 md:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce">
+                      <PhoneIcon className="text-white size-3" />
+                    </span>
                   </a>
                 </Button>
               </CardContent>

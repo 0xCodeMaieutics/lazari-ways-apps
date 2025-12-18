@@ -23,6 +23,7 @@ import {
   ListChecks,
   Languages,
   UserCheck,
+  PhoneIcon,
 } from "lucide-react";
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
@@ -555,7 +556,18 @@ export const VacancyClientPage = ({
                 <div className="flex flex-col sm:flex-row gap-4">
                   <Button
                     size="lg"
+                    className="xs:text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
+                    asChild
+                  >
+                    <Link href={`/${lang}/vacancies`}>
+                      <ArrowLeft className="size-5 ml-2" />
+                      სხვა ვაკანსიები
+                    </Link>
+                  </Button>
+                  <Button
+                    size="lg"
                     className="xs:text-lg font-semibold h-14 px-10 shadow-lg hover:shadow-xl transition-all group cursor-pointer"
+                    variant="outline"
                     asChild
                   >
                     <a
@@ -565,20 +577,11 @@ export const VacancyClientPage = ({
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      განაცხადის გაგზავნა
-                      <ArrowRight className="size-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                      კითხვის გაგზავნა
+                      <span className="flex size-8 md:size-7 justify-center items-center bg-emerald-500 p-2 rounded-full animate-bounce">
+                        <PhoneIcon className="text-white size-3" />
+                      </span>
                     </a>
-                  </Button>
-                  <Button
-                    size="lg"
-                    variant="outline"
-                    className="xs:text-lg font-semibold h-14 px-10 border-2 hover:bg-secondary transition-all"
-                    asChild
-                  >
-                    <Link href={`/${lang}/vacancies`}>
-                      სხვა ვაკანსიები
-                      <ArrowRight className="size-5 ml-2" />
-                    </Link>
                   </Button>
                 </div>
               </CardContent>
