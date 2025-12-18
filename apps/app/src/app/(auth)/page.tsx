@@ -26,6 +26,7 @@ export default async function OnboardingPage({
       "/login?" +
         new URLSearchParams({
           vacancyId: params.vacancyId as string,
+          loginType: "login",
         }).toString()
     );
   }

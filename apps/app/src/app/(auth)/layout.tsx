@@ -15,10 +15,11 @@ export default async function AuthLayout({ children }: PropsWithChildren) {
 
   if (!session?.session || !session.user) {
     console.error("SESSION_NOT_FOUND");
-    return redirect(
+    redirect(
       "/login?" +
         new URLSearchParams({
           vacancyId: params.get("vacancyId") || "",
+          loginType: params.get("loginType") || "",
         }).toString()
     );
   }
