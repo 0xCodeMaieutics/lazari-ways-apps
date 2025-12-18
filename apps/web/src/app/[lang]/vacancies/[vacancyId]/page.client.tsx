@@ -20,10 +20,10 @@ import {
   Star,
   Instagram,
   User,
-  ListChecks,
   Languages,
   UserCheck,
   PhoneIcon,
+  List,
 } from "lucide-react";
 import { Translations } from "@/i18n/translations";
 import { translationsContext } from "@/lib/context/translations";
@@ -48,6 +48,8 @@ import { ApplicationType } from "@workspace/server/db/models";
 import { LogoAndText } from "../../text-logo";
 import { Locale } from "@/i18n";
 import { env } from "@/env";
+import clsx from "clsx";
+import { format } from "date-fns";
 
 const VACANCY_ID_PREFIX = "LZRY-";
 
@@ -102,7 +104,7 @@ export const VacancyClientPage = ({
     <translationsContext.Provider value={{ translations }}>
       <main className="min-h-screen w-full bg-linear-to-b from-background via-background to-secondary/20">
         {/* Hero Section with Modern Layout */}
-        <section className="relative px-6 py-16 md:py-24">
+        <section className="relative px-6 pt-16 md:pt-24">
           {/* Decorative background elements */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div className="absolute top-20 right-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl" />
@@ -118,7 +120,7 @@ export const VacancyClientPage = ({
                 variant={"link"}
                 className="flex items-center gap-2 h-12 text-xl font-semibold max-w-max mr-auto"
               >
-                <Link href={`/${lang}#vacancies`}>
+                <Link href={`/${lang}/vacancies`}>
                   <ArrowLeft />
                   დაბრუნება
                 </Link>
@@ -165,7 +167,7 @@ export const VacancyClientPage = ({
 
                 {/* Salary Card */}
                 <Card className="border-2 border-primary/20 bg-linear-to-br from-primary/5 to-primary/10 shadow-lg">
-                  <CardContent className="p-6">
+                  <CardContent className="md:p-3">
                     <div className="flex items-center justify-between">
                       <div className="space-y-1">
                         <p className="text-sm text-muted-foreground font-medium flex items-center gap-2">
@@ -184,7 +186,7 @@ export const VacancyClientPage = ({
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* Begin Date */}
                   <Card className="border-2">
-                    <CardContent className="p-5">
+                    <CardContent className="md:p-4">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                           <Calendar className="size-5 text-primary" />
@@ -194,7 +196,7 @@ export const VacancyClientPage = ({
                             როდის იწყებთ
                           </p>
                           <p className="font-bold text-lg mt-1">
-                            {data.beginDate}
+                            {format(new Date(data.beginDate), "LLLL M yyyy")}
                           </p>
                         </div>
                       </div>
@@ -203,7 +205,7 @@ export const VacancyClientPage = ({
 
                   {/* Duration */}
                   <Card className="border-2">
-                    <CardContent className="p-5">
+                    <CardContent className="md:p-4">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                           <Clock className="size-5 text-primary" />
@@ -223,7 +225,7 @@ export const VacancyClientPage = ({
                   {/* Language Level */}
                   {data.languageLevel && (
                     <Card className="border-2 sm:col-span-2">
-                      <CardContent className="p-5">
+                      <CardContent className="md:p-4">
                         <div className="flex items-start gap-3">
                           <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                             <Languages className="size-5 text-primary" />
@@ -245,7 +247,7 @@ export const VacancyClientPage = ({
                   {data.acceptableApplicationTypes &&
                     data.acceptableApplicationTypes.length > 0 && (
                       <Card className="border-2 sm:col-span-2">
-                        <CardContent className="p-5">
+                        <CardContent className="md:p-4">
                           <div className="flex items-start gap-3">
                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                               <UserCheck className="size-5 text-primary" />
@@ -272,7 +274,7 @@ export const VacancyClientPage = ({
 
                   {/* Schedule */}
                   <Card className="border-2 sm:col-span-2">
-                    <CardContent className="p-5">
+                    <CardContent className="md:p-4">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                           <Briefcase className="size-5 text-primary" />
@@ -303,7 +305,7 @@ export const VacancyClientPage = ({
                   <div className="space-y-3">
                     {data.accommodation && (
                       <Card className="border-2 border-primary/20">
-                        <CardContent className="p-4">
+                        <CardContent className="md:p-4">
                           <div className="flex items-start gap-3">
                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                               <Home className="size-6 text-primary" />
@@ -320,7 +322,7 @@ export const VacancyClientPage = ({
                     )}
                     {data.meals && (
                       <Card className="border-2 border-primary/20">
-                        <CardContent className="p-4">
+                        <CardContent className="md:p-4">
                           <div className="flex items-start gap-3">
                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                               <UtensilsCrossed className="size-6 text-primary" />
@@ -341,15 +343,13 @@ export const VacancyClientPage = ({
                 {/* Job Description */}
                 <div className="space-y-3">
                   <h3 className="text-lg font-semibold flex items-center gap-2">
-                    <ListChecks className="size-5 text-primary" />
+                    <List className="size-5 text-primary" />
                     სამუშაოს არსი
                   </h3>
                   <div className="space-y-2">
                     {data.jobDescription.split("\n").map((item, idx) => (
                       <div key={idx} className="flex items-start gap-3">
-                        <p className="text-base text-foreground">
-                          {item.trim()}
-                        </p>
+                        <p>{item.trim()}</p>
                       </div>
                     ))}
                   </div>
@@ -358,7 +358,7 @@ export const VacancyClientPage = ({
                 {/* Additional Info */}
                 {data.additionalInfo && (
                   <Card className="border-2 border-amber-200 bg-amber-50/50 dark:border-amber-900 dark:bg-amber-950/20">
-                    <CardContent className="p-5">
+                    <CardContent className="md:p-4">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
                           <Info className="size-5 text-amber-600 dark:text-amber-500" />
@@ -399,7 +399,7 @@ export const VacancyClientPage = ({
               </div>
 
               {/* Right Column - Media Gallery */}
-              <div className="relative lg:sticky lg:top-8 space-y-6">
+              <div className="relative lg:sticky lg:top-8">
                 {data.photo?.key === undefined ? (
                   <div className="w-full h-[400px] lg:h-[550px] rounded-2xl bg-linear-to-br from-primary/10 to-primary/5 flex flex-col items-center justify-center border-2 border-dashed border-primary/20 space-y-4">
                     <LogoAndText lang={lang as Locale} />
@@ -425,27 +425,27 @@ export const VacancyClientPage = ({
           </div>
         </section>
 
-        <section className="px-6 py-16 md:py-24 bg-secondary/30">
+        <section className="px-6 pt-16 md:pt-24 bg-secondary/30">
           <div className="max-w-7xl mx-auto">
             {((data.photos?.length ?? 0) > 0 ||
               (data.videos?.length ?? 0) > 0) && (
-              <div className="space-y-10">
-                <h2 className="text-3xl md:text-4xl font-bold">
-                  გალერეა (
-                  {(data.photos?.length ?? 0) + (data.videos?.length ?? 0)})
-                </h2>
-                <div className="grid grid-cols-4 gap-3">
+              <div className="space-y-6 md:space-y-10">
+                <h2 className="text-3xl md:text-4xl font-bold">გალერეა</h2>
+                <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                   {data.photos?.map((photo, idx) => (
                     <button
                       key={`photo-${idx}`}
                       onClick={() =>
                         setSelectedMedia({ type: "photo", url: photo.key })
                       }
-                      className={`relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105 ${
-                        selectedMedia?.url === photo.key
-                          ? "border-primary ring-2 ring-primary/50"
-                          : "border-border"
-                      }`}
+                      className={clsx(
+                        `relative aspect-square overflow-hidden rounded-lg border-2 transition-all hover:scale-105`,
+                        {
+                          "border-primary ring-2 ring-primary/50":
+                            selectedMedia?.url === photo.key,
+                          "border-border": selectedMedia?.url !== photo.key,
+                        }
+                      )}
                     >
                       <Image
                         src={`${process.env.NEXT_PUBLIC_S3_ENDPOINT}${photo.key}`}
