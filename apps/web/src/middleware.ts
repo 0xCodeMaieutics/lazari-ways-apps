@@ -23,6 +23,8 @@ export function middleware(request: NextRequest) {
 
   const locale = getServerSideLocal(request.headers.get("accept-language"));
   request.nextUrl.pathname = `/${locale}${request.nextUrl.pathname}`;
+  
+  // Test commit in web
 
   return NextResponse.redirect(request.nextUrl, {
     headers: {
