@@ -8,13 +8,14 @@
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "docker:up": "docker compose up --build --remove-orphans -d",
-    "docker:down": "docker compose down", 
+    "docker:down": "docker compose down",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*",
-    "prettier": "^3.6.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-tailwindcss": "0.0.0-insiders.f7d2598",
     "turbo": "^2.6.1",
     "typescript": "5.7.3"
   },

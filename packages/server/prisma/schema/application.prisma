@@ -47,6 +47,8 @@ model Application {
   emergencyContactName  String?
   emergencyContactPhone String?
 
+  email String?
+
   employeeId String?
   employee   Employee? @relation(fields: [employeeId], references: [id])
 
