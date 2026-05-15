@@ -1,0 +1,1 @@
+This web app was meant to be built for non-authorized applicants that could easily submit their applications without any login. However, it turns out it's not lucrative.
