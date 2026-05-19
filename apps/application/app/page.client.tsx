@@ -1,7 +1,7 @@
 'use client'
 
 import { standardSchemaResolver } from '@hookform/resolvers/standard-schema'
-import { Controller, useForm } from 'react-hook-form'
+import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useEffect, useCallback, useState } from 'react'
 
 import { Button } from '@workspace/ui/components/button'
@@ -26,6 +26,15 @@ import { tryCatchAsync } from '@workspace/shared/error-handling/index'
 import { ImageCropper } from './image-cropper'
 import { SafariInputDate } from '@/components/safari-date-component'
 import { useRouter } from 'next/navigation'
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@workspace/ui/components/dialog'
+import { XCircle } from 'lucide-react'
 
 function applicationFormDataToFormData(data: ApplicationFormData): FormData {
     const fd = new FormData()
@@ -53,24 +62,32 @@ function applicationFormDataToFormData(data: ApplicationFormData): FormData {
 export function ApplicationForm() {
     const router = useRouter()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const [isSubmissionErrorOpen, setIsSubmissionErrorOpen] = useState(false)
     const [base64String, setBase64String] = useState<string | null>(null)
 
     const submitApplication = async (input: ApplicationFormData) => {
         setIsSubmitting(true)
 
-        const result = await tryCatchAsync(() =>
-            fetch('/api/application', {
+        const result = await tryCatchAsync(async () => {
+            const response = await fetch('/api/application', {
                 method: 'POST',
                 body: applicationFormDataToFormData(input),
             })
-        )
+            if (!response.ok) {
+                throw new Error(
+                    `Submission failed with status ${response.status}`
+                )
+            }
+        })
         setIsSubmitting(false)
 
         result.match({
             ok: () => {
                 router.push('/success')
             },
-            err: (error) => {},
+            err: () => {
+                setIsSubmissionErrorOpen(true)
+            },
         })
         return result
     }
@@ -251,403 +268,816 @@ export function ApplicationForm() {
         }, 100)
     }
 
+    const hasBeenInGermanyBefore = useWatch({
+        control: form.control,
+        name: 'hasBeenInGermanyBefore',
+    })
+
     const isDirty = form.formState.isDirty
     return (
-        <form
-            id="application-form"
-            onSubmit={form.handleSubmit(
-                (data) => submitApplication(data),
-                onInvalid
-            )}
-            noValidate
-            className="p-6"
-        >
-            <div className="space-y-8">
-                <div>
-                    <h3
-                        className="mb-4 flex items-center gap-2 text-lg font-semibold"
-                        role="button"
-                        onDoubleClick={handleTestValuesClick}
-                        title="ორჯერ დააჭირეთ ტესტური მონაცემების შესავსებად"
-                    >
-                        პირადი ინფორმაცია
-                    </h3>
-                    <FieldGroup>
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <Controller
-                                name="firstName"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="firstName"
-                                            className="text-sm font-medium"
+        <>
+            <form
+                id="application-form"
+                onSubmit={form.handleSubmit(
+                    (data) => submitApplication(data),
+                    onInvalid
+                )}
+                noValidate
+                className="p-6"
+            >
+                <div className="space-y-8">
+                    <div>
+                        <h3
+                            className="mb-4 flex items-center gap-2 text-lg font-semibold"
+                            role="button"
+                            onDoubleClick={handleTestValuesClick}
+                            title="ორჯერ დააჭირეთ ტესტური მონაცემების შესავსებად"
+                        >
+                            პირადი ინფორმაცია
+                        </h3>
+                        <FieldGroup>
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <Controller
+                                    name="firstName"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
                                         >
-                                            სახელი *
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="firstName"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="თქვენი სახელი"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="lastName"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="lastName"
-                                            className="text-sm font-medium"
-                                        >
-                                            გვარი *
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="lastName"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="თქვენი გვარი"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </div>
-
-                        <Controller
-                            name="gender"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel className="text-sm font-medium">
-                                        სქესი *
-                                    </FieldLabel>
-                                    <div className="mt-2 flex gap-6">
-                                        <Radio
-                                            {...field}
-                                            value={'M'}
-                                            checked={field.value === 'M'}
-                                            onChange={() => field.onChange('M')}
-                                            label="მამრობითი"
-                                            id="gender-male"
-                                        />
-                                        <Radio
-                                            {...field}
-                                            value="female"
-                                            checked={field.value === 'F'}
-                                            onChange={() => field.onChange('F')}
-                                            label="მდედრობითი"
-                                            id="gender-female"
-                                        />
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-
-                {/* Birth Information */}
-                <FieldGroup>
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                        <Controller
-                            name="birthDate"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="birthDate"
-                                        className="text-sm font-medium"
-                                    >
-                                        დაბადების თარიღი *
-                                    </FieldLabel>
-                                    <SafariInputDate
-                                        field={field}
-                                        id="birthDate"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="birthPlace"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="birthPlace"
-                                        className="text-sm font-medium"
-                                    >
-                                        დაბადების ადგილი *
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="birthPlace"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="ქალაქი"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="birthCountry"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="birthCountry"
-                                        className="text-sm font-medium"
-                                    >
-                                        დაბადების ქვეყანა *
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="birthCountry"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="ქვეყანა"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </div>
-                </FieldGroup>
-
-                {/* Address Information */}
-                <div className="border-t pt-8">
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                        მისამართი
-                    </h3>
-                    <FieldGroup>
-                        <Controller
-                            name="street"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="street"
-                                        className="text-sm font-medium"
-                                    >
-                                        ქუჩა, სახლის ნომერი *
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="street"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="მაგ. რუსთაველის გამზირი 1"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                            <Controller
-                                name="postalCode"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="postalCode"
-                                            className="text-sm font-medium"
-                                        >
-                                            საფოსტო ინდექსი *
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="postalCode"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="12345"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="city"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="city"
-                                            className="text-sm font-medium"
-                                        >
-                                            ქალაქი *
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="city"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="თბილისი"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="country"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="country"
-                                            className="text-sm font-medium"
-                                        >
-                                            ქვეყანა *
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="country"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="საქართველო"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </div>
-                    </FieldGroup>
-                </div>
-
-                {/* Contact & Social Media Information */}
-                <div className="border-t pt-8">
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                        კონტაქტი და სოციალური ქსელები
-                    </h3>
-                    <FieldGroup>
-                        <Controller
-                            name="email"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="phone"
-                                        className="text-sm font-medium"
-                                    >
-                                        საფოსტო ემაილი
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="email"
-                                        type="text"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="საფოსტო ემაილი"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="phone"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="phone"
-                                        className="text-sm font-medium"
-                                    >
-                                        ტელეფონის ნომერი
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="phone"
-                                        type="tel"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="+49 123 456789"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-
-                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                            <Controller
-                                name="instagram"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="instagram"
-                                            className="text-sm font-medium"
-                                        >
-                                            Instagram
-                                        </FieldLabel>
-                                        <div className="flex items-center gap-2">
-                                            <span className="text-muted-foreground">
-                                                @
-                                            </span>
+                                            <FieldLabel
+                                                htmlFor="firstName"
+                                                className="text-sm font-medium"
+                                            >
+                                                სახელი *
+                                            </FieldLabel>
                                             <Input
                                                 {...field}
-                                                id="instagram"
+                                                id="firstName"
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="მომხმარებლის სახელი"
+                                                placeholder="თქვენი სახელი"
                                                 className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                                <Controller
+                                    name="lastName"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="lastName"
+                                                className="text-sm font-medium"
+                                            >
+                                                გვარი *
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="lastName"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="თქვენი გვარი"
+                                                className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                            </div>
+
+                            <Controller
+                                name="gender"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel className="text-sm font-medium">
+                                            სქესი *
+                                        </FieldLabel>
+                                        <div className="mt-2 flex gap-6">
+                                            <Radio
+                                                {...field}
+                                                value={'M'}
+                                                checked={field.value === 'M'}
+                                                onChange={() =>
+                                                    field.onChange('M')
+                                                }
+                                                label="მამრობითი"
+                                                id="gender-male"
+                                            />
+                                            <Radio
+                                                {...field}
+                                                value="female"
+                                                checked={field.value === 'F'}
+                                                onChange={() =>
+                                                    field.onChange('F')
+                                                }
+                                                label="მდედრობითი"
+                                                id="gender-female"
+                                            />
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
+
+                    {/* Birth Information */}
+                    <FieldGroup>
+                        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                            <Controller
+                                name="birthDate"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="birthDate"
+                                            className="text-sm font-medium"
+                                        >
+                                            დაბადების თარიღი *
+                                        </FieldLabel>
+                                        <SafariInputDate
+                                            field={field}
+                                            id="birthDate"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="birthPlace"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="birthPlace"
+                                            className="text-sm font-medium"
+                                        >
+                                            დაბადების ადგილი *
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="birthPlace"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="ქალაქი"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="birthCountry"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="birthCountry"
+                                            className="text-sm font-medium"
+                                        >
+                                            დაბადების ქვეყანა *
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="birthCountry"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="ქვეყანა"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </div>
+                    </FieldGroup>
+
+                    {/* Address Information */}
+                    <div className="border-t pt-8">
+                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                            მისამართი
+                        </h3>
+                        <FieldGroup>
+                            <Controller
+                                name="street"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="street"
+                                            className="text-sm font-medium"
+                                        >
+                                            ქუჩა, სახლის ნომერი *
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="street"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="მაგ. რუსთაველის გამზირი 1"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+                                <Controller
+                                    name="postalCode"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="postalCode"
+                                                className="text-sm font-medium"
+                                            >
+                                                საფოსტო ინდექსი *
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="postalCode"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="12345"
+                                                className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                                <Controller
+                                    name="city"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="city"
+                                                className="text-sm font-medium"
+                                            >
+                                                ქალაქი *
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="city"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="თბილისი"
+                                                className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                                <Controller
+                                    name="country"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="country"
+                                                className="text-sm font-medium"
+                                            >
+                                                ქვეყანა *
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="country"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="საქართველო"
+                                                className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                            </div>
+                        </FieldGroup>
+                    </div>
+
+                    {/* Contact & Social Media Information */}
+                    <div className="border-t pt-8">
+                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                            კონტაქტი და სოციალური ქსელები
+                        </h3>
+                        <FieldGroup>
+                            <Controller
+                                name="email"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="phone"
+                                            className="text-sm font-medium"
+                                        >
+                                            საფოსტო ემაილი
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="email"
+                                            type="text"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="საფოსტო ემაილი"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="phone"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="phone"
+                                            className="text-sm font-medium"
+                                        >
+                                            ტელეფონის ნომერი
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="phone"
+                                            type="tel"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="+49 123 456789"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                <Controller
+                                    name="instagram"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="instagram"
+                                                className="text-sm font-medium"
+                                            >
+                                                Instagram
+                                            </FieldLabel>
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-muted-foreground">
+                                                    @
+                                                </span>
+                                                <Input
+                                                    {...field}
+                                                    id="instagram"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                    placeholder="მომხმარებლის სახელი"
+                                                    className="transition-colors"
+                                                />
+                                            </div>
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                                <Controller
+                                    name="facebook"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel
+                                                htmlFor="facebook"
+                                                className="text-sm font-medium"
+                                            >
+                                                Facebook
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="facebook"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="მომხმარებლის სახელი ან პროფილის სახელი"
+                                                className="transition-colors"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                            </div>
+
+                            <Controller
+                                name="taxId"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="taxId"
+                                            className="text-sm font-medium"
+                                        >
+                                            საგადასახადო იდენტიფიკაციის ნომერი
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="taxId"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="საგადასახადო იდენტიფიკაციის ნომერი"
+                                            className="transition-colors"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
+
+                    <div className="border-t pt-8">
+                        <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+                            პროფილის ფოტო
+                        </h3>
+                        <FieldGroup>
+                            <Controller
+                                name="foto"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="foto">
+                                            ფოტოს ატვირთვა
+                                        </FieldLabel>
+                                        <FileUpload
+                                            id="foto"
+                                            accept=".png,.jpg,.jpeg"
+                                            value={field.value}
+                                            onChange={(files) => {
+                                                if (files === null) {
+                                                    field.onChange(undefined)
+                                                    setBase64String(null)
+                                                    return
+                                                }
+                                                const file = Array.isArray(
+                                                    files
+                                                )
+                                                    ? files[0]
+                                                    : files
+
+                                                const reader = new FileReader()
+                                                reader.readAsDataURL(
+                                                    file as File
+                                                )
+                                                reader.onload = () => {
+                                                    const base64Encoded =
+                                                        reader.result as string
+                                                    setBase64String(
+                                                        base64Encoded
+                                                    )
+                                                }
+
+                                                reader.onerror = function (
+                                                    error
+                                                ) {
+                                                    console.log(
+                                                        'Error: ',
+                                                        error
+                                                    )
+                                                }
+                                                field.onChange(file)
+                                            }}
+                                            placeholder="აირჩიეთ ფოტო"
+                                            required
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                        {base64String !== null &&
+                                            field.value instanceof File && (
+                                                <ImageCropper
+                                                    base64Image={base64String}
+                                                    originalFile={field.value}
+                                                    onDismiss={() =>
+                                                        setBase64String(null)
+                                                    }
+                                                    onCropComplete={(
+                                                        cropped
+                                                    ) => {
+                                                        form.setValue(
+                                                            'foto',
+                                                            cropped,
+                                                            {
+                                                                shouldDirty: true,
+                                                                shouldTouch: true,
+                                                                shouldValidate: true,
+                                                            }
+                                                        )
+                                                        setBase64String(null)
+                                                    }}
+                                                />
+                                            )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
+                    <div>
+                        <h2 className="mb-4 text-lg font-semibold">
+                            სწავლა და კვალიფიკაცია
+                        </h2>
+                        <FieldGroup>
+                            <Controller
+                                name="semesterBreakFrom"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="semesterBreakFrom">
+                                            არდადეგების დასაწყისი
+                                        </FieldLabel>
+                                        <SafariInputDate
+                                            field={field}
+                                            id="semesterBreakFrom"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="semesterBreakTo"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="semesterBreakTo">
+                                            არდადეგები დასასრული
+                                        </FieldLabel>
+                                        <SafariInputDate
+                                            field={field}
+                                            id="semesterBreakTo"
+                                            aria-invalid={fieldState.invalid}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <Controller
+                                    name="university"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel htmlFor="university">
+                                                უნივერსიტეტი
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="university"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="უნივერსიტეტის სახელი"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                                <Controller
+                                    name="studySubject"
+                                    control={form.control}
+                                    render={({ field, fieldState }) => (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
+                                        >
+                                            <FieldLabel htmlFor="studySubject">
+                                                სასწავლო სპეციალობა
+                                            </FieldLabel>
+                                            <Input
+                                                {...field}
+                                                id="studySubject"
+                                                aria-invalid={
+                                                    fieldState.invalid
+                                                }
+                                                placeholder="სასწავლო სპეციალობა"
+                                            />
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )}
+                                />
+                            </div>
+                            <Controller
+                                name="germanLevel"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>გერმანულის დონე</FieldLabel>
+                                        <div className="flex gap-4">
+                                            {['A1', 'A2', 'B1', 'B2', 'C1'].map(
+                                                (level) => (
+                                                    <div
+                                                        key={level}
+                                                        className="flex items-center gap-2"
+                                                    >
+                                                        <Checkbox
+                                                            key={level}
+                                                            checked={
+                                                                field.value ===
+                                                                level
+                                                            }
+                                                            onChange={() =>
+                                                                field.onChange(
+                                                                    field.value ===
+                                                                        level
+                                                                        ? undefined
+                                                                        : level
+                                                                )
+                                                            }
+                                                            id={`german-${field.value}`}
+                                                        />
+                                                        <label
+                                                            htmlFor={`german-${field.value}`}
+                                                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        >
+                                                            {level}
+                                                        </label>
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="otherLanguages"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="otherLanguages">
+                                            სხვა ენების ცოდნა / ენის დონე
+                                        </FieldLabel>
+                                        <Textarea
+                                            {...field}
+                                            id="otherLanguages"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="მაგ. ინგლისური B2, ფრანგული A1"
+                                            rows={3}
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="driverLicense"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="driverLicense">
+                                            მართვის მოწმობა
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="driverLicense"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="მართვის მოწმობის კატეგორია (მაგ. B, A1)"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="canRideBike"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>
+                                            შეგიძლიათ ველოსიპედის ტარება?
+                                        </FieldLabel>
+                                        <div className="flex gap-4">
+                                            <Radio
+                                                {...field}
+                                                value="Ja"
+                                                checked={field.value === true}
+                                                onChange={() =>
+                                                    field.onChange(true)
+                                                }
+                                                label="დიახ"
+                                                id="bike-yes"
+                                            />
+                                            <Radio
+                                                {...field}
+                                                value="Nein"
+                                                checked={field.value === false}
+                                                onChange={() =>
+                                                    field.onChange(false)
+                                                }
+                                                label="არა"
+                                                id="bike-no"
                                             />
                                         </div>
                                         {fieldState.invalid && (
@@ -659,199 +1089,67 @@ export function ApplicationForm() {
                                 )}
                             />
                             <Controller
-                                name="facebook"
+                                name="shiftWork"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="facebook"
-                                            className="text-sm font-medium"
-                                        >
-                                            Facebook
+                                        <FieldLabel>
+                                            მზადყოფნა ცვლებში მუშაობისთვის
                                         </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="facebook"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="მომხმარებლის სახელი ან პროფილის სახელი"
-                                            className="transition-colors"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </div>
-
-                        <Controller
-                            name="taxId"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel
-                                        htmlFor="taxId"
-                                        className="text-sm font-medium"
-                                    >
-                                        საგადასახადო იდენტიფიკაციის ნომერი
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="taxId"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="საგადასახადო იდენტიფიკაციის ნომერი"
-                                        className="transition-colors"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-
-                <div className="border-t pt-8">
-                    <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-                        პროფილის ფოტო
-                    </h3>
-                    <FieldGroup>
-                        <Controller
-                            name="foto"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="foto">
-                                        ფოტოს ატვირთვა
-                                    </FieldLabel>
-                                    <FileUpload
-                                        id="foto"
-                                        accept=".png,.jpg,.jpeg"
-                                        value={field.value}
-                                        onChange={(files) => {
-                                            if (files === null) {
-                                                field.onChange(undefined)
-                                                setBase64String(null)
-                                                return
-                                            }
-                                            const file = Array.isArray(files)
-                                                ? files[0]
-                                                : files
-
-                                            const reader = new FileReader()
-                                            reader.readAsDataURL(file as File)
-                                            reader.onload = () => {
-                                                const base64Encoded =
-                                                    reader.result as string
-                                                setBase64String(base64Encoded)
-                                            }
-
-                                            reader.onerror = function (error) {
-                                                console.log('Error: ', error)
-                                            }
-                                            field.onChange(file)
-                                        }}
-                                        placeholder="აირჩიეთ ფოტო"
-                                        required
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                    {base64String !== null &&
-                                        field.value instanceof File && (
-                                            <ImageCropper
-                                                base64Image={base64String}
-                                                originalFile={field.value}
-                                                onDismiss={() =>
-                                                    setBase64String(null)
+                                        <div className="flex gap-4">
+                                            <Radio
+                                                {...field}
+                                                value="Ja"
+                                                checked={field.value === true}
+                                                onChange={() =>
+                                                    field.onChange(true)
                                                 }
-                                                onCropComplete={(cropped) => {
-                                                    form.setValue(
-                                                        'foto',
-                                                        cropped,
-                                                        {
-                                                            shouldDirty: true,
-                                                            shouldTouch: true,
-                                                            shouldValidate: true,
-                                                        }
-                                                    )
-                                                    setBase64String(null)
-                                                }}
+                                                label="დიახ"
+                                                id="shift-yes"
+                                            />
+                                            <Radio
+                                                {...field}
+                                                value="Nein"
+                                                checked={field.value === false}
+                                                onChange={() =>
+                                                    field.onChange(false)
+                                                }
+                                                label="არა"
+                                                id="shift-no"
+                                            />
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
                                             />
                                         )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-                <div>
-                    <h2 className="mb-4 text-lg font-semibold">
-                        სწავლა და კვალიფიკაცია
-                    </h2>
-                    <FieldGroup>
-                        <Controller
-                            name="semesterBreakFrom"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="semesterBreakFrom">
-                                        არდადეგების დასაწყისი
-                                    </FieldLabel>
-                                    <SafariInputDate
-                                        field={field}
-                                        id="semesterBreakFrom"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="semesterBreakTo"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="semesterBreakTo">
-                                        არდადეგები დასასრული
-                                    </FieldLabel>
-                                    <SafariInputDate
-                                        field={field}
-                                        id="semesterBreakTo"
-                                        aria-invalid={fieldState.invalid}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
+                    <div>
+                        <h2
+                            className="mb-4 text-lg font-semibold"
+                            title="ორჯერ დააჭირეთ ტესტური მონაცემების შესავსებად"
+                        >
+                            ჯანმრთელობა და პირადი მონაცემები
+                        </h2>
+                        <FieldGroup>
                             <Controller
-                                name="university"
+                                name="healthRestrictions"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="university">
-                                            უნივერსიტეტი
+                                        <FieldLabel htmlFor="healthRestrictions">
+                                            ჯანმრთელობის შეზღუდვები
                                         </FieldLabel>
-                                        <Input
+                                        <Textarea
                                             {...field}
-                                            id="university"
+                                            id="healthRestrictions"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="უნივერსიტეტის სახელი"
+                                            placeholder="გთხოვთ, აღწეროთ ჯანმრთელობასთან დაკავშირებული შეზღუდვები (თუ არის)"
+                                            rows={3}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -862,18 +1160,19 @@ export function ApplicationForm() {
                                 )}
                             />
                             <Controller
-                                name="studySubject"
+                                name="allergies"
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="studySubject">
-                                            სასწავლო სპეციალობა
+                                        <FieldLabel htmlFor="allergies">
+                                            ალერგიები
                                         </FieldLabel>
-                                        <Input
+                                        <Textarea
                                             {...field}
-                                            id="studySubject"
+                                            id="allergies"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="სასწავლო სპეციალობა"
+                                            placeholder="გთხოვთ, ჩამოთვალეთ ცნობილი ალერგიები"
+                                            rows={3}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -883,339 +1182,24 @@ export function ApplicationForm() {
                                     </Field>
                                 )}
                             />
-                        </div>
-                        <Controller
-                            name="germanLevel"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>გერმანულის დონე</FieldLabel>
-                                    <div className="flex gap-4">
-                                        {['A1', 'A2', 'B1', 'B2', 'C1'].map(
-                                            (level) => (
-                                                <div
-                                                    key={level}
-                                                    className="flex items-center gap-2"
-                                                >
-                                                    <Checkbox
-                                                        key={level}
-                                                        checked={
-                                                            field.value ===
-                                                            level
-                                                        }
-                                                        onChange={() =>
-                                                            field.onChange(
-                                                                field.value ===
-                                                                    level
-                                                                    ? undefined
-                                                                    : level
-                                                            )
-                                                        }
-                                                        id={`german-${field.value}`}
-                                                    />
-                                                    <label
-                                                        htmlFor={`german-${field.value}`}
-                                                        className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                    >
-                                                        {level}
-                                                    </label>
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="otherLanguages"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="otherLanguages">
-                                        სხვა ენების ცოდნა / ენის დონე
-                                    </FieldLabel>
-                                    <Textarea
-                                        {...field}
-                                        id="otherLanguages"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="მაგ. ინგლისური B2, ფრანგული A1"
-                                        rows={3}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="driverLicense"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="driverLicense">
-                                        მართვის მოწმობა
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="driverLicense"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="მართვის მოწმობის კატეგორია (მაგ. B, A1)"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="canRideBike"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        შეგიძლიათ ველოსიპედის ტარება?
-                                    </FieldLabel>
-                                    <div className="flex gap-4">
-                                        <Radio
-                                            {...field}
-                                            value="Ja"
-                                            checked={field.value === true}
-                                            onChange={() =>
-                                                field.onChange(true)
-                                            }
-                                            label="დიახ"
-                                            id="bike-yes"
-                                        />
-                                        <Radio
-                                            {...field}
-                                            value="Nein"
-                                            checked={field.value === false}
-                                            onChange={() =>
-                                                field.onChange(false)
-                                            }
-                                            label="არა"
-                                            id="bike-no"
-                                        />
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="shiftWork"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        მზადყოფნა ცვლებში მუშაობისთვის
-                                    </FieldLabel>
-                                    <div className="flex gap-4">
-                                        <Radio
-                                            {...field}
-                                            value="Ja"
-                                            checked={field.value === true}
-                                            onChange={() =>
-                                                field.onChange(true)
-                                            }
-                                            label="დიახ"
-                                            id="shift-yes"
-                                        />
-                                        <Radio
-                                            {...field}
-                                            value="Nein"
-                                            checked={field.value === false}
-                                            onChange={() =>
-                                                field.onChange(false)
-                                            }
-                                            label="არა"
-                                            id="shift-no"
-                                        />
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-                <div>
-                    <h2
-                        className="mb-4 text-lg font-semibold"
-                        title="ორჯერ დააჭირეთ ტესტური მონაცემების შესავსებად"
-                    >
-                        ჯანმრთელობა და პირადი მონაცემები
-                    </h2>
-                    <FieldGroup>
-                        <Controller
-                            name="healthRestrictions"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="healthRestrictions">
-                                        ჯანმრთელობის შეზღუდვები
-                                    </FieldLabel>
-                                    <Textarea
-                                        {...field}
-                                        id="healthRestrictions"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="გთხოვთ, აღწეროთ ჯანმრთელობასთან დაკავშირებული შეზღუდვები (თუ არის)"
-                                        rows={3}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="allergies"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="allergies">
-                                        ალერგიები
-                                    </FieldLabel>
-                                    <Textarea
-                                        {...field}
-                                        id="allergies"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="გთხოვთ, ჩამოთვალეთ ცნობილი ალერგიები"
-                                        rows={3}
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                            <Controller
-                                name="clothingSize"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="clothingSize">
-                                            ტანსაცმლის ზომა
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="clothingSize"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="მაგ. M, L, XL"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                            <Controller
-                                name="shoeSize"
-                                control={form.control}
-                                render={({ field, fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="shoeSize">
-                                            ფეხსაცმლის ზომა
-                                        </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="shoeSize"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="მაგ. 42, 43, 44"
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
-                            />
-                        </div>
-                    </FieldGroup>
-                </div>
-                <div>
-                    <h2 className="mb-4 text-lg font-semibold">
-                        ყოფნა გერმანიაში
-                    </h2>
-                    <FieldGroup>
-                        <Controller
-                            name="hasBeenInGermanyBefore"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>ყოფნა გერმანიაში</FieldLabel>
-                                    <div className="flex gap-4">
-                                        <Radio
-                                            {...field}
-                                            value="Ja"
-                                            checked={field.value === true}
-                                            onChange={() =>
-                                                field.onChange(true)
-                                            }
-                                            label="დიახ"
-                                            id="bike-yes"
-                                        />
-                                        <Radio
-                                            {...field}
-                                            value="Nein"
-                                            checked={field.value === false}
-                                            onChange={() =>
-                                                field.onChange(false)
-                                            }
-                                            label="არა"
-                                            id="bike-no"
-                                        />
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        {form.watch('hasBeenInGermanyBefore') && (
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <Controller
-                                    name="previousStayPlace"
+                                    name="clothingSize"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field
                                             data-invalid={fieldState.invalid}
                                         >
-                                            <FieldLabel htmlFor="previousStayPlace">
-                                                თუ კი, სად
+                                            <FieldLabel htmlFor="clothingSize">
+                                                ტანსაცმლის ზომა
                                             </FieldLabel>
                                             <Input
                                                 {...field}
-                                                id="previousStayPlace"
+                                                id="clothingSize"
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="ქალაქი/რეგიონი გერმანიაში"
+                                                placeholder="მაგ. M, L, XL"
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1226,23 +1210,22 @@ export function ApplicationForm() {
                                     )}
                                 />
                                 <Controller
-                                    name="previousStayPeriodFrom"
+                                    name="shoeSize"
                                     control={form.control}
                                     render={({ field, fieldState }) => (
                                         <Field
                                             data-invalid={fieldState.invalid}
                                         >
-                                            <FieldLabel htmlFor="previousStayPeriodFrom">
-                                                პერიოდი
+                                            <FieldLabel htmlFor="shoeSize">
+                                                ფეხსაცმლის ზომა
                                             </FieldLabel>
                                             <Input
                                                 {...field}
-                                                id="previousStayPeriodFrom"
+                                                id="shoeSize"
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="მაგ. ივლისი 2023"
-                                                type="date"
+                                                placeholder="მაგ. 42, 43, 44"
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1253,106 +1236,247 @@ export function ApplicationForm() {
                                     )}
                                 />
                             </div>
-                        )}
-                    </FieldGroup>
-                </div>
-                <div>
-                    <h2 className="mb-4 text-lg font-semibold">
-                        საგანგებო საკონტაქტო პირი
-                    </h2>
-                    <FieldGroup>
-                        <Controller
-                            name="emergencyContactName"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="emergencyContactName">
-                                        საგანგებო საკონტაქტო პირი *
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="emergencyContactName"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="საკონტაქტო პირის სრული სახელი"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                        <Controller
-                            name="emergencyPhone"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel htmlFor="emergencyPhone">
-                                        საგანგებო ტელეფონის ნომერი *
-                                    </FieldLabel>
-                                    <Input
-                                        {...field}
-                                        id="emergencyPhone"
-                                        type="tel"
-                                        aria-invalid={fieldState.invalid}
-                                        placeholder="+49 XXX XXXXXXX"
-                                    />
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
-                            )}
-                        />
-                    </FieldGroup>
-                </div>
-                <div>
-                    <FieldGroup>
-                        <Controller
-                            name="workSector"
-                            control={form.control}
-                            render={({ field, fieldState }) => (
-                                <Field data-invalid={fieldState.invalid}>
-                                    <FieldLabel>
-                                        სასურველი სამუშაო სფერო
-                                    </FieldLabel>
-                                    <div className="flex flex-col gap-3">
-                                        {workSectorOptions.map((option) => (
+                        </FieldGroup>
+                    </div>
+                    <div>
+                        <h2 className="mb-4 text-lg font-semibold">
+                            ყოფნა გერმანიაში
+                        </h2>
+                        <FieldGroup>
+                            <Controller
+                                name="hasBeenInGermanyBefore"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>
+                                            ყოფნა გერმანიაში
+                                        </FieldLabel>
+                                        <div className="flex gap-4">
                                             <Radio
-                                                key={option}
                                                 {...field}
-                                                value={option}
-                                                checked={field.value === option}
+                                                value="Ja"
+                                                checked={field.value === true}
                                                 onChange={() =>
-                                                    field.onChange(option)
+                                                    field.onChange(true)
                                                 }
-                                                label={option}
-                                                id={`work-sector-${option.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`}
+                                                label="დიახ"
+                                                id="bike-yes"
                                             />
-                                        ))}
-                                    </div>
-                                    {fieldState.invalid && (
-                                        <FieldError
-                                            errors={[fieldState.error]}
-                                        />
-                                    )}
-                                </Field>
+                                            <Radio
+                                                {...field}
+                                                value="Nein"
+                                                checked={field.value === false}
+                                                onChange={() =>
+                                                    field.onChange(false)
+                                                }
+                                                label="არა"
+                                                id="bike-no"
+                                            />
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            {hasBeenInGermanyBefore && (
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                    <Controller
+                                        name="previousStayPlace"
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field
+                                                data-invalid={
+                                                    fieldState.invalid
+                                                }
+                                            >
+                                                <FieldLabel htmlFor="previousStayPlace">
+                                                    თუ კი, სად
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    id="previousStayPlace"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                    placeholder="ქალაქი/რეგიონი გერმანიაში"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError
+                                                        errors={[
+                                                            fieldState.error,
+                                                        ]}
+                                                    />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="previousStayPeriodFrom"
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field
+                                                data-invalid={
+                                                    fieldState.invalid
+                                                }
+                                            >
+                                                <FieldLabel htmlFor="previousStayPeriodFrom">
+                                                    პერიოდი
+                                                </FieldLabel>
+                                                <Input
+                                                    {...field}
+                                                    id="previousStayPeriodFrom"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                    placeholder="მაგ. ივლისი 2023"
+                                                    type="date"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError
+                                                        errors={[
+                                                            fieldState.error,
+                                                        ]}
+                                                    />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                </div>
                             )}
-                        />
-                    </FieldGroup>
+                        </FieldGroup>
+                    </div>
+                    <div>
+                        <h2 className="mb-4 text-lg font-semibold">
+                            საგანგებო საკონტაქტო პირი
+                        </h2>
+                        <FieldGroup>
+                            <Controller
+                                name="emergencyContactName"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="emergencyContactName">
+                                            საგანგებო საკონტაქტო პირი *
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="emergencyContactName"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="საკონტაქტო პირის სრული სახელი"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="emergencyPhone"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel htmlFor="emergencyPhone">
+                                            საგანგებო ტელეფონის ნომერი *
+                                        </FieldLabel>
+                                        <Input
+                                            {...field}
+                                            id="emergencyPhone"
+                                            type="tel"
+                                            aria-invalid={fieldState.invalid}
+                                            placeholder="+49 XXX XXXXXXX"
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
+                    <div>
+                        <FieldGroup>
+                            <Controller
+                                name="workSector"
+                                control={form.control}
+                                render={({ field, fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel>
+                                            სასურველი სამუშაო სფერო
+                                        </FieldLabel>
+                                        <div className="flex flex-col gap-3">
+                                            {workSectorOptions.map((option) => (
+                                                <Radio
+                                                    key={option}
+                                                    {...field}
+                                                    value={option}
+                                                    checked={
+                                                        field.value === option
+                                                    }
+                                                    onChange={() =>
+                                                        field.onChange(option)
+                                                    }
+                                                    label={option}
+                                                    id={`work-sector-${option.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`}
+                                                />
+                                            ))}
+                                        </div>
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                        </FieldGroup>
+                    </div>
                 </div>
-            </div>
-            <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
-                <Button
-                    type="submit"
-                    size={'lg'}
-                    disabled={isSubmitting || !isDirty}
-                >
-                    {isSubmitting ? 'იგზავნება...' : 'გაგზავნა'}
-                </Button>
-            </div>
-        </form>
+                <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
+                    <Button
+                        type="submit"
+                        size={'lg'}
+                        disabled={isSubmitting || !isDirty}
+                    >
+                        {isSubmitting ? 'იგზავნება...' : 'გაგზავნა'}
+                    </Button>
+                </div>
+            </form>
+
+            <Dialog
+                open={isSubmissionErrorOpen}
+                onOpenChange={setIsSubmissionErrorOpen}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <div className="flex items-center gap-3">
+                            <XCircle
+                                className="text-destructive size-6"
+                                aria-hidden
+                            />
+                            <DialogTitle>გაგზავნა ვერ მოხერხდა</DialogTitle>
+                        </div>
+                        <DialogDescription>
+                            განაცხადის გაგზავნისას მოხდა შეცდომა. გთხოვთ,
+                            დაუკავშირდეთ ანას ან ქრისტის.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            onClick={() => setIsSubmissionErrorOpen(false)}
+                        >
+                            დახურვა
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </>
     )
 }

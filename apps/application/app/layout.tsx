@@ -24,6 +24,7 @@ export default function RootLayout({
                         width={254}
                         height={60}
                         className="h-8 w-auto"
+                        loading="eager"
                     />
                 </header>
                 <Providers>{children}</Providers>

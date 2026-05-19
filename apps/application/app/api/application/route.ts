@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
     const parsed = applicationFormSchema.safeParse(input)
 
     if (!parsed.success) {
-        console.log('ZOD_VALIDATION_FAILED')
+        console.error('ZOD_VALIDATION_FAILED')
         return Response.json({ error: 'Bad request' }, { status: 400 })
     }
 
@@ -22,9 +22,18 @@ export const POST = async (request: NextRequest) => {
     const pdfFilename = `bewerbung-${base || 'application'}.pdf`
 
     const logoUrl = new URL('/ir-germany-logo.png', request.nextUrl.origin)
-    const logoResponse = await fetch(logoUrl)
+    const logoResponseResult = await tryCatchAsync(() => fetch(logoUrl))
+    if (logoResponseResult.isErr()) {
+        console.error('FETCH_LOGO_REQUEST_FAILED')
+        return Response.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        )
+    }
+
+    const logoResponse = logoResponseResult.value
     if (!logoResponse.ok) {
-        console.log('FETCH_LOGO_FAILED', logoResponse.status)
+        console.error('FETCH_LOGO_REQUEST_NOT_OKAY')
         return Response.json(
             { error: 'Internal server error' },
             { status: 500 }
@@ -56,6 +65,7 @@ export const POST = async (request: NextRequest) => {
     )
 
     if (telegramResult.isErr()) {
+        console.error('TELEGRAM_REQUEST_FAILED')
         return Response.json(
             { error: 'Internal server error' },
             { status: 502 }
