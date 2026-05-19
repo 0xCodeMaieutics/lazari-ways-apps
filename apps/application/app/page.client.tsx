@@ -627,7 +627,7 @@ export function ApplicationForm() {
                                         <Input
                                             {...field}
                                             id="email"
-                                            type="text"
+                                            type="email"
                                             aria-invalid={fieldState.invalid}
                                             placeholder="საფოსტო ემაილი"
                                             className="transition-colors"
@@ -989,9 +989,7 @@ export function ApplicationForm() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>
-                                            მართვის მოწმობა
-                                        </FieldLabel>
+                                        <FieldLabel>მართვის მოწმობა</FieldLabel>
                                         <div className="flex gap-4">
                                             <Radio
                                                 {...field}
