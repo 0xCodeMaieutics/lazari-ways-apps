@@ -60,7 +60,7 @@ export const applicationFormSchema = z.object({
     semesterBreakTo: z.string().optional(),
     germanLevel: germanLevels.optional(),
     otherLanguages: z.string().optional(),
-    driverLicense: z.string().optional(),
+    driverLicense: z.boolean().optional(),
     canRideBike: z.boolean().optional(),
     shiftWork: z.boolean().optional(),
     healthRestrictions: z.string().optional(),

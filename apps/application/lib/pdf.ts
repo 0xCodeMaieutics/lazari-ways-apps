@@ -273,7 +273,7 @@ export const generateApplicationPdf = async (
             'Weitere Sprachen',
             formatOptional(applicationFormData.otherLanguages),
         ],
-        ['Führerschein', formatOptional(applicationFormData.driverLicense)],
+        ['Führerschein', formatBool(applicationFormData.driverLicense)],
         ['Kann Fahrrad fahren', formatBool(applicationFormData.canRideBike)],
         [
             'Bereitschaft zur Schichtarbeit',
@@ -496,7 +496,7 @@ if (require.main === module) {
             semesterBreakTo: '2024-09-30',
             germanLevel: 'B2',
             otherLanguages: 'English, Spanish',
-            driverLicense: 'B',
+            driverLicense: true,
             canRideBike: true,
             shiftWork: false,
             healthRestrictions: '',

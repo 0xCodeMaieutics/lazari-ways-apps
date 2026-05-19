@@ -157,7 +157,7 @@ function applicationFormDataFromFormData(formData: FormData) {
         semesterBreakTo: formString(formData, 'semesterBreakTo'),
         germanLevel: germanLevelRaw.trim() === '' ? undefined : germanLevelRaw,
         otherLanguages: formString(formData, 'otherLanguages'),
-        driverLicense: formString(formData, 'driverLicense'),
+        driverLicense: formOptionalBool(formData, 'driverLicense'),
         canRideBike: formOptionalBool(formData, 'canRideBike'),
         shiftWork: formOptionalBool(formData, 'shiftWork'),
         healthRestrictions: formString(formData, 'healthRestrictions'),

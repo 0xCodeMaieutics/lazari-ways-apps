@@ -5,7 +5,6 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useEffect, useCallback, useState } from 'react'
 
 import { Button } from '@workspace/ui/components/button'
-import { Checkbox } from '@workspace/ui/components/checkbox'
 import { Radio } from '@workspace/ui/components/radio'
 
 import {
@@ -117,7 +116,7 @@ export function ApplicationForm() {
             germanLevel: 'A1',
             otherLanguages: '',
 
-            driverLicense: 'B',
+            driverLicense: false,
             canRideBike: false,
             shiftWork: false,
 
@@ -167,7 +166,7 @@ export function ApplicationForm() {
         form.setValue('otherLanguages', 'Englisch B2, Französisch A2', {
             shouldDirty: true,
         })
-        form.setValue('driverLicense', 'B', { shouldDirty: true })
+        form.setValue('driverLicense', true, { shouldDirty: true })
         form.setValue('canRideBike', false, { shouldDirty: true })
         form.setValue('shiftWork', false, { shouldDirty: true })
         form.setValue('healthRestrictions', 'whatever', { shouldDirty: true })
@@ -935,33 +934,22 @@ export function ApplicationForm() {
                                         <div className="flex gap-4">
                                             {['A1', 'A2', 'B1', 'B2', 'C1'].map(
                                                 (level) => (
-                                                    <div
+                                                    <Radio
                                                         key={level}
-                                                        className="flex items-center gap-2"
-                                                    >
-                                                        <Checkbox
-                                                            key={level}
-                                                            checked={
-                                                                field.value ===
+                                                        {...field}
+                                                        value={level}
+                                                        checked={
+                                                            field.value ===
+                                                            level
+                                                        }
+                                                        onChange={() =>
+                                                            field.onChange(
                                                                 level
-                                                            }
-                                                            onChange={() =>
-                                                                field.onChange(
-                                                                    field.value ===
-                                                                        level
-                                                                        ? undefined
-                                                                        : level
-                                                                )
-                                                            }
-                                                            id={`german-${field.value}`}
-                                                        />
-                                                        <label
-                                                            htmlFor={`german-${field.value}`}
-                                                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                        >
-                                                            {level}
-                                                        </label>
-                                                    </div>
+                                                            )
+                                                        }
+                                                        label={level}
+                                                        id={`german-${level}`}
+                                                    />
                                                 )
                                             )}
                                         </div>
@@ -1001,15 +989,31 @@ export function ApplicationForm() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel htmlFor="driverLicense">
+                                        <FieldLabel>
                                             მართვის მოწმობა
                                         </FieldLabel>
-                                        <Input
-                                            {...field}
-                                            id="driverLicense"
-                                            aria-invalid={fieldState.invalid}
-                                            placeholder="მართვის მოწმობის კატეგორია (მაგ. B, A1)"
-                                        />
+                                        <div className="flex gap-4">
+                                            <Radio
+                                                {...field}
+                                                value="Ja"
+                                                checked={field.value === true}
+                                                onChange={() =>
+                                                    field.onChange(true)
+                                                }
+                                                label="დიახ"
+                                                id="driver-license-yes"
+                                            />
+                                            <Radio
+                                                {...field}
+                                                value="Nein"
+                                                checked={field.value === false}
+                                                onChange={() =>
+                                                    field.onChange(false)
+                                                }
+                                                label="არა"
+                                                id="driver-license-no"
+                                            />
+                                        </div>
                                         {fieldState.invalid && (
                                             <FieldError
                                                 errors={[fieldState.error]}
