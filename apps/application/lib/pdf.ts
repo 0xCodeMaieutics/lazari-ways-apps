@@ -213,16 +213,16 @@ export const generateApplicationPdf = async (
             font: fontBold,
             color: colors.accent,
         })
-        cursorY -= sectionTitleSize + 4
+        cursorY -= 10
 
         page.drawRectangle({
             x: margin,
             y: cursorY,
-            width: 140,
+            width: 180,
             height: 1,
             color: colors.accent,
         })
-        cursorY -= 12
+        cursorY -= 20
 
         for (const [label, value] of rows) {
             drawKv(label, value)
@@ -514,9 +514,3 @@ if (require.main === module) {
         await writeFileAsync('./application.pdf', pdfBytes)
     })()
 }
-
-// Added "Deine Wunsch-Branche" feature -> Hotel/Gaststätte, Systemgastronomie, Landwirtschaft, Gebäude-/Industriereinigung, Industrielle Produktion, Sonstige (möglichst genaue Angaben)
-// - Pdf
-// - Form UI
-// Success page
-// ImageCropper does not work properly with landscape fotos. (probs that's fine for now)
