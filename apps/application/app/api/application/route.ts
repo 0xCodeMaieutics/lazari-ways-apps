@@ -149,7 +149,6 @@ function applicationFormDataFromFormData(formData: FormData) {
         email: emailRaw.trim() === '' ? undefined : emailRaw,
         phone: formString(formData, 'phone'),
         instagram: formString(formData, 'instagram'),
-        facebook: formString(formData, 'facebook'),
         taxId: formString(formData, 'taxId'),
         foto: formData.get('foto'),
         university: formString(formData, 'university'),

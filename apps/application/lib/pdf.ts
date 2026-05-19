@@ -249,7 +249,6 @@ export const generateApplicationPdf = async (
         ['E-Mail', formatOptional(applicationFormData.email)],
         ['Telefon', formatOptional(applicationFormData.phone)],
         ['Instagram', formatOptional(applicationFormData.instagram)],
-        ['Facebook', formatOptional(applicationFormData.facebook)],
         ['Steuer-ID', formatOptional(applicationFormData.taxId)],
     ])
 
@@ -484,7 +483,6 @@ if (require.main === module) {
             email: 'john.doe@example.com',
             phone: '+491234567890',
             instagram: 'john_insta',
-            facebook: 'john.fb',
             taxId: '123456789',
             foto: new File([pngContent], 'me.png', {
                 type: 'image/png',

@@ -42,13 +42,6 @@ export const applicationFormSchema = z.object({
             'არასწორი Instagram-ის ფორმატი (მხოლოდ მომხმარებლის სახელი @-ის გარეშე)'
         )
         .optional(),
-    facebook: z
-        .string()
-        .refine(
-            (val) => val.trim() === '' || /^[\w\.]+$/.test(val.trim()),
-            'არასწორი Facebook-ის ფორმატი (მხოლოდ მომხმარებლის ან პროფილის სახელი)'
-        )
-        .optional(),
     taxId: z.string().optional(),
     foto: z
         .instanceof(File, {

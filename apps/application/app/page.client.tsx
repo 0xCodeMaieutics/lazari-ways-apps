@@ -107,7 +107,6 @@ export function ApplicationForm() {
             country: '',
             phone: '',
             instagram: '',
-            facebook: '',
             taxId: '',
             foto: undefined,
 
@@ -154,7 +153,6 @@ export function ApplicationForm() {
         form.setValue('phone', '+49 123 456789', { shouldDirty: true })
         form.setValue('email', 'dev@testing.com', { shouldDirty: true })
         form.setValue('instagram', 'username', { shouldDirty: true })
-        form.setValue('facebook', 'username', { shouldDirty: true })
         form.setValue('taxId', '123456789', { shouldDirty: true })
 
         form.setValue('semesterBreakFrom', '2024-07-01', { shouldDirty: true })
@@ -699,36 +697,6 @@ export function ApplicationForm() {
                                                     className="transition-colors"
                                                 />
                                             </div>
-                                            {fieldState.invalid && (
-                                                <FieldError
-                                                    errors={[fieldState.error]}
-                                                />
-                                            )}
-                                        </Field>
-                                    )}
-                                />
-                                <Controller
-                                    name="facebook"
-                                    control={form.control}
-                                    render={({ field, fieldState }) => (
-                                        <Field
-                                            data-invalid={fieldState.invalid}
-                                        >
-                                            <FieldLabel
-                                                htmlFor="facebook"
-                                                className="text-sm font-medium"
-                                            >
-                                                Facebook
-                                            </FieldLabel>
-                                            <Input
-                                                {...field}
-                                                id="facebook"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
-                                                placeholder="მომხმარებლის სახელი ან პროფილის სახელი"
-                                                className="transition-colors"
-                                            />
                                             {fieldState.invalid && (
                                                 <FieldError
                                                     errors={[fieldState.error]}
