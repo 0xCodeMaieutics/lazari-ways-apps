@@ -33,7 +33,12 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@workspace/ui/components/dialog'
-import { XCircle } from 'lucide-react'
+import {
+    Alert,
+    AlertDescription,
+    AlertTitle,
+} from '@workspace/ui/components/alert'
+import { XCircle, CircleAlert } from 'lucide-react'
 
 function applicationFormDataToFormData(data: ApplicationFormData): FormData {
     const fd = new FormData()
@@ -283,6 +288,22 @@ export function ApplicationForm() {
                 className="p-6"
             >
                 <div className="space-y-8">
+                    <Alert className="border-amber-700 bg-amber-300">
+                        <AlertTitle>
+                            <div className="flex gap-2">
+                                <CircleAlert className="size-5" />
+                                <span className="font-semibold">
+                                    პასუხები მიიღება მხოლოდ გერმანულ ენაზე.
+                                </span>
+                            </div>
+                        </AlertTitle>
+
+                        <AlertDescription>
+                            პასუხი ქართულად არ დაწეროთ, წინააღმდეგ შემთხვევაში,
+                            გაგზავნა წარუმატებელი იქნება. მაგალითად დაბადების
+                            ქვეყანაში ჩაწერეთ &quot;Georgien&quot;
+                        </AlertDescription>
+                    </Alert>
                     <div>
                         <h3
                             className="mb-4 flex items-center gap-2 text-lg font-semibold"
