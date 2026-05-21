@@ -309,7 +309,37 @@ export function ApplicationForm() {
                                             </FieldLabel>
                                             <Input
                                                 {...field}
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
+                                                    if (
+                                                        new RegExp(
+                                                            /[^a-zA-Z0-9]/g
+                                                        ).test(value)
+                                                    ) {
+                                                        form.setError(
+                                                            'firstName',
+                                                            {
+                                                                message:
+                                                                    'გთხოვთ, ინგლისური ასოებით შეიყვანეთ',
+                                                            }
+                                                        )
+                                                        return
+                                                    }
+                                                    if (
+                                                        form.getFieldState(
+                                                            'firstName'
+                                                        ).invalid
+                                                    ) {
+                                                        form.clearErrors(
+                                                            'firstName'
+                                                        )
+                                                    }
+                                                }}
                                                 id="firstName"
+                                                pattern="[a-zA-Z\s\.\-_]+"
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
