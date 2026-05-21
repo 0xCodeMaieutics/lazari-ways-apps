@@ -79,7 +79,9 @@ export const applicationFormSchema = z.object({
     emergencyPhone: z
         .string()
         .min(1, 'საგანგებო ტელეფონის ნომერი სავალდებულოა'),
-    workSector: z.enum(workSectorOptions),
+    workSector: z
+        .array(z.enum(workSectorOptions))
+        .min(1, 'სასურველი სამუშაო სფერო სავალდებულოა'),
 })
 
 export type ApplicationFormData = z.infer<typeof applicationFormSchema>

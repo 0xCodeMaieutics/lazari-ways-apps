@@ -80,6 +80,14 @@ function formString(formData: FormData, key: string): string {
     return typeof v === 'string' ? v : ''
 }
 
+function formStringArray(formData: FormData, key: string): string[] {
+    return formData
+        .getAll(key)
+        .filter((v): v is string => typeof v === 'string')
+        .map((v) => v.trim())
+        .filter((v) => v !== '')
+}
+
 function formOptionalBool(
     formData: FormData,
     key: string
@@ -134,7 +142,6 @@ async function sendPdfToTelegram(pdfBytes: Uint8Array, pdfFilename: string) {
 function applicationFormDataFromFormData(formData: FormData) {
     const emailRaw = formString(formData, 'email')
     const germanLevelRaw = formString(formData, 'germanLevel')
-    const rawWorkSector = formString(formData, 'workSector')
     return {
         firstName: formString(formData, 'firstName'),
         lastName: formString(formData, 'lastName'),
@@ -173,6 +180,6 @@ function applicationFormDataFromFormData(formData: FormData) {
         previousStayPeriodTo: formString(formData, 'previousStayPeriodTo'),
         emergencyContactName: formString(formData, 'emergencyContactName'),
         emergencyPhone: formString(formData, 'emergencyPhone'),
-        workSector: rawWorkSector.trim() === '' ? undefined : rawWorkSector,
+        workSector: formStringArray(formData, 'workSector'),
     }
 }

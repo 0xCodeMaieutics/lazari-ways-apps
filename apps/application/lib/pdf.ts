@@ -314,7 +314,12 @@ export const generateApplicationPdf = async (
     ])
 
     drawSection('Arbeitsbereich', [
-        ['Branche', formatOptional(applicationFormData.workSector)],
+        [
+            'Branche',
+            applicationFormData.workSector.length > 0
+                ? applicationFormData.workSector.join(', ')
+                : '—',
+        ],
     ])
 
     const confirmation =
@@ -509,7 +514,7 @@ if (require.main === module) {
             previousStayPeriodTo: '2021-09-01',
             emergencyContactName: 'Jane Doe',
             emergencyPhone: '+49111222333',
-            workSector: 'Hotel/Gaststätte',
+            workSector: ['Hotel/Gaststätte'],
         })
         await writeFileAsync('./application.pdf', pdfBytes)
     })()

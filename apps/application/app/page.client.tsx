@@ -5,6 +5,7 @@ import { Controller, useForm, useWatch } from 'react-hook-form'
 import { useEffect, useCallback, useState } from 'react'
 
 import { Button } from '@workspace/ui/components/button'
+import { Checkbox } from '@workspace/ui/components/checkbox'
 import { Radio } from '@workspace/ui/components/radio'
 
 import {
@@ -47,6 +48,16 @@ function applicationFormDataToFormData(data: ApplicationFormData): FormData {
         if (key === 'foto') {
             if (value instanceof File) {
                 fd.set(key, value)
+            }
+            continue
+        }
+        if (Array.isArray(value)) {
+            if (value.length === 0) {
+                fd.set(key, '')
+            } else {
+                for (const item of value) {
+                    fd.append(key, String(item))
+                }
             }
             continue
         }
@@ -136,7 +147,7 @@ export function ApplicationForm() {
 
             emergencyContactName: '',
             emergencyPhone: '',
-            workSector: undefined,
+            workSector: [],
         },
     })
 
@@ -192,7 +203,11 @@ export function ApplicationForm() {
         form.setValue('emergencyPhone', '+49 89 98765432', {
             shouldDirty: true,
         })
-        form.setValue('workSector', 'Hotel/Gaststätte', { shouldDirty: true })
+        form.setValue(
+            'workSector',
+            ['Hotel/Gaststätte', 'Systemgastronomie'],
+            { shouldDirty: true }
+        )
         form.setValue('foto', new File([], 'foto.png', { type: 'image/png' }), {
             shouldDirty: true,
         })
@@ -1433,21 +1448,51 @@ export function ApplicationForm() {
                                             სასურველი სამუშაო სფერო
                                         </FieldLabel>
                                         <div className="flex flex-col gap-3">
-                                            {workSectorOptions.map((option) => (
-                                                <Radio
-                                                    key={option}
-                                                    {...field}
-                                                    value={option}
-                                                    checked={
-                                                        field.value === option
-                                                    }
-                                                    onChange={() =>
-                                                        field.onChange(option)
-                                                    }
-                                                    label={option}
-                                                    id={`work-sector-${option.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`}
-                                                />
-                                            ))}
+                                            {workSectorOptions.map((option) => {
+                                                const id = `work-sector-${option.replace(/[^a-zA-Z0-9]+/g, '-').toLowerCase()}`
+                                                const selected =
+                                                    field.value.includes(option)
+
+                                                return (
+                                                    <div
+                                                        key={option}
+                                                        className="flex items-center gap-2"
+                                                    >
+                                                        <Checkbox
+                                                            id={id}
+                                                            checked={selected}
+                                                            onCheckedChange={(
+                                                                checked
+                                                            ) => {
+                                                                if (checked) {
+                                                                    field.onChange(
+                                                                        [
+                                                                            ...field.value,
+                                                                            option,
+                                                                        ]
+                                                                    )
+                                                                } else {
+                                                                    field.onChange(
+                                                                        field.value.filter(
+                                                                            (
+                                                                                value
+                                                                            ) =>
+                                                                                value !==
+                                                                                option
+                                                                        )
+                                                                    )
+                                                                }
+                                                            }}
+                                                        />
+                                                        <label
+                                                            htmlFor={id}
+                                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                        >
+                                                            {option}
+                                                        </label>
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
                                         {fieldState.invalid && (
                                             <FieldError
