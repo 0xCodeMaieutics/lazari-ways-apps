@@ -301,7 +301,7 @@ export function ApplicationForm() {
                         <AlertDescription>
                             პასუხი ქართულად არ დაწეროთ, წინააღმდეგ შემთხვევაში,
                             გაგზავნა წარუმატებელი იქნება. მაგალითად დაბადების
-                            ქვეყანაში ჩაწერეთ &quot;Georgien&quot;
+                            ქალაქში ჩაწერეთ &quot;Tiflis&quot;
                         </AlertDescription>
                     </Alert>
                     <div>
@@ -364,7 +364,7 @@ export function ApplicationForm() {
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="თქვენი სახელი"
+                                                placeholder="თქვენი სახელი მაგ. Ana"
                                                 className="transition-colors"
                                             />
                                             {fieldState.invalid && (
@@ -394,7 +394,7 @@ export function ApplicationForm() {
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="თქვენი გვარი"
+                                                placeholder="თქვენი გვარი მაგ. Malazonia"
                                                 className="transition-colors"
                                             />
                                             {fieldState.invalid && (
@@ -504,7 +504,7 @@ export function ApplicationForm() {
                             <Controller
                                 name="birthCountry"
                                 control={form.control}
-                                render={({ field, fieldState }) => (
+                                render={({ fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel
                                             htmlFor="birthCountry"
@@ -513,11 +513,11 @@ export function ApplicationForm() {
                                             დაბადების ქვეყანა *
                                         </FieldLabel>
                                         <Input
-                                            {...field}
                                             id="birthCountry"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="ქვეყანა"
                                             className="transition-colors"
+                                            value={'Georgien'}
+                                            disabled
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -551,7 +551,7 @@ export function ApplicationForm() {
                                             {...field}
                                             id="street"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="მაგ. რუსთაველის გამზირი 1"
+                                            placeholder="მაგ. Rustavelis gamziri 1"
                                             className="transition-colors"
                                         />
                                         {fieldState.invalid && (
@@ -613,7 +613,7 @@ export function ApplicationForm() {
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="თბილისი"
+                                                placeholder="Tiflis"
                                                 className="transition-colors"
                                             />
                                             {fieldState.invalid && (
@@ -643,8 +643,9 @@ export function ApplicationForm() {
                                                 aria-invalid={
                                                     fieldState.invalid
                                                 }
-                                                placeholder="საქართველო"
                                                 className="transition-colors"
+                                                value={'Georgien'}
+                                                disabled
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1024,7 +1025,7 @@ export function ApplicationForm() {
                                             {...field}
                                             id="otherLanguages"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="მაგ. ინგლისური B2, ფრანგული A1"
+                                            placeholder="მაგ. Englisch B2, Französisch A1"
                                             rows={3}
                                         />
                                         {fieldState.invalid && (
