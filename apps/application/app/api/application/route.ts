@@ -1,3 +1,4 @@
+import { cacheSuccessfulApplication } from '@/lib/application-cache'
 import { applicationFormSchema } from '@/lib/application-form-schema'
 import { generateRemoteApplicationPdf } from '@/lib/pdf'
 import { tryCatchAsync } from '@workspace/shared/error-handling/result'
@@ -70,6 +71,13 @@ export const POST = async (request: NextRequest) => {
             { error: 'Internal server error' },
             { status: 502 }
         )
+    }
+
+    const cacheResult = await tryCatchAsync(() =>
+        cacheSuccessfulApplication(parsed.data, pdfFilename)
+    )
+    if (cacheResult.isErr()) {
+        console.error('REDIS_CACHE_FAILED', cacheResult.error)
     }
 
     return Response.json({ success: true }, { status: 200 })
