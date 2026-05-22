@@ -120,6 +120,7 @@ export function ApplicationForm() {
             postalCode: '',
             city: '',
             country: '',
+            nationality: 'Georgisch',
             phone: '',
             instagram: '',
             taxId: '',
@@ -189,12 +190,12 @@ export function ApplicationForm() {
         form.setValue('allergies', 'Some allergy', { shouldDirty: true })
         form.setValue('clothingSize', 'M', { shouldDirty: true })
         form.setValue('shoeSize', '38', { shouldDirty: true })
-        form.setValue('hasBeenInGermanyBefore', false, { shouldDirty: true })
+        form.setValue('hasBeenInGermanyBefore', true, { shouldDirty: true })
         form.setValue('previousStayPlace', 'Hamburg', { shouldDirty: true })
-        form.setValue('previousStayPeriodFrom', 'July 2022', {
+        form.setValue('previousStayPeriodFrom', '2023-07-01', {
             shouldDirty: true,
         })
-        form.setValue('previousStayPeriodTo', 'August 2023', {
+        form.setValue('previousStayPeriodTo', '2023-08-01', {
             shouldDirty: true,
         })
         form.setValue('emergencyContactName', 'Maria Schmidt', {
@@ -203,11 +204,9 @@ export function ApplicationForm() {
         form.setValue('emergencyPhone', '+49 89 98765432', {
             shouldDirty: true,
         })
-        form.setValue(
-            'workSector',
-            ['Hotel/Gaststätte', 'Systemgastronomie'],
-            { shouldDirty: true }
-        )
+        form.setValue('workSector', ['Hotel/Gaststätte', 'Systemgastronomie'], {
+            shouldDirty: true,
+        })
         form.setValue('foto', new File([], 'foto.png', { type: 'image/png' }), {
             shouldDirty: true,
         })
@@ -532,6 +531,32 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             className="transition-colors"
                                             value={'Georgien'}
+                                            disabled
+                                        />
+                                        {fieldState.invalid && (
+                                            <FieldError
+                                                errors={[fieldState.error]}
+                                            />
+                                        )}
+                                    </Field>
+                                )}
+                            />
+                            <Controller
+                                name="nationality"
+                                control={form.control}
+                                render={({ fieldState }) => (
+                                    <Field data-invalid={fieldState.invalid}>
+                                        <FieldLabel
+                                            htmlFor="nationality"
+                                            className="text-sm font-medium"
+                                        >
+                                            მოქალაქეობა *
+                                        </FieldLabel>
+                                        <Input
+                                            id="nationality"
+                                            aria-invalid={fieldState.invalid}
+                                            className="transition-colors"
+                                            value="Georgisch"
                                             disabled
                                         />
                                         {fieldState.invalid && (
@@ -1486,7 +1511,7 @@ export function ApplicationForm() {
                                                         />
                                                         <label
                                                             htmlFor={id}
-                                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                            className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                                                         >
                                                             {option}
                                                         </label>

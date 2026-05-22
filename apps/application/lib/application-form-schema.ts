@@ -23,6 +23,7 @@ export const applicationFormSchema = z.object({
     postalCode: z.string().min(1, 'საფოსტო ინდექსი სავალდებულოა'),
     city: z.string().min(1, 'ქალაქი სავალდებულოა'),
     country: z.string().min(1, 'ქვეყანა სავალდებულოა'),
+    nationality: z.string(),
     email: z.email().optional(),
     phone: z
         .string()

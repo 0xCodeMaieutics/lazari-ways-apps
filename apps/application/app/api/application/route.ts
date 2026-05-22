@@ -1,5 +1,5 @@
 import { applicationFormSchema } from '@/lib/application-form-schema'
-import { generateApplicationPdf } from '@/lib/pdf'
+import { generateRemoteApplicationPdf } from '@/lib/pdf'
 import { tryCatchAsync } from '@workspace/shared/error-handling/result'
 import { NextRequest } from 'next/server'
 
@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
     const parsed = applicationFormSchema.safeParse(input)
 
     if (!parsed.success) {
-        console.error('ZOD_VALIDATION_FAILED')
+        console.error('ZOD_VALIDATION_FAILED', parsed.error)
         return Response.json({ error: 'Bad request' }, { status: 400 })
     }
 
@@ -42,7 +42,7 @@ export const POST = async (request: NextRequest) => {
     const logoContent = new Uint8Array(await logoResponse.arrayBuffer())
 
     const pdfBytesResult = await tryCatchAsync(() =>
-        generateApplicationPdf({
+        generateRemoteApplicationPdf({
             logo: new File([logoContent], 'logo.png', {
                 type: 'image/png',
             }),
@@ -153,6 +153,7 @@ function applicationFormDataFromFormData(formData: FormData) {
         postalCode: formString(formData, 'postalCode'),
         city: formString(formData, 'city'),
         country: formString(formData, 'country'),
+        nationality: formString(formData, 'nationality') || 'Georgisch',
         email: emailRaw.trim() === '' ? undefined : emailRaw,
         phone: formString(formData, 'phone'),
         instagram: formString(formData, 'instagram'),
