@@ -232,6 +232,9 @@ importers:
       '@upstash/redis':
         specifier: ^1.38.0
         version: 1.38.0
+      '@workspace/file-upload':
+        specifier: workspace:*
+        version: link:../../packages/file-upload
       '@workspace/shared':
         specifier: workspace:*
         version: link:../../packages/shared

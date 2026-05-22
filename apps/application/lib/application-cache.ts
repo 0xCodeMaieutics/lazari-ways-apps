@@ -4,11 +4,13 @@ import { redis } from './redis'
 export type CachedApplication = Omit<ApplicationFormData, 'foto'> & {
     submittedAt: string
     pdfFilename: string
+    fotoS3Url: string
 }
 
 export async function cacheSuccessfulApplication(
     data: ApplicationFormData,
-    pdfFilename: string
+    pdfFilename: string,
+    fotoS3Url: string
 ) {
     const { foto, ...rest } = data
     void foto
@@ -16,6 +18,7 @@ export async function cacheSuccessfulApplication(
     const record: CachedApplication = {
         submittedAt: new Date().toISOString(),
         pdfFilename,
+        fotoS3Url,
         ...rest,
     }
 

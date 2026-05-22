@@ -1,8 +1,10 @@
 import { cacheSuccessfulApplication } from '@/lib/application-cache'
 import { applicationFormSchema } from '@/lib/application-form-schema'
 import { generateRemoteApplicationPdf } from '@/lib/pdf'
+import { env } from '@/env'
 import { tryCatchAsync } from '@workspace/shared/error-handling/result'
 import { NextRequest } from 'next/server'
+import { uploadFileToStorage } from '@workspace/file-upload/s3-client'
 
 export const POST = async (request: NextRequest) => {
     const formData = await request.formData()
@@ -16,11 +18,27 @@ export const POST = async (request: NextRequest) => {
 
     const first = sanitizeFilenamePart(parsed.data.firstName)
     const last = sanitizeFilenamePart(parsed.data.lastName)
+
     const base =
         first || last
             ? `${last}-${first}`.replace(/^-+|-+$/g, '')
             : 'application'
     const pdfFilename = `bewerbung-${base || 'application'}.pdf`
+
+    const fotoKey = buildApplicationFotoKey(base, parsed.data.foto)
+
+    const fotoUploadResult = await uploadFileToStorage({
+        file: parsed.data.foto,
+        bucket: env.S3_BUCKET_NAME,
+        fileKey: fotoKey,
+    })
+    if (fotoUploadResult.isErr()) {
+        console.error('FOTO_UPLOAD_FAILED', fotoUploadResult.error)
+        return Response.json(
+            { error: 'Internal server error' },
+            { status: 500 }
+        )
+    }
 
     const logoUrl = new URL('/ir-germany-logo.png', request.nextUrl.origin)
     const logoResponseResult = await tryCatchAsync(() => fetch(logoUrl))
@@ -73,8 +91,9 @@ export const POST = async (request: NextRequest) => {
         )
     }
 
+    const fotoS3Url = buildApplicationFotoUrl(fotoKey)
     const cacheResult = await tryCatchAsync(() =>
-        cacheSuccessfulApplication(parsed.data, pdfFilename)
+        cacheSuccessfulApplication(parsed.data, pdfFilename, fotoS3Url)
     )
     if (cacheResult.isErr()) {
         console.error('REDIS_CACHE_FAILED', cacheResult.error)
@@ -109,6 +128,17 @@ function formOptionalBool(
 
 function sanitizeFilenamePart(value: string): string {
     return value.replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 60)
+}
+
+function buildApplicationFotoKey(applicationBase: string, foto: File): string {
+    const filename = sanitizeFilenamePart(foto.name) || 'foto.jpg'
+    return `applications/${applicationBase || 'application'}/foto/${Date.now()}-${filename}`
+}
+
+function buildApplicationFotoUrl(fileKey: string): string {
+    const prefix =
+        process.env.NODE_ENV === 'development' ? `${env.S3_BUCKET_NAME}/` : ''
+    return `${env.S3_ENDPOINT}/${prefix}${fileKey}`
 }
 
 async function sendPdfToTelegram(pdfBytes: Uint8Array, pdfFilename: string) {
