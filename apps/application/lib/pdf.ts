@@ -572,9 +572,7 @@ const formatSignatureDate = (date: Date = new Date()) =>
     }).format(date)
 
 export const generateRemoteApplicationPdf = async (
-    applicationFormData: ApplicationFormData & {
-        logo: File
-    }
+    applicationFormData: ApplicationFormData
 ) => {
     const [pdfTemplateBytes, arialFontBytes] = await Promise.all([
         fetch(REMOTE_TEMPLATE_URL).then((res) => res.bytes()),

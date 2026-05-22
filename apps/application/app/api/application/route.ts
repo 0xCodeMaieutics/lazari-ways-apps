@@ -40,33 +40,8 @@ export const POST = async (request: NextRequest) => {
         )
     }
 
-    const logoUrl = new URL('/ir-germany-logo.png', request.nextUrl.origin)
-    const logoResponseResult = await tryCatchAsync(() => fetch(logoUrl))
-    if (logoResponseResult.isErr()) {
-        console.error('FETCH_LOGO_REQUEST_FAILED')
-        return Response.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        )
-    }
-
-    const logoResponse = logoResponseResult.value
-    if (!logoResponse.ok) {
-        console.error('FETCH_LOGO_REQUEST_NOT_OKAY')
-        return Response.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        )
-    }
-    const logoContent = new Uint8Array(await logoResponse.arrayBuffer())
-
     const pdfBytesResult = await tryCatchAsync(() =>
-        generateRemoteApplicationPdf({
-            logo: new File([logoContent], 'logo.png', {
-                type: 'image/png',
-            }),
-            ...parsed.data,
-        })
+        generateRemoteApplicationPdf(parsed.data)
     )
     if (pdfBytesResult.isErr()) {
         console.log('GENERATE_APPLICATION_PDF_ERROR', pdfBytesResult.error)
