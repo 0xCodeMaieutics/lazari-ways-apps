@@ -5,6 +5,7 @@ import { env } from '@/env'
 import { tryCatchAsync } from '@workspace/shared/error-handling/result'
 import { NextRequest } from 'next/server'
 import { uploadFileToStorage } from '@workspace/file-upload/s3-client'
+import crypto from 'crypto'
 
 export const POST = async (request: NextRequest) => {
     const formData = await request.formData()
@@ -21,7 +22,7 @@ export const POST = async (request: NextRequest) => {
 
     const base =
         first || last
-            ? `${last}-${first}`.replace(/^-+|-+$/g, '')
+            ? `${last}-${first}-${crypto.randomUUID()}`.replace(/^-+|-+$/g, '')
             : 'application'
     const pdfFilename = `bewerbung-${base || 'application'}.pdf`
 
