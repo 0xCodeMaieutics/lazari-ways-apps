@@ -1,23 +1,18 @@
 import type { ApplicationFormData } from './application-form-schema'
 import { redis } from './redis'
 
-export type CachedApplication = Omit<ApplicationFormData, 'foto'> & {
-    submittedAt: string
-    pdfFilename: string
-    fotoS3Url: string
-}
-
 export async function cacheSuccessfulApplication(
     data: ApplicationFormData,
-    pdfFilename: string,
     fotoS3Url: string
 ) {
     const { foto, ...rest } = data
     void foto
 
-    const record: CachedApplication = {
+    const record: Omit<ApplicationFormData, 'foto'> & {
+        submittedAt: string
+        fotoS3Url: string
+    } = {
         submittedAt: new Date().toISOString(),
-        pdfFilename,
         fotoS3Url,
         ...rest,
     }

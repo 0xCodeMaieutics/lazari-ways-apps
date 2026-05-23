@@ -17,16 +17,15 @@ export const POST = async (request: NextRequest) => {
         return Response.json({ error: 'Bad request' }, { status: 400 })
     }
 
-    const first = sanitizeFilenamePart(parsed.data.firstName)
-    const last = sanitizeFilenamePart(parsed.data.lastName)
+    const firstName = sanitizeFilenamePart(parsed.data.firstName)
+    const lastName = sanitizeFilenamePart(parsed.data.lastName)
 
-    const base =
-        first || last
-            ? `${last}-${first}-${crypto.randomUUID()}`.replace(/^-+|-+$/g, '')
-            : 'application'
-    const pdfFilename = `bewerbung-${base || 'application'}.pdf`
-
-    const fotoKey = buildApplicationFotoKey(base, parsed.data.foto)
+    const base = `${lastName}-${firstName}-${crypto.randomUUID()}`.replace(
+        /^-+|-+$/g,
+        ''
+    )
+    const filename = sanitizeFilenamePart(parsed.data.foto.name) || 'foto.jpg'
+    const fotoKey = `applications/${base}/foto/${Date.now()}-${filename}`
 
     const fotoUploadResult = await uploadFileToStorage({
         file: parsed.data.foto,
@@ -56,7 +55,11 @@ export const POST = async (request: NextRequest) => {
         )
     }
     const telegramResult = await tryCatchAsync(() =>
-        sendPdfToTelegram(pdfBytesResult.value, pdfFilename)
+        sendPdfToTelegram(
+            pdfBytesResult.value,
+            `${firstName} ${lastName}.pdf`,
+            `${process.env.NODE_ENV === 'development' ? 'TEST - ' : ''}${parsed.data.firstName} ${parsed.data.lastName}`.trim()
+        )
     )
 
     if (telegramResult.isErr()) {
@@ -68,11 +71,13 @@ export const POST = async (request: NextRequest) => {
     }
 
     const fotoS3Url = buildApplicationFotoUrl(fotoKey)
-    const cacheResult = await tryCatchAsync(() =>
-        cacheSuccessfulApplication(parsed.data, pdfFilename, fotoS3Url)
-    )
-    if (cacheResult.isErr()) {
-        console.error('REDIS_CACHE_FAILED', cacheResult.error)
+    if (process.env.NODE_ENV === 'production') {
+        const cacheResult = await tryCatchAsync(() =>
+            cacheSuccessfulApplication(parsed.data, fotoS3Url)
+        )
+        if (cacheResult.isErr()) {
+            console.error('REDIS_CACHE_FAILED', cacheResult.error)
+        }
     }
 
     return Response.json({ success: true }, { status: 200 })
@@ -106,18 +111,17 @@ function sanitizeFilenamePart(value: string): string {
     return value.replace(/[^a-zA-Z0-9._-]+/g, '_').slice(0, 60)
 }
 
-function buildApplicationFotoKey(applicationBase: string, foto: File): string {
-    const filename = sanitizeFilenamePart(foto.name) || 'foto.jpg'
-    return `applications/${applicationBase || 'application'}/foto/${Date.now()}-${filename}`
-}
-
 function buildApplicationFotoUrl(fileKey: string): string {
     const prefix =
         process.env.NODE_ENV === 'development' ? `${env.S3_BUCKET_NAME}/` : ''
     return `${env.S3_ENDPOINT}/${prefix}${fileKey}`
 }
 
-async function sendPdfToTelegram(pdfBytes: Uint8Array, pdfFilename: string) {
+async function sendPdfToTelegram(
+    pdfBytes: Uint8Array,
+    pdfFilename: string,
+    caption: string
+) {
     const token = process.env.TELEGRAM_BOT_TOKEN
     const chatId = process.env.TELEGRAM_CHAT_ID
 
@@ -136,6 +140,7 @@ async function sendPdfToTelegram(pdfBytes: Uint8Array, pdfFilename: string) {
         new Blob([pdfCopy], { type: 'application/pdf' }),
         pdfFilename
     )
+    body.append('caption', caption)
 
     const res = await fetch(
         `https://api.telegram.org/bot${token}/sendDocument`,

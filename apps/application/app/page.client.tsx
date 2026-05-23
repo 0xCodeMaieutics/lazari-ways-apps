@@ -1344,7 +1344,7 @@ export function ApplicationForm() {
                                 )}
                             />
                             {hasBeenInGermanyBefore && (
-                                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                                     <Controller
                                         name="previousStayPlace"
                                         control={form.control}
@@ -1385,16 +1385,43 @@ export function ApplicationForm() {
                                                 }
                                             >
                                                 <FieldLabel htmlFor="previousStayPeriodFrom">
-                                                    პერიოდი
+                                                    პერიოდის დასაწყისი
                                                 </FieldLabel>
-                                                <Input
-                                                    {...field}
+                                                <SafariInputDate
+                                                    field={field}
                                                     id="previousStayPeriodFrom"
                                                     aria-invalid={
                                                         fieldState.invalid
                                                     }
-                                                    placeholder="მაგ. ივლისი 2023"
-                                                    type="date"
+                                                />
+                                                {fieldState.invalid && (
+                                                    <FieldError
+                                                        errors={[
+                                                            fieldState.error,
+                                                        ]}
+                                                    />
+                                                )}
+                                            </Field>
+                                        )}
+                                    />
+                                    <Controller
+                                        name="previousStayPeriodTo"
+                                        control={form.control}
+                                        render={({ field, fieldState }) => (
+                                            <Field
+                                                data-invalid={
+                                                    fieldState.invalid
+                                                }
+                                            >
+                                                <FieldLabel htmlFor="previousStayPeriodTo">
+                                                    პერიოდის დასასრული
+                                                </FieldLabel>
+                                                <SafariInputDate
+                                                    field={field}
+                                                    id="previousStayPeriodTo"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError
