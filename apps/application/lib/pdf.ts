@@ -470,7 +470,7 @@ const REMOTE_FONT_URL =
 const remotePdfLayout = {
     valueX: 240,
     fontSize: 11,
-    photo: { x: 62.5, bottomY: 719, maxW: 108, maxH: 132 },
+    photo: { x: 65, bottomY: 715, maxW: 108, maxH: 132 },
     page1: {
         agencyName: 652,
         nachname: 608.8,
