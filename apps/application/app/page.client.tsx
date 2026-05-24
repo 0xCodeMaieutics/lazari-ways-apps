@@ -291,6 +291,25 @@ export function ApplicationForm() {
     })
 
     const isDirty = form.formState.isDirty
+
+    const onValidateRomanCharacters = ({
+        fieldName,
+        value,
+    }: {
+        value: string
+        fieldName: keyof ApplicationFormData
+    }) => {
+        if (new RegExp(/[^a-zA-Z0-9]/g).test(value)) {
+            form.setError(fieldName, {
+                message: 'გთხოვთ, ინგლისური ასოებით შეიყვანეთ',
+            })
+            return
+        }
+        if (form.getFieldState(fieldName).invalid) {
+            form.clearErrors(fieldName)
+        }
+    }
+
     return (
         <>
             <form
@@ -350,29 +369,10 @@ export function ApplicationForm() {
                                                     field.onChange(
                                                         v.target.value
                                                     )
-                                                    if (
-                                                        new RegExp(
-                                                            /[^a-zA-Z0-9]/g
-                                                        ).test(value)
-                                                    ) {
-                                                        form.setError(
-                                                            'firstName',
-                                                            {
-                                                                message:
-                                                                    'გთხოვთ, ინგლისური ასოებით შეიყვანეთ',
-                                                            }
-                                                        )
-                                                        return
-                                                    }
-                                                    if (
-                                                        form.getFieldState(
-                                                            'firstName'
-                                                        ).invalid
-                                                    ) {
-                                                        form.clearErrors(
-                                                            'firstName'
-                                                        )
-                                                    }
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'firstName',
+                                                    })
                                                 }}
                                                 id="firstName"
                                                 pattern="[a-zA-Z\s\.\-_]+"
@@ -411,6 +411,16 @@ export function ApplicationForm() {
                                                 }
                                                 placeholder="თქვენი გვარი მაგ. Malazonia"
                                                 className="transition-colors"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'lastName',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -507,6 +517,14 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="ქალაქი"
                                             className="transition-colors"
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName: 'birthPlace',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -563,6 +581,20 @@ export function ApplicationForm() {
                                                     }
                                                     placeholder="მაგ. Armenien"
                                                     className="mt-2 transition-colors"
+                                                    onChange={(v) => {
+                                                        const value =
+                                                            v.target.value
+                                                        field.onChange(
+                                                            v.target.value
+                                                        )
+                                                        onValidateRomanCharacters(
+                                                            {
+                                                                value,
+                                                                fieldName:
+                                                                    'birthCountry',
+                                                            }
+                                                        )
+                                                    }}
                                                 />
                                             )}
                                             {fieldState.invalid && (
@@ -621,6 +653,20 @@ export function ApplicationForm() {
                                                     }
                                                     placeholder="მაგ. Armenisch"
                                                     className="mt-2 transition-colors"
+                                                    onChange={(v) => {
+                                                        const value =
+                                                            v.target.value
+                                                        field.onChange(
+                                                            v.target.value
+                                                        )
+                                                        onValidateRomanCharacters(
+                                                            {
+                                                                value,
+                                                                fieldName:
+                                                                    'nationality',
+                                                            }
+                                                        )
+                                                    }}
                                                 />
                                             )}
                                             {fieldState.invalid && (
@@ -658,6 +704,14 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="მაგ. Rustavelis gamziri 1"
                                             className="transition-colors"
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName: 'street',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -690,6 +744,14 @@ export function ApplicationForm() {
                                                 }
                                                 placeholder="12345"
                                                 className="transition-colors"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'postalCode',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -720,6 +782,14 @@ export function ApplicationForm() {
                                                 }
                                                 placeholder="Tiflis"
                                                 className="transition-colors"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'city',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -851,6 +921,20 @@ export function ApplicationForm() {
                                                     }
                                                     placeholder="მომხმარებლის სახელი"
                                                     className="transition-colors"
+                                                    onChange={(v) => {
+                                                        const value =
+                                                            v.target.value
+                                                        field.onChange(
+                                                            v.target.value
+                                                        )
+                                                        onValidateRomanCharacters(
+                                                            {
+                                                                value,
+                                                                fieldName:
+                                                                    'instagram',
+                                                            }
+                                                        )
+                                                    }}
                                                 />
                                             </div>
                                             {fieldState.invalid && (
@@ -880,6 +964,14 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="საგადასახადო იდენტიფიკაციის ნომერი"
                                             className="transition-colors"
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName: 'taxId',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -1046,6 +1138,14 @@ export function ApplicationForm() {
                                                     fieldState.invalid
                                                 }
                                                 placeholder="უნივერსიტეტის სახელი"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'university',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1072,6 +1172,15 @@ export function ApplicationForm() {
                                                     fieldState.invalid
                                                 }
                                                 placeholder="სასწავლო სპეციალობა"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName:
+                                                            'studySubject',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1132,6 +1241,14 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="მაგ. Englisch B2, Französisch A1"
                                             rows={3}
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName: 'otherLanguages',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -1277,6 +1394,15 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="გთხოვთ, აღწეროთ ჯანმრთელობასთან დაკავშირებული შეზღუდვები (თუ არის)"
                                             rows={3}
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName:
+                                                        'healthRestrictions',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -1300,6 +1426,14 @@ export function ApplicationForm() {
                                             aria-invalid={fieldState.invalid}
                                             placeholder="გთხოვთ, ჩამოთვალეთ ცნობილი ალერგიები"
                                             rows={3}
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName: 'allergies',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -1327,6 +1461,14 @@ export function ApplicationForm() {
                                                     fieldState.invalid
                                                 }
                                                 placeholder="მაგ. M, L, XL"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'clothingSize',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1353,6 +1495,14 @@ export function ApplicationForm() {
                                                     fieldState.invalid
                                                 }
                                                 placeholder="მაგ. 42, 43, 44"
+                                                onChange={(v) => {
+                                                    const value = v.target.value
+                                                    field.onChange(v.target.value)
+                                                    onValidateRomanCharacters({
+                                                        value,
+                                                        fieldName: 'shoeSize',
+                                                    })
+                                                }}
                                             />
                                             {fieldState.invalid && (
                                                 <FieldError
@@ -1429,6 +1579,20 @@ export function ApplicationForm() {
                                                         fieldState.invalid
                                                     }
                                                     placeholder="ქალაქი/რეგიონი გერმანიაში"
+                                                    onChange={(v) => {
+                                                        const value =
+                                                            v.target.value
+                                                        field.onChange(
+                                                            v.target.value
+                                                        )
+                                                        onValidateRomanCharacters(
+                                                            {
+                                                                value,
+                                                                fieldName:
+                                                                    'previousStayPlace',
+                                                            }
+                                                        )
+                                                    }}
                                                 />
                                                 {fieldState.invalid && (
                                                     <FieldError
@@ -1520,6 +1684,15 @@ export function ApplicationForm() {
                                             id="emergencyContactName"
                                             aria-invalid={fieldState.invalid}
                                             placeholder="საკონტაქტო პირის სრული სახელი"
+                                            onChange={(v) => {
+                                                const value = v.target.value
+                                                field.onChange(v.target.value)
+                                                onValidateRomanCharacters({
+                                                    value,
+                                                    fieldName:
+                                                        'emergencyContactName',
+                                                })
+                                            }}
                                         />
                                         {fieldState.invalid && (
                                             <FieldError
@@ -1627,7 +1800,7 @@ export function ApplicationForm() {
                         ფორმის გაგზავნით თქვენ ეთანხმებით{' '}
                         <Link
                             href="/terms-and-condition"
-                            className="text-foreground underline underline-offset-4 hover:text-foreground/80"
+                            className="text-foreground hover:text-foreground/80 underline underline-offset-4"
                         >
                             წესებსა და პირობებს
                         </Link>
