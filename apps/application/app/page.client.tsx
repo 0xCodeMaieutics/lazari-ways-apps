@@ -21,6 +21,7 @@ import {
     applicationFormSchema,
     type ApplicationFormData,
     workSectorOptions,
+    shoeSizeOptions,
 } from '../lib/application-form-schema'
 import { tryCatchAsync } from '@workspace/shared/error-handling/index'
 import { ImageCropper } from './image-cropper'
@@ -136,7 +137,7 @@ export function ApplicationForm() {
             healthRestrictions: '',
             allergies: '',
             clothingSize: '',
-            shoeSize: '',
+            shoeSize: [],
             hasBeenInGermanyBefore: false,
             previousStayPlace: '',
             previousStayPeriodFrom: '',
@@ -185,7 +186,7 @@ export function ApplicationForm() {
         form.setValue('healthRestrictions', 'whatever', { shouldDirty: true })
         form.setValue('allergies', 'Some allergy', { shouldDirty: true })
         form.setValue('clothingSize', 'M', { shouldDirty: true })
-        form.setValue('shoeSize', '38', { shouldDirty: true })
+        form.setValue('shoeSize', ['41', '42'], { shouldDirty: true })
         form.setValue('hasBeenInGermanyBefore', true, { shouldDirty: true })
         form.setValue('previousStayPlace', 'Hamburg', { shouldDirty: true })
         form.setValue('previousStayPeriodFrom', '2023-07-01', {
@@ -1384,15 +1385,14 @@ export function ApplicationForm() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="healthRestrictions">
-                                            ჯანმრთელობის შეზღუდვები
+                                            ჯანმრთელობის შეზღუდვები თუ არის
                                             (არასავალდებულო)
                                         </FieldLabel>
-                                        <Textarea
+                                        <Input
                                             {...field}
                                             id="healthRestrictions"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="გთხოვთ, აღწეროთ ჯანმრთელობასთან დაკავშირებული შეზღუდვები (თუ არის)"
-                                            rows={3}
+                                            placeholder="მაგ. Rückenschmerzen, Atemwegserkrankungen"
                                             onChange={(v) => {
                                                 const value = v.target.value
                                                 field.onChange(v.target.value)
@@ -1419,12 +1419,11 @@ export function ApplicationForm() {
                                         <FieldLabel htmlFor="allergies">
                                             ალერგიები (არასავალდებულო)
                                         </FieldLabel>
-                                        <Textarea
+                                        <Input
                                             {...field}
                                             id="allergies"
                                             aria-invalid={fieldState.invalid}
-                                            placeholder="გთხოვთ, ჩამოთვალეთ ცნობილი ალერგიები"
-                                            rows={3}
+                                            placeholder="მაგ. Honig, Planzen, etc."
                                             onChange={(v) => {
                                                 const value = v.target.value
                                                 field.onChange(v.target.value)
@@ -1450,28 +1449,33 @@ export function ApplicationForm() {
                                         <Field
                                             data-invalid={fieldState.invalid}
                                         >
-                                            <FieldLabel htmlFor="clothingSize">
+                                            <FieldLabel>
                                                 ტანსაცმლის ზომა (არასავალდებულო)
                                             </FieldLabel>
-                                            <Input
-                                                {...field}
-                                                id="clothingSize"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
-                                                placeholder="მაგ. M, L, XL"
-                                                onChange={(v) => {
-                                                    const value = v.target.value
-                                                    field.onChange(
-                                                        v.target.value
-                                                    )
-                                                    onValidateRomanCharacters({
-                                                        value,
-                                                        fieldName:
-                                                            'clothingSize',
-                                                    })
-                                                }}
-                                            />
+                                            <div className="flex flex-wrap gap-4">
+                                                {[
+                                                    'XS',
+                                                    'S',
+                                                    'M',
+                                                    'L',
+                                                    'XL',
+                                                    'XXL',
+                                                ].map((size) => (
+                                                    <Radio
+                                                        key={size}
+                                                        {...field}
+                                                        value={size}
+                                                        checked={
+                                                            field.value === size
+                                                        }
+                                                        onChange={() =>
+                                                            field.onChange(size)
+                                                        }
+                                                        label={size}
+                                                        id={`clothingSize-${size}`}
+                                                    />
+                                                ))}
+                                            </div>
                                             {fieldState.invalid && (
                                                 <FieldError
                                                     errors={[fieldState.error]}
@@ -1487,27 +1491,68 @@ export function ApplicationForm() {
                                         <Field
                                             data-invalid={fieldState.invalid}
                                         >
-                                            <FieldLabel htmlFor="shoeSize">
+                                            <FieldLabel>
                                                 ფეხსაცმლის ზომა (არასავალდებულო)
                                             </FieldLabel>
-                                            <Input
-                                                {...field}
-                                                id="shoeSize"
-                                                aria-invalid={
-                                                    fieldState.invalid
-                                                }
-                                                placeholder="მაგ. 42, 43, 44"
-                                                onChange={(v) => {
-                                                    const value = v.target.value
-                                                    field.onChange(
-                                                        v.target.value
-                                                    )
-                                                    onValidateRomanCharacters({
-                                                        value,
-                                                        fieldName: 'shoeSize',
-                                                    })
-                                                }}
-                                            />
+                                            <div className="flex flex-wrap gap-x-4 gap-y-2">
+                                                {shoeSizeOptions.map(
+                                                    (size) => {
+                                                        const id = `shoeSize-${size}`
+                                                        const selected = (
+                                                            field.value ?? []
+                                                        ).includes(size)
+
+                                                        return (
+                                                            <div
+                                                                key={size}
+                                                                className="flex items-center gap-2"
+                                                            >
+                                                                <Checkbox
+                                                                    id={id}
+                                                                    checked={
+                                                                        selected
+                                                                    }
+                                                                    onCheckedChange={(
+                                                                        checked
+                                                                    ) => {
+                                                                        const current =
+                                                                            field.value ??
+                                                                            []
+                                                                        if (
+                                                                            checked
+                                                                        ) {
+                                                                            field.onChange(
+                                                                                [
+                                                                                    ...current,
+                                                                                    size,
+                                                                                ]
+                                                                            )
+                                                                        } else {
+                                                                            field.onChange(
+                                                                                current.filter(
+                                                                                    (
+                                                                                        value
+                                                                                    ) =>
+                                                                                        value !==
+                                                                                        size
+                                                                                )
+                                                                            )
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                <label
+                                                                    htmlFor={
+                                                                        id
+                                                                    }
+                                                                    className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                                >
+                                                                    {size}
+                                                                </label>
+                                                            </div>
+                                                        )
+                                                    }
+                                                )}
+                                            </div>
                                             {fieldState.invalid && (
                                                 <FieldError
                                                     errors={[fieldState.error]}

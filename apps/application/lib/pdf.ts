@@ -289,7 +289,13 @@ export const generateApplicationPdf = async (
         ],
         ['Allergien', formatOptional(applicationFormData.allergies)],
         ['Kleidergröße', formatOptional(applicationFormData.clothingSize)],
-        ['Schuhgröße', formatOptional(applicationFormData.shoeSize)],
+        [
+            'Schuhgröße',
+            applicationFormData.shoeSize &&
+            applicationFormData.shoeSize.length > 0
+                ? applicationFormData.shoeSize.join(', ')
+                : '—',
+        ],
     ])
 
     const prevPlace = applicationFormData.previousStayPlace?.trim() ?? ''
@@ -764,7 +770,14 @@ export const generateRemoteApplicationPdf = async (
         applicationFormData.clothingSize ?? '',
         p1.kleidergroesse
     )
-    drawValue(firstPage, applicationFormData.shoeSize ?? '', p1.schuhgroesse)
+    drawValue(
+        firstPage,
+        applicationFormData.shoeSize &&
+            applicationFormData.shoeSize.length > 0
+            ? applicationFormData.shoeSize.join(', ')
+            : '',
+        p1.schuhgroesse
+    )
 
     drawBoolCheckbox(
         firstPage,

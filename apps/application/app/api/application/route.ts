@@ -190,7 +190,7 @@ function applicationFormDataFromFormData(formData: FormData) {
         healthRestrictions: formString(formData, 'healthRestrictions'),
         allergies: formString(formData, 'allergies'),
         clothingSize: formString(formData, 'clothingSize'),
-        shoeSize: formString(formData, 'shoeSize'),
+        shoeSize: formStringArray(formData, 'shoeSize'),
         hasBeenInGermanyBefore: formOptionalBool(
             formData,
             'hasBeenInGermanyBefore'

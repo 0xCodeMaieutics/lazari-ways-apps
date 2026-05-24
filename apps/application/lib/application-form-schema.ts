@@ -10,6 +10,21 @@ export const workSectorOptions = [
     'Industrielle Produktion',
 ] as const
 
+export const shoeSizeOptions = [
+    '36',
+    '37',
+    '38',
+    '39',
+    '40',
+    '41',
+    '42',
+    '43',
+    '44',
+    '45',
+    '46',
+    '47',
+] as const
+
 export const applicationFormSchema = z.object({
     firstName: z.string().min(1, 'სახელი სავალდებულოა'),
     lastName: z.string().min(1, 'გვარი სავალდებულოა'),
@@ -67,7 +82,7 @@ export const applicationFormSchema = z.object({
     healthRestrictions: z.string().optional(),
     allergies: z.string().optional(),
     clothingSize: z.string().optional(),
-    shoeSize: z.string().optional(),
+    shoeSize: z.array(z.enum(shoeSizeOptions)).optional(),
 
     hasBeenInGermanyBefore: z.boolean().optional(),
     previousStayPlace: z.string().optional(),
