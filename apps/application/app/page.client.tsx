@@ -25,6 +25,7 @@ import {
 import { tryCatchAsync } from '@workspace/shared/error-handling/index'
 import { ImageCropper } from './image-cropper'
 import { SafariInputDate } from '@/components/safari-date-component'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
     Dialog,
@@ -1621,14 +1622,26 @@ export function ApplicationForm() {
                         </FieldGroup>
                     </div>
                 </div>
-                <div className="mt-8 flex flex-col-reverse gap-4 sm:flex-row">
-                    <Button
-                        type="submit"
-                        size={'lg'}
-                        disabled={isSubmitting || !isDirty}
-                    >
-                        {isSubmitting ? 'იგზავნება...' : 'გაგზავნა'}
-                    </Button>
+                <div className="mt-8 flex flex-col gap-4">
+                    <p className="text-muted-foreground text-sm leading-relaxed">
+                        ფორმის გაგზავნით თქვენ ეთანხმებით{' '}
+                        <Link
+                            href="/terms-and-condition"
+                            className="text-foreground underline underline-offset-4 hover:text-foreground/80"
+                        >
+                            წესებსა და პირობებს
+                        </Link>
+                        .
+                    </p>
+                    <div className="flex flex-col-reverse gap-4 sm:flex-row">
+                        <Button
+                            type="submit"
+                            size={'lg'}
+                            disabled={isSubmitting || !isDirty}
+                        >
+                            {isSubmitting ? 'იგზავნება...' : 'გაგზავნა'}
+                        </Button>
+                    </div>
                 </div>
             </form>
 
