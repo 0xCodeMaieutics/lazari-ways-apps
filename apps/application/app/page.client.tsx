@@ -518,54 +518,118 @@ export function ApplicationForm() {
                             <Controller
                                 name="birthCountry"
                                 control={form.control}
-                                render={({ fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="birthCountry"
-                                            className="text-sm font-medium"
+                                render={({ field, fieldState }) => {
+                                    const isGeorgien =
+                                        field.value === 'Georgien'
+
+                                    return (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
                                         >
-                                            დაბადების ქვეყანა *
-                                        </FieldLabel>
-                                        <Input
-                                            id="birthCountry"
-                                            aria-invalid={fieldState.invalid}
-                                            className="transition-colors"
-                                            value={'Georgien'}
-                                            disabled
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
+                                            <FieldLabel className="text-sm font-medium">
+                                                დაბადების ქვეყანა *
+                                            </FieldLabel>
+                                            <div className="mt-2 flex gap-6">
+                                                <Radio
+                                                    {...field}
+                                                    value="Georgien"
+                                                    checked={isGeorgien}
+                                                    onChange={() =>
+                                                        field.onChange(
+                                                            'Georgien'
+                                                        )
+                                                    }
+                                                    label="Georgien"
+                                                    id="birthCountry-georgien"
+                                                />
+                                                <Radio
+                                                    {...field}
+                                                    value="Other"
+                                                    checked={!isGeorgien}
+                                                    onChange={() =>
+                                                        field.onChange('')
+                                                    }
+                                                    label="სხვა"
+                                                    id="birthCountry-other"
+                                                />
+                                            </div>
+                                            {!isGeorgien && (
+                                                <Input
+                                                    {...field}
+                                                    id="birthCountry"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                    placeholder="მაგ. Armenien"
+                                                    className="mt-2 transition-colors"
+                                                />
+                                            )}
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )
+                                }}
                             />
                             <Controller
                                 name="nationality"
                                 control={form.control}
-                                render={({ fieldState }) => (
-                                    <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel
-                                            htmlFor="nationality"
-                                            className="text-sm font-medium"
+                                render={({ field, fieldState }) => {
+                                    const isGeorgisch =
+                                        field.value === 'Georgisch'
+
+                                    return (
+                                        <Field
+                                            data-invalid={fieldState.invalid}
                                         >
-                                            მოქალაქეობა *
-                                        </FieldLabel>
-                                        <Input
-                                            id="nationality"
-                                            aria-invalid={fieldState.invalid}
-                                            className="transition-colors"
-                                            value="Georgisch"
-                                            disabled
-                                        />
-                                        {fieldState.invalid && (
-                                            <FieldError
-                                                errors={[fieldState.error]}
-                                            />
-                                        )}
-                                    </Field>
-                                )}
+                                            <FieldLabel className="text-sm font-medium">
+                                                მოქალაქეობა *
+                                            </FieldLabel>
+                                            <div className="mt-2 flex gap-6">
+                                                <Radio
+                                                    {...field}
+                                                    value="Georgisch"
+                                                    checked={isGeorgisch}
+                                                    onChange={() =>
+                                                        field.onChange(
+                                                            'Georgisch'
+                                                        )
+                                                    }
+                                                    label="Georgisch"
+                                                    id="nationality-georgisch"
+                                                />
+                                                <Radio
+                                                    {...field}
+                                                    value="Other"
+                                                    checked={!isGeorgisch}
+                                                    onChange={() =>
+                                                        field.onChange('')
+                                                    }
+                                                    label="სხვა"
+                                                    id="nationality-other"
+                                                />
+                                            </div>
+                                            {!isGeorgisch && (
+                                                <Input
+                                                    {...field}
+                                                    id="nationality"
+                                                    aria-invalid={
+                                                        fieldState.invalid
+                                                    }
+                                                    placeholder="მაგ. Armenisch"
+                                                    className="mt-2 transition-colors"
+                                                />
+                                            )}
+                                            {fieldState.invalid && (
+                                                <FieldError
+                                                    errors={[fieldState.error]}
+                                                />
+                                            )}
+                                        </Field>
+                                    )
+                                }}
                             />
                         </div>
                     </FieldGroup>
