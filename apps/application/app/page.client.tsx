@@ -746,7 +746,9 @@ export function ApplicationForm() {
                                                 className="transition-colors"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
                                                         fieldName: 'postalCode',
@@ -784,7 +786,9 @@ export function ApplicationForm() {
                                                 className="transition-colors"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
                                                         fieldName: 'city',
@@ -849,7 +853,7 @@ export function ApplicationForm() {
                                             htmlFor="phone"
                                             className="text-sm font-medium"
                                         >
-                                            საფოსტო ემაილი
+                                            საფოსტო ემაილი (არასავალდებულო)
                                         </FieldLabel>
                                         <Input
                                             {...field}
@@ -876,7 +880,7 @@ export function ApplicationForm() {
                                             htmlFor="phone"
                                             className="text-sm font-medium"
                                         >
-                                            ტელეფონის ნომერი
+                                            ტელეფონის ნომერი (არასავალდებულო)
                                         </FieldLabel>
                                         <Input
                                             {...field}
@@ -907,7 +911,7 @@ export function ApplicationForm() {
                                                 htmlFor="instagram"
                                                 className="text-sm font-medium"
                                             >
-                                                Instagram
+                                                Instagram (არასავალდებულო)
                                             </FieldLabel>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-muted-foreground">
@@ -957,6 +961,7 @@ export function ApplicationForm() {
                                             className="text-sm font-medium"
                                         >
                                             საგადასახადო იდენტიფიკაციის ნომერი
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <Input
                                             {...field}
@@ -995,7 +1000,7 @@ export function ApplicationForm() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="foto">
-                                            ფოტოს ატვირთვა
+                                            ფოტოს ატვირთვა *
                                         </FieldLabel>
                                         <FileUpload
                                             id="foto"
@@ -1084,6 +1089,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="semesterBreakFrom">
                                             არდადეგების დასაწყისი
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <SafariInputDate
                                             field={field}
@@ -1105,6 +1111,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="semesterBreakTo">
                                             არდადეგები დასასრული
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <SafariInputDate
                                             field={field}
@@ -1129,7 +1136,7 @@ export function ApplicationForm() {
                                             data-invalid={fieldState.invalid}
                                         >
                                             <FieldLabel htmlFor="university">
-                                                უნივერსიტეტი
+                                                უნივერსიტეტი (არასავალდებულო)
                                             </FieldLabel>
                                             <Input
                                                 {...field}
@@ -1140,7 +1147,9 @@ export function ApplicationForm() {
                                                 placeholder="უნივერსიტეტის სახელი"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
                                                         fieldName: 'university',
@@ -1164,6 +1173,7 @@ export function ApplicationForm() {
                                         >
                                             <FieldLabel htmlFor="studySubject">
                                                 სასწავლო სპეციალობა
+                                                (არასავალდებულო)
                                             </FieldLabel>
                                             <Input
                                                 {...field}
@@ -1174,7 +1184,9 @@ export function ApplicationForm() {
                                                 placeholder="სასწავლო სპეციალობა"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
                                                         fieldName:
@@ -1196,7 +1208,9 @@ export function ApplicationForm() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>გერმანულის დონე</FieldLabel>
+                                        <FieldLabel>
+                                            გერმანულის დონე (არასავალდებულო)
+                                        </FieldLabel>
                                         <div className="flex gap-4">
                                             {['A1', 'A2', 'B1', 'B2', 'C1'].map(
                                                 (level) => (
@@ -1234,6 +1248,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="otherLanguages">
                                             სხვა ენების ცოდნა / ენის დონე
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <Textarea
                                             {...field}
@@ -1263,7 +1278,9 @@ export function ApplicationForm() {
                                 control={form.control}
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
-                                        <FieldLabel>მართვის მოწმობა</FieldLabel>
+                                        <FieldLabel>
+                                            მართვის მოწმობა (არასავალდებულო)
+                                        </FieldLabel>
                                         <div className="flex gap-4">
                                             <Radio
                                                 {...field}
@@ -1301,6 +1318,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>
                                             შეგიძლიათ ველოსიპედის ტარება?
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <div className="flex gap-4">
                                             <Radio
@@ -1339,6 +1357,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>
                                             მზადყოფნა ცვლებში მუშაობისთვის
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <div className="flex gap-4">
                                             <Radio
@@ -1387,6 +1406,7 @@ export function ApplicationForm() {
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="healthRestrictions">
                                             ჯანმრთელობის შეზღუდვები
+                                            (არასავალდებულო)
                                         </FieldLabel>
                                         <Textarea
                                             {...field}
@@ -1418,7 +1438,7 @@ export function ApplicationForm() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel htmlFor="allergies">
-                                            ალერგიები
+                                            ალერგიები (არასავალდებულო)
                                         </FieldLabel>
                                         <Textarea
                                             {...field}
@@ -1452,7 +1472,7 @@ export function ApplicationForm() {
                                             data-invalid={fieldState.invalid}
                                         >
                                             <FieldLabel htmlFor="clothingSize">
-                                                ტანსაცმლის ზომა
+                                                ტანსაცმლის ზომა (არასავალდებულო)
                                             </FieldLabel>
                                             <Input
                                                 {...field}
@@ -1463,10 +1483,13 @@ export function ApplicationForm() {
                                                 placeholder="მაგ. M, L, XL"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
-                                                        fieldName: 'clothingSize',
+                                                        fieldName:
+                                                            'clothingSize',
                                                     })
                                                 }}
                                             />
@@ -1486,7 +1509,7 @@ export function ApplicationForm() {
                                             data-invalid={fieldState.invalid}
                                         >
                                             <FieldLabel htmlFor="shoeSize">
-                                                ფეხსაცმლის ზომა
+                                                ფეხსაცმლის ზომა (არასავალდებულო)
                                             </FieldLabel>
                                             <Input
                                                 {...field}
@@ -1497,7 +1520,9 @@ export function ApplicationForm() {
                                                 placeholder="მაგ. 42, 43, 44"
                                                 onChange={(v) => {
                                                     const value = v.target.value
-                                                    field.onChange(v.target.value)
+                                                    field.onChange(
+                                                        v.target.value
+                                                    )
                                                     onValidateRomanCharacters({
                                                         value,
                                                         fieldName: 'shoeSize',
@@ -1526,7 +1551,7 @@ export function ApplicationForm() {
                                 render={({ field, fieldState }) => (
                                     <Field data-invalid={fieldState.invalid}>
                                         <FieldLabel>
-                                            ყოფნა გერმანიაში
+                                            ყოფნა გერმანიაში (არასავალდებულო)
                                         </FieldLabel>
                                         <div className="flex gap-4">
                                             <Radio
@@ -1570,7 +1595,7 @@ export function ApplicationForm() {
                                                 }
                                             >
                                                 <FieldLabel htmlFor="previousStayPlace">
-                                                    თუ კი, სად
+                                                    თუ კი, სად (არასავალდებულო)
                                                 </FieldLabel>
                                                 <Input
                                                     {...field}
@@ -1615,6 +1640,7 @@ export function ApplicationForm() {
                                             >
                                                 <FieldLabel htmlFor="previousStayPeriodFrom">
                                                     პერიოდის დასაწყისი
+                                                    (არასავალდებულო)
                                                 </FieldLabel>
                                                 <SafariInputDate
                                                     field={field}
@@ -1644,6 +1670,7 @@ export function ApplicationForm() {
                                             >
                                                 <FieldLabel htmlFor="previousStayPeriodTo">
                                                     პერიოდის დასასრული
+                                                    (არასავალდებულო)
                                                 </FieldLabel>
                                                 <SafariInputDate
                                                     field={field}
