@@ -38,6 +38,15 @@ import {
 } from '@workspace/ui/components/dialog'
 import { XCircle } from 'lucide-react'
 
+function containsNonLatinLetters(value: string) {
+    for (const char of value) {
+        if (/\p{L}/u.test(char) && !/\p{Script=Latin}/u.test(char)) {
+            return true
+        }
+    }
+    return false
+}
+
 function applicationFormDataToFormData(data: ApplicationFormData): FormData {
     const fd = new FormData()
     for (const key of Object.keys(data) as (keyof ApplicationFormData)[]) {
@@ -295,7 +304,7 @@ export function ApplicationForm() {
         value: string
         fieldName: keyof ApplicationFormData
     }) => {
-        if (new RegExp(/[^a-zA-Z0-9]/g).test(value)) {
+        if (containsNonLatinLetters(value)) {
             form.setError(fieldName, {
                 message: 'გთხოვთ, ინგლისური ასოებით შეიყვანეთ',
             })
@@ -1495,63 +1504,59 @@ export function ApplicationForm() {
                                                 ფეხსაცმლის ზომა (არასავალდებულო)
                                             </FieldLabel>
                                             <div className="flex flex-wrap gap-x-4 gap-y-2">
-                                                {shoeSizeOptions.map(
-                                                    (size) => {
-                                                        const id = `shoeSize-${size}`
-                                                        const selected = (
-                                                            field.value ?? []
-                                                        ).includes(size)
+                                                {shoeSizeOptions.map((size) => {
+                                                    const id = `shoeSize-${size}`
+                                                    const selected = (
+                                                        field.value ?? []
+                                                    ).includes(size)
 
-                                                        return (
-                                                            <div
-                                                                key={size}
-                                                                className="flex items-center gap-2"
-                                                            >
-                                                                <Checkbox
-                                                                    id={id}
-                                                                    checked={
-                                                                        selected
-                                                                    }
-                                                                    onCheckedChange={(
+                                                    return (
+                                                        <div
+                                                            key={size}
+                                                            className="flex items-center gap-2"
+                                                        >
+                                                            <Checkbox
+                                                                id={id}
+                                                                checked={
+                                                                    selected
+                                                                }
+                                                                onCheckedChange={(
+                                                                    checked
+                                                                ) => {
+                                                                    const current =
+                                                                        field.value ??
+                                                                        []
+                                                                    if (
                                                                         checked
-                                                                    ) => {
-                                                                        const current =
-                                                                            field.value ??
-                                                                            []
-                                                                        if (
-                                                                            checked
-                                                                        ) {
-                                                                            field.onChange(
-                                                                                [
-                                                                                    ...current,
-                                                                                    size,
-                                                                                ]
+                                                                    ) {
+                                                                        field.onChange(
+                                                                            [
+                                                                                ...current,
+                                                                                size,
+                                                                            ]
+                                                                        )
+                                                                    } else {
+                                                                        field.onChange(
+                                                                            current.filter(
+                                                                                (
+                                                                                    value
+                                                                                ) =>
+                                                                                    value !==
+                                                                                    size
                                                                             )
-                                                                        } else {
-                                                                            field.onChange(
-                                                                                current.filter(
-                                                                                    (
-                                                                                        value
-                                                                                    ) =>
-                                                                                        value !==
-                                                                                        size
-                                                                                )
-                                                                            )
-                                                                        }
-                                                                    }}
-                                                                />
-                                                                <label
-                                                                    htmlFor={
-                                                                        id
+                                                                        )
                                                                     }
-                                                                    className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                                >
-                                                                    {size}
-                                                                </label>
-                                                            </div>
-                                                        )
-                                                    }
-                                                )}
+                                                                }}
+                                                            />
+                                                            <label
+                                                                htmlFor={id}
+                                                                className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                            >
+                                                                {size}
+                                                            </label>
+                                                        </div>
+                                                    )
+                                                })}
                                             </div>
                                             {fieldState.invalid && (
                                                 <FieldError
