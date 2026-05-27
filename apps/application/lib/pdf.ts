@@ -501,7 +501,7 @@ const remotePdfLayout = {
         telefon: 100.2,
         email: 80,
         instagram: 59.7,
-        vorherigerAufenthaltOrt: 265,
+        vorherigerAufenthaltOrt: 260,
         vorherigerAufenthaltZeitraum: 400,
     },
     checkboxes: {
