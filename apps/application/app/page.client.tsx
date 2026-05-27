@@ -1239,12 +1239,11 @@ export function ApplicationForm() {
                                             სხვა ენების ცოდნა / ენის დონე
                                             (არასავალდებულო)
                                         </FieldLabel>
-                                        <Textarea
+                                        <Input
                                             {...field}
                                             id="otherLanguages"
                                             aria-invalid={fieldState.invalid}
                                             placeholder="მაგ. Englisch B2, Französisch A1"
-                                            rows={3}
                                             onChange={(v) => {
                                                 const value = v.target.value
                                                 field.onChange(v.target.value)
