@@ -18,5 +18,5 @@ export async function cacheSuccessfulApplication(
     }
 
     const id = crypto.randomUUID()
-    await redis.set(`application:${process.env.NODE_ENV}:${id}`, record)
+    await redis.set(`application:${process.env.NODE_ENV}:new:${id}`, record)
 }
